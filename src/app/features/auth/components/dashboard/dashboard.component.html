@@ -1,0 +1,69 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <button class="btn btn-secondary" (click)="logout()">
+      Logout
+    </button>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="welcome-section">
+      <h2>Welcome back!</h2>
+      <p>You are successfully logged in to your account.</p>
+    </div>
+
+    <div class="info-card" *ngIf="user$ | async as user">
+      <h3>User Information</h3>
+      <div class="info-item">
+        <span class="label">Name:</span>
+        <span class="value">{{ user.name }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Email:</span>
+        <span class="value">{{ user.email }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Role:</span>
+        <span class="value role-badge" [class.admin]="user.role === 'ADMIN'" [class.user]="user.role === 'USER'">
+          {{ user.role | titlecase }}
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="label">User ID:</span>
+        <span class="value">{{ user.id }}</span>
+      </div>
+    </div>
+
+    <div class="actions-section" *ngIf="user$ | async as user">
+      <h3>Quick Actions</h3>
+      <div class="action-buttons">
+        <button 
+          class="btn btn-primary" 
+          routerLink="/admin"
+          *ngIf="user.role === 'ADMIN'"
+        >
+          Admin Panel
+        </button>
+        <button class="btn btn-outline" routerLink="/profile">
+          View Profile
+        </button>
+        <button class="btn btn-outline" (click)="logout()">
+          Sign Out
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-only-content" *ngIf="(user$ | async)?.role === 'ADMIN'">
+      <h3>Admin Features</h3>
+      <p>This content is only visible to admin users.</p>
+      <div class="admin-actions-section">
+        <button class="btn btn-primary" routerLink="/users">
+          Manage Users
+        </button>
+        <button class="btn btn-success" routerLink="/admin">
+          Admin Panel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

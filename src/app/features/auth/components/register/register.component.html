@@ -1,0 +1,115 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Create Account</h2>
+      <p>Join us today! Create your account to get started.</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Enter your full name"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('name')"
+        />
+        <div *ngIf="isFieldInvalid('name')" class="error-message invalid-feedback">
+          <div *ngIf="registerForm.get('name')?.errors?.['required']">
+            Name is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('email')"
+        />
+        <div *ngIf="isFieldInvalid('email')" class="error-message invalid-feedback">
+          <div *ngIf="registerForm.get('email')?.errors?.['required']">
+            Email is required
+          </div>
+          <div *ngIf="registerForm.get('email')?.errors?.['email']">
+            Please enter a valid email address
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('password')"
+        />
+        <div *ngIf="isFieldInvalid('password')" class="error-message invalid-feedback">
+          <div *ngIf="registerForm.get('password')?.errors?.['required']">
+            Password is required
+          </div>
+          <div *ngIf="registerForm.get('password')?.errors?.['minlength']">
+            Password must be at least 6 characters
+          </div>
+        </div>
+        
+        <!-- Password strength indicator -->
+        <div class="password-strength" *ngIf="registerForm.get('password')?.value">
+          <div class="strength-bar">
+            <div class="strength-fill" [class]="getPasswordStrengthClass()"></div>
+          </div>
+          <span class="strength-text">{{ getPasswordStrengthText() }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('confirmPassword') || isPasswordMismatch()"
+        />
+        <div *ngIf="isFieldInvalid('confirmPassword')" class="error-message invalid-feedback">
+          <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
+            Please confirm your password
+          </div>
+        </div>
+        <div *ngIf="isPasswordMismatch()" class="error-message invalid-feedback">
+          Passwords do not match
+        </div>
+      </div>
+
+      <div *ngIf="error$ | async as error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="registerForm.invalid || (isLoading$ | async)"
+      >
+        <span *ngIf="isLoading$ | async" class="spinner"></span>
+        {{ (isLoading$ | async) ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>
+        Already have an account?
+        <a routerLink="/login" class="link">Sign in here</a>
+      </p>
+    </div>
+  </div>
+</div>

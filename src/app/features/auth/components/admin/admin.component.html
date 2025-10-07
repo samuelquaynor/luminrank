@@ -1,0 +1,67 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Admin Panel</h1>
+    <div class="admin-nav">
+      <button class="btn btn-outline" routerLink="/dashboard">
+        Back to Dashboard
+      </button>
+      <button class="btn btn-secondary" (click)="logout()">
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <div class="admin-welcome">
+      <h2>Administrator Dashboard</h2>
+      <p>Welcome to the admin panel. You have full administrative privileges.</p>
+    </div>
+
+    <div class="admin-stats" *ngIf="user$ | async as user">
+      <div class="stat-card">
+        <h3>Current User</h3>
+        <div class="user-info">
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Role:</strong> {{ user.role }}</p>
+          <p><strong>ID:</strong> {{ user.id }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-actions">
+      <h3>Administrative Actions</h3>
+      <div class="admin-actions-section">
+        <button class="btn btn-danger" (click)="performAdminAction('delete')">
+          Delete User
+        </button>
+        <button class="btn btn-warning" (click)="performAdminAction('edit')">
+          Edit Permissions
+        </button>
+        <button class="btn btn-success" (click)="performAdminAction('create')">
+          Create User
+        </button>
+        <button class="btn btn-info" (click)="performAdminAction('export')">
+          Export Data
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-info">
+      <h3>System Information</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Application Version:</span>
+          <span class="value">1.0.0</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Last Login:</span>
+          <span class="value">{{ getCurrentTime() }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Session Status:</span>
+          <span class="value status-active">Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

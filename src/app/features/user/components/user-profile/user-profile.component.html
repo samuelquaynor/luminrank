@@ -1,0 +1,225 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>User Profile</h1>
+    <p>Manage your personal information and preferences</p>
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+    <!-- Personal Information -->
+    <div class="form-section">
+      <h2>Personal Information</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('firstName')"
+          />
+          <div *ngIf="isFieldInvalid('firstName')" class="invalid-feedback">
+            First name is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('lastName')"
+          />
+          <div *ngIf="isFieldInvalid('lastName')" class="invalid-feedback">
+            Last name is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('email')"
+          readonly
+        />
+        <small class="form-text">Email cannot be changed</small>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input
+          type="tel"
+          id="phone"
+          formControlName="phone"
+          class="form-control"
+          placeholder="Enter your phone number"
+        />
+      </div>
+    </div>
+
+    <!-- Address Information -->
+    <div class="form-section">
+      <h2>Address Information</h2>
+      
+      <div class="form-group">
+        <label for="street">Street Address</label>
+        <input
+          type="text"
+          id="street"
+          formControlName="street"
+          class="form-control"
+          placeholder="Enter street address"
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input
+            type="text"
+            id="city"
+            formControlName="city"
+            class="form-control"
+            placeholder="Enter city"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="state">State/Province</label>
+          <input
+            type="text"
+            id="state"
+            formControlName="state"
+            class="form-control"
+            placeholder="Enter state/province"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="zipCode">ZIP/Postal Code</label>
+          <input
+            type="text"
+            id="zipCode"
+            formControlName="zipCode"
+            class="form-control"
+            placeholder="Enter ZIP/postal code"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            formControlName="country"
+            class="form-control"
+            placeholder="Enter country"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferences -->
+    <div class="form-section">
+      <h2>Preferences</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="theme">Theme</label>
+          <select
+            id="theme"
+            formControlName="theme"
+            class="form-control"
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="auto">Auto</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="language">Language</label>
+          <select
+            id="language"
+            formControlName="language"
+            class="form-control"
+          >
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <h3>Notifications</h3>
+        
+        <div class="checkbox-group">
+          <div class="checkbox-item">
+            <input
+              type="checkbox"
+              id="emailNotifications"
+              formControlName="emailNotifications"
+              class="form-check-input"
+            />
+            <label for="emailNotifications" class="form-check-label">
+              Email Notifications
+            </label>
+          </div>
+
+          <div class="checkbox-item">
+            <input
+              type="checkbox"
+              id="pushNotifications"
+              formControlName="pushNotifications"
+              class="form-check-input"
+            />
+            <label for="pushNotifications" class="form-check-label">
+              Push Notifications
+            </label>
+          </div>
+
+          <div class="checkbox-item">
+            <input
+              type="checkbox"
+              id="smsNotifications"
+              formControlName="smsNotifications"
+              class="form-check-input"
+            />
+            <label for="smsNotifications" class="form-check-label">
+              SMS Notifications
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Display -->
+    <div *ngIf="error$ | async as error" class="alert alert-danger">
+      {{ error }}
+      <button type="button" class="btn-close" (click)="clearError()" aria-label="Close"></button>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="profileForm.invalid || (loading$ | async)"
+      >
+        <span *ngIf="loading$ | async" class="spinner"></span>
+        {{ (loading$ | async) ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+  </form>
+</div>
