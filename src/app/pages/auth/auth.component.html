@@ -1,0 +1,31 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-header">
+      <h1>LuminRank</h1>
+      <p class="tagline">Rank and illuminate your content</p>
+    </div>
+
+    <div class="auth-content">
+      <div class="auth-tabs">
+        <button 
+          class="tab-button" 
+          [class.active]="showLogin"
+          (click)="showLogin = true">
+          Login
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="!showLogin"
+          (click)="showLogin = false">
+          Register
+        </button>
+      </div>
+
+      <div class="auth-component-wrapper">
+        <app-login *ngIf="showLogin"></app-login>
+        <app-register *ngIf="!showLogin"></app-register>
+      </div>
+    </div>
+  </div>
+</div>
+

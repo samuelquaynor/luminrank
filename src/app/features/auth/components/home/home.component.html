@@ -44,26 +44,21 @@
         >
           Admin Panel
         </button>
-        <button class="btn btn-outline" routerLink="/profile">
-          View Profile
-        </button>
         <button class="btn btn-outline" (click)="logout()">
           Sign Out
         </button>
       </div>
     </div>
 
-    <div class="admin-only-content" *ngIf="(user$ | async)?.role === 'ADMIN'">
-      <h3>Admin Features</h3>
-      <p>This content is only visible to admin users.</p>
-      <div class="admin-actions-section">
-        <button class="btn btn-primary" routerLink="/users">
-          Manage Users
-        </button>
-        <button class="btn btn-success" routerLink="/admin">
-          Admin Panel
-        </button>
-      </div>
-    </div>
+        <div class="admin-only-content" *ngIf="(user$ | async)?.role === 'ADMIN'">
+          <h3>Admin Features</h3>
+          <p>This content is only visible to admin users.</p>
+          <div class="admin-actions-section">
+            <button class="btn btn-success" routerLink="/admin">
+              Admin Panel
+            </button>
+          </div>
+        </div>
+
   </div>
 </div>

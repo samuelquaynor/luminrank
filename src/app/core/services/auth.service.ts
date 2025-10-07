@@ -1,196 +1,278 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError, delay } from 'rxjs';
+import { Observable, from, throwError, of } from 'rxjs';
+import { map, catchError, switchMap } from 'rxjs/operators';
+import { createClient, SupabaseClient, AuthResponse as SupabaseAuthResponse, User as SupabaseUser } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
+
 import { User, UserRole, LoginCredentials, RegisterData, AuthResponse } from '../models/user.model';
 import { StorageService } from './storage.service';
 
-/**
- * Authentication Service
- * 
- * This service simulates backend authentication for development purposes.
- * In production, this would be replaced with HTTP calls to your backend API.
- * 
- * The backend would:
- * - Verify user credentials
- * - Generate and return JWT tokens
- * - Handle user registration
- * - Manage user sessions
- */
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private storageService: StorageService) {}
+  private supabase: SupabaseClient;
 
-  // Mock user database - simplified for auth purposes
-  private mockUsers: User[] = [
-    {
-      id: '1',
-      email: 'admin@example.com',
-      name: 'Admin User',
-      role: UserRole.ADMIN,
-      createdAt: new Date('2024-01-01'),
-      lastLoginAt: new Date()
-    },
-    {
-      id: '2',
-      email: 'user@example.com',
-      name: 'Regular User',
-      role: UserRole.USER,
-      createdAt: new Date('2024-01-01'),
-      lastLoginAt: new Date()
-    },
-    {
-      id: '3',
-      email: 'test@example.com',
-      name: 'Test User',
-      role: UserRole.USER,
-      createdAt: new Date('2024-01-01'),
-      lastLoginAt: new Date()
-    }
-  ];
-
-  // Mock passwords (in real app, these would be hashed)
-  private mockPasswords: { [email: string]: string } = {
-    'admin@example.com': 'admin123',
-    'user@example.com': 'user123',
-    'test@example.com': 'test123'
-  };
-
-  login(credentials: LoginCredentials): Observable<AuthResponse> {
-    return new Observable(observer => {
-      // Simulate API delay
-      setTimeout(() => {
-        const user = this.mockUsers.find(u => u.email === credentials.email);
-        const password = this.mockPasswords[credentials.email];
-
-        if (!user || password !== credentials.password) {
-          observer.error({
-            message: 'Invalid email or password',
-            status: 401,
-            timestamp: new Date().toISOString()
-          });
-          return;
-        }
-
-        // Update last login
-        user.lastLoginAt = new Date();
-
-        // In a real application, this would be an HTTP request to your backend:
-        // return this.http.post<AuthResponse>('/api/auth/login', credentials);
-        // The backend would return a JWT token that you would store and use
-        
-        // For development/testing, we simulate receiving a token from the backend
-        const token = this.simulateBackendToken(user);
-
-        observer.next({
-          user,
-          token,
-          expiresIn: 3600 // 1 hour
-        });
-        observer.complete();
-      }, 1000); // Simulate network delay
-    });
-  }
-
-  register(registerData: RegisterData): Observable<AuthResponse> {
-    return new Observable(observer => {
-      // Simulate API delay
-      setTimeout(() => {
-        // Check if user already exists
-        const existingUser = this.mockUsers.find(u => u.email === registerData.email);
-        if (existingUser) {
-          observer.error({
-            message: 'User with this email already exists',
-            status: 409,
-            timestamp: new Date().toISOString()
-          });
-          return;
-        }
-
-        // Create new user
-        const newUser: User = {
-          id: (this.mockUsers.length + 1).toString(),
-          email: registerData.email,
-          name: registerData.name,
-          role: UserRole.USER, // Default role
-          createdAt: new Date(),
-          lastLoginAt: new Date()
-        };
-
-        // Add to mock database
-        this.mockUsers.push(newUser);
-        this.mockPasswords[registerData.email] = registerData.password;
-
-        // In a real application, this would be an HTTP request to your backend:
-        // return this.http.post<AuthResponse>('/api/auth/register', registerData);
-        
-        // For development/testing, we simulate receiving a token from the backend
-        const token = this.simulateBackendToken(newUser);
-
-        observer.next({
-          user: newUser,
-          token,
-          expiresIn: 3600 // 1 hour
-        });
-        observer.complete();
-      }, 1000); // Simulate network delay
-    });
-  }
-
-  logout(): Observable<void> {
-    return of(undefined).pipe(delay(500));
-  }
-
-  getCurrentUser(token: string): Observable<User | null> {
-    return new Observable(observer => {
-      setTimeout(() => {
-        try {
-          // Use the storage service's proper JWT decoding
-          const payload = this.storageService.decodeToken(token);
-          if (!payload) {
-            observer.next(null);
-            observer.complete();
-            return;
-          }
-
-          const user = this.mockUsers.find(u => u.id === payload.sub);
-          observer.next(user || null);
-          observer.complete();
-        } catch (error) {
-          observer.next(null);
-          observer.complete();
-        }
-      }, 300);
-    });
+  constructor(private storageService: StorageService) {
+    this.supabase = createClient(
+      environment.supabaseUrl,
+      environment.supabaseAnonKey
+    );
   }
 
   /**
-   * Simulates receiving a JWT token from the backend
-   * In production, this would be replaced with actual HTTP calls to your backend API
-   * The backend would generate and return the JWT token
+   * Login with email and password using Supabase Auth
    */
-  private simulateBackendToken(user: User): string {
-    // This simulates what your backend would return
-    // In reality, your backend would:
-    // 1. Verify the user credentials
-    // 2. Generate a cryptographically signed JWT token
-    // 3. Return the token in the response
-    
-    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 3600 // 1 hour
-    };
-    
-    const payloadB64 = btoa(JSON.stringify(payload));
-    const signature = 'mock-signature'; // Backend would provide real cryptographic signature
-    
-    return `${header}.${payloadB64}.${signature}`;
+  login(credentials: LoginCredentials): Observable<AuthResponse> {
+    return from(
+      this.supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password
+      })
+    ).pipe(
+      switchMap((response: SupabaseAuthResponse) => {
+        if (response.error) {
+          return throwError(() => ({
+            message: response.error.message || 'Login failed',
+            status: 401,
+            timestamp: new Date().toISOString()
+          }));
+        }
+
+        if (!response.data.user) {
+          return throwError(() => ({
+            message: 'No user data received',
+            status: 401,
+            timestamp: new Date().toISOString()
+          }));
+        }
+
+        // Get user profile from our profiles table
+        return this.getUserProfile(response.data.user.id).pipe(
+          map((profile) => ({
+            user: profile,
+            token: response.data.session?.access_token || '',
+            expiresIn: response.data.session?.expires_in || 3600
+          }))
+        );
+      }),
+      catchError((error) => {
+        if (error.status) {
+          return throwError(() => error);
+        }
+        return throwError(() => ({
+          message: error.message || 'Login failed',
+          status: 401,
+          timestamp: new Date().toISOString()
+        }));
+      })
+    );
   }
 
+  /**
+   * Register a new user using Supabase Auth
+   */
+  register(registerData: RegisterData): Observable<AuthResponse> {
+    return from(
+      this.supabase.auth.signUp({
+        email: registerData.email,
+        password: registerData.password,
+        options: {
+          data: {
+            name: registerData.name
+          }
+        }
+      })
+    ).pipe(
+      switchMap((response: SupabaseAuthResponse) => {
+        if (response.error) {
+          return throwError(() => ({
+            message: response.error.message || 'Registration failed',
+            status: 409,
+            timestamp: new Date().toISOString()
+          }));
+        }
+
+        if (!response.data.user) {
+          return throwError(() => ({
+            message: 'No user data received',
+            status: 409,
+            timestamp: new Date().toISOString()
+          }));
+        }
+
+        // The user profile will be created automatically by our database trigger
+        // Get the created profile
+        return this.getUserProfile(response.data.user.id).pipe(
+          map((profile) => ({
+            user: profile,
+            token: response.data.session?.access_token || '',
+            expiresIn: response.data.session?.expires_in || 3600
+          }))
+        );
+      }),
+      catchError((error) => {
+        if (error.status) {
+          return throwError(() => error);
+        }
+        return throwError(() => ({
+          message: error.message || 'Registration failed',
+          status: 409,
+          timestamp: new Date().toISOString()
+        }));
+      })
+    );
+  }
+
+  /**
+   * Logout using Supabase Auth
+   */
+  logout(): Observable<void> {
+    return from(this.supabase.auth.signOut()).pipe(
+      map(() => undefined),
+      catchError((error) => {
+        // Even if logout fails on server, we should still clear local state
+        console.warn('Logout error:', error);
+        return of(undefined);
+      })
+    );
+  }
+
+  /**
+   * Get current user from Supabase session
+   */
+  getCurrentUser(token?: string): Observable<User | null> {
+    return from(this.supabase.auth.getSession()).pipe(
+      switchMap(({ data: { session }, error }) => {
+        if (error) {
+          console.error('Session error:', error);
+          return of(null);
+        }
+
+        if (!session?.user) {
+          return of(null);
+        }
+
+        return this.getUserProfile(session.user.id);
+      }),
+      catchError((error) => {
+        console.error('Get current user error:', error);
+        return of(null);
+      })
+    );
+  }
+
+  /**
+   * Get user profile from our profiles table
+   */
+  private getUserProfile(userId: string): Observable<User> {
+    return from(
+      this.supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) {
+          throw error;
+        }
+
+        if (!data) {
+          throw new Error('Profile not found');
+        }
+
+        // Map Supabase profile to our User interface
+        return {
+          id: data.id,
+          email: data.email,
+          name: data.name,
+          role: data.role as UserRole,
+          createdAt: new Date(data.created_at),
+          lastLoginAt: data.last_login_at ? new Date(data.last_login_at) : null
+        };
+      }),
+      catchError((error) => {
+        console.error('Get profile error:', error);
+        // Return a default user if profile doesn't exist
+        return of({
+          id: userId,
+          email: '',
+          name: 'Unknown User',
+          role: UserRole.USER,
+          createdAt: new Date(),
+          lastLoginAt: null
+        });
+      })
+    );
+  }
+
+  /**
+   * Update user profile in Supabase
+   */
+  updateProfile(userId: string, updates: Partial<User>): Observable<User> {
+    const supabaseUpdates: any = {};
+    
+    if (updates.name) supabaseUpdates.name = updates.name;
+    if (updates.role) supabaseUpdates.role = updates.role;
+    if (updates.lastLoginAt) supabaseUpdates.last_login_at = updates.lastLoginAt.toISOString();
+
+    return from(
+      this.supabase
+        .from('profiles')
+        .update(supabaseUpdates)
+        .eq('id', userId)
+        .select()
+        .single()
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) {
+          throw error;
+        }
+
+        return {
+          id: data.id,
+          email: data.email,
+          name: data.name,
+          role: data.role as UserRole,
+          createdAt: new Date(data.created_at),
+          lastLoginAt: data.last_login_at ? new Date(data.last_login_at) : null
+        };
+      }),
+      catchError((error) => {
+        console.error('Update profile error:', error);
+        return throwError(() => ({
+          message: error.message || 'Failed to update profile',
+          status: 500,
+          timestamp: new Date().toISOString()
+        }));
+      })
+    );
+  }
+
+  /**
+   * Get Supabase client for direct access (if needed)
+   */
+  getSupabaseClient(): SupabaseClient {
+    return this.supabase;
+  }
+
+  /**
+   * Listen to auth state changes
+   */
+  onAuthStateChange(callback: (user: User | null) => void): () => void {
+    return this.supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        try {
+          const user = await this.getUserProfile(session.user.id).toPromise();
+          callback(user || null);
+        } catch (error) {
+          console.error('Auth state change error:', error);
+          callback(null);
+        }
+      } else {
+        callback(null);
+      }
+    }).data.subscription.unsubscribe;
+  }
 }

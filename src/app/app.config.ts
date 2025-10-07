@@ -10,7 +10,6 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { routes } from './app.routes';
 import { appReducers } from './store/app.state';
 import { AuthEffects } from './features/auth/store/auth.effects';
-import { UserEffects } from './features/user/store/user.effects';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 
@@ -24,7 +23,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, errorInterceptor])
     ),
     provideStore(appReducers),
-    provideEffects([AuthEffects, UserEffects]),
+        provideEffects([AuthEffects]),
     provideRouterStore(),
     provideStoreDevtools({
       maxAge: 25,

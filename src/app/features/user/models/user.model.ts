@@ -9,51 +9,21 @@ export interface User {
   name: string;
   role: UserRole;
   createdAt: Date;
-  lastLoginAt: Date;
+  lastLoginAt: Date | null;
   isActive?: boolean;
-  profile?: UserProfile;
-}
-
-export interface UserProfile {
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  phone?: string;
-  address?: UserAddress;
-  preferences?: UserPreferences;
-}
-
-export interface UserAddress {
-  street?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
-  country?: string;
-}
-
-export interface UserPreferences {
-  theme: 'light' | 'dark' | 'auto';
-  language: string;
-  notifications: {
-    email: boolean;
-    push: boolean;
-    sms: boolean;
-  };
 }
 
 export interface CreateUserData {
   email: string;
   name: string;
-  password: string;
   role?: UserRole;
 }
 
 export interface UpdateUserData {
-  name?: string;
   email?: string;
+  name?: string;
   role?: UserRole;
   isActive?: boolean;
-  profile?: Partial<UserProfile>;
 }
 
 export interface UserListResponse {
@@ -64,9 +34,11 @@ export interface UserListResponse {
 }
 
 export interface UserState {
-  currentUser: User | null;
   users: User[];
+  selectedUser: User | null;
   loading: boolean;
   error: string | null;
-  selectedUser: User | null;
+  searchTerm: string;
+  currentPage: number;
+  totalCount: number;
 }

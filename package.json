@@ -38,6 +38,7 @@
     "@ngrx/router-store": "^20.0.1",
     "@ngrx/store": "^20.0.1",
     "@ngrx/store-devtools": "^20.0.1",
+    "@supabase/supabase-js": "^2.74.0",
     "cypress": "^15.3.0",
     "express": "^5.1.0",
     "jwt-decode": "^4.0.0",

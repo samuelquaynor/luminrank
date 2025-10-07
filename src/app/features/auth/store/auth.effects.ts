@@ -37,7 +37,7 @@ export class AuthEffects {
         ofType(AuthActions.loginSuccess),
         tap(({ response }) => {
           this.storageService.saveToken(response.token);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         })
       ),
     { dispatch: false }
@@ -63,7 +63,7 @@ export class AuthEffects {
         ofType(AuthActions.registerSuccess),
         tap(({ response }) => {
           this.storageService.saveToken(response.token);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         })
       ),
     { dispatch: false }
@@ -89,7 +89,7 @@ export class AuthEffects {
         ofType(AuthActions.logoutSuccess),
         tap(() => {
           this.storageService.removeToken();
-          this.router.navigate(['/login']);
+          this.router.navigate(['/']);
         })
       ),
     { dispatch: false }

@@ -1,0 +1,56 @@
+<div class="home-page">
+  <nav class="navbar">
+    <div class="nav-content">
+      <h1 class="logo">LuminRank</h1>
+      <div class="nav-buttons">
+        <ng-container *ngIf="isAuthenticated$ | async; else notAuthenticated">
+          <button class="btn btn-outline" routerLink="/dashboard">Dashboard</button>
+          <button class="btn btn-secondary" (click)="logout()">Logout</button>
+        </ng-container>
+        <ng-template #notAuthenticated>
+          <button class="btn btn-primary" routerLink="/auth">Get Started</button>
+        </ng-template>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section for Non-Authenticated Users -->
+  <div class="hero-section" *ngIf="!(isAuthenticated$ | async)">
+    <div class="hero-content">
+      <h1 class="hero-title">Welcome to LuminRank</h1>
+      <p class="hero-subtitle">Rank and illuminate your content with powerful analytics</p>
+      <button class="btn btn-hero" routerLink="/auth">Start Free Trial</button>
+    </div>
+  </div>
+
+  <!-- User Dashboard for Authenticated Users -->
+  <div class="home-content" *ngIf="(isAuthenticated$ | async) && (user$ | async) as user">
+    <div class="welcome-card">
+      <h2>Welcome back, {{user.name}}!</h2>
+      <p>You're successfully logged in</p>
+    </div>
+
+    <div class="user-card">
+      <h3>Your Profile</h3>
+      <div class="user-info">
+        <div class="info-row">
+          <span class="label">Email:</span>
+          <span class="value">{{user.email}}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Role:</span>
+          <span class="value badge" [class.admin]="user.role === 'ADMIN'">
+            {{user.role}}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card" *ngIf="user.role === 'ADMIN'">
+      <h3>Admin Access</h3>
+      <p>You have administrator privileges</p>
+      <button class="btn btn-primary" routerLink="/admin">Go to Admin Panel</button>
+    </div>
+  </div>
+</div>
+
