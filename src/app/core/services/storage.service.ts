@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { JwtPayload as CustomJwtPayload } from '../models/auth.model';
 
@@ -7,23 +8,33 @@ import { JwtPayload as CustomJwtPayload } from '../models/auth.model';
  * 
  * Handles JWT token storage and validation.
  * Designed to work with JWT tokens received from the backend.
+ * SSR-compatible: checks for browser environment before accessing localStorage.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
   private readonly TOKEN_KEY = 'luminrank_auth_token';
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   saveToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    if (this.isBrowser) {
+      localStorage.setItem(this.TOKEN_KEY, token);
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    if (this.isBrowser) {
+      return localStorage.getItem(this.TOKEN_KEY);
+    }
+    return null;
   }
 
   removeToken(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
+    if (this.isBrowser) {
+      localStorage.removeItem(this.TOKEN_KEY);
+    }
   }
 
   isTokenExpired(token: string): boolean {
