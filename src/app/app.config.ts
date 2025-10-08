@@ -10,8 +10,10 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { routes } from './app.routes';
 import { appReducers } from './store/app.state';
 import { AuthEffects } from './features/auth/store/auth.effects';
+import { LeagueEffects } from './features/leagues/store/league.effects';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { provideSupabase } from './core/providers/supabase.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,11 +25,12 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, errorInterceptor])
     ),
     provideStore(appReducers),
-        provideEffects([AuthEffects]),
+    provideEffects([AuthEffects, LeagueEffects]),
     provideRouterStore(),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: false, // Set to true in production
-    })
+    }),
+    provideSupabase()
   ]
 };

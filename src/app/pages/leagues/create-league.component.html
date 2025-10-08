@@ -1,0 +1,193 @@
+<div class="create-league-page">
+  <app-header></app-header>
+
+  <div class="create-container">
+    <div class="create-card">
+      <div class="create-header">
+        <h1>Create a League</h1>
+        <p>Set up your league and invite your friends to compete</p>
+      </div>
+
+      <form [formGroup]="createForm" (ngSubmit)="onSubmit()" data-testid="create-league-form">
+        <!-- Basic Information -->
+        <div class="form-section">
+          <h3>Basic Information</h3>
+          
+          <div class="form-group">
+            <label for="name">League Name *</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              placeholder="e.g., Friday Night GamePigeon"
+              class="form-control"
+              [class.error]="name?.invalid && name?.touched"
+              data-testid="league-name-input"
+            />
+            @if (name?.invalid && name?.touched) {
+              <span class="error-message">
+                @if (name?.errors?.['required']) {
+                  League name is required
+                }
+                @if (name?.errors?.['minlength']) {
+                  Name must be at least 3 characters
+                }
+                @if (name?.errors?.['maxlength']) {
+                  Name must be less than 50 characters
+                }
+              </span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              placeholder="What's this league about?"
+              class="form-control"
+              rows="3"
+              [class.error]="description?.invalid && description?.touched"
+              data-testid="league-description-input"
+            ></textarea>
+            @if (description?.errors?.['maxlength']) {
+              <span class="error-message">
+                Description must be less than 200 characters
+              </span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="gameType">Game Type *</label>
+            <select
+              id="gameType"
+              formControlName="gameType"
+              class="form-control"
+              [class.error]="gameType?.invalid && gameType?.touched"
+              data-testid="league-gametype-select"
+            >
+              <option value="">Select a game type</option>
+              @for (type of gameTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+            @if (gameType?.invalid && gameType?.touched) {
+              <span class="error-message">
+                Please select a game type
+              </span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="isPrivate" />
+              <span>Make this league private</span>
+            </label>
+            <p class="field-hint">Private leagues won't appear in public listings</p>
+          </div>
+        </div>
+
+        <!-- Advanced Settings -->
+        <div class="form-section">
+          <div class="section-header" (click)="toggleAdvanced()">
+            <h3>Advanced Settings</h3>
+            <span class="toggle-icon">{{ showAdvanced ? '−' : '+' }}</span>
+          </div>
+
+          @if (showAdvanced) {
+            <div class="advanced-content">
+              <div class="form-group">
+                <label>Scoring System</label>
+                <div class="radio-group">
+                  @for (system of scoringSystems; track system.value) {
+                    <label class="radio-label">
+                      <input 
+                        type="radio" 
+                        formControlName="scoringSystem" 
+                        [value]="system.value"
+                      />
+                      <div class="radio-content">
+                        <span class="radio-title">{{ system.label }}</span>
+                        <span class="radio-description">{{ system.description }}</span>
+                      </div>
+                    </label>
+                  }
+                </div>
+              </div>
+
+              @if (createForm.value.scoringSystem === 'points') {
+                <div class="points-config">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="pointsPerWin">Points per Win</label>
+                      <input
+                        type="number"
+                        id="pointsPerWin"
+                        formControlName="pointsPerWin"
+                        class="form-control"
+                        min="1"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="pointsPerDraw">Points per Draw</label>
+                      <input
+                        type="number"
+                        id="pointsPerDraw"
+                        formControlName="pointsPerDraw"
+                        class="form-control"
+                        min="0"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="pointsPerLoss">Points per Loss</label>
+                      <input
+                        type="number"
+                        id="pointsPerLoss"
+                        formControlName="pointsPerLoss"
+                        class="form-control"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                </div>
+              }
+
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="allowDraws" />
+                  <span>Allow draw results</span>
+                </label>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (error$ | async; as error) {
+          <div class="form-error">
+            {{ error }}
+          </div>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" routerLink="/leagues" data-testid="cancel-create-button">Cancel</button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="createForm.invalid || (loading$ | async)"
+            data-testid="submit-create-league-button"
+          >
+            @if (loading$ | async) {
+              <span class="btn-spinner"></span>
+              Creating...
+            } @else {
+              Create League
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

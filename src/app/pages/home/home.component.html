@@ -13,7 +13,7 @@
         and visualize leaderboards—all automatically.
       </p>
       <div class="hero-actions">
-        <button class="btn btn-large btn-primary" routerLink="/auth">Start Your League</button>
+        <button class="btn btn-large btn-primary" routerLink="/auth" data-testid="start-league-button">Start Your League</button>
       </div>
       <div class="hero-features">
         <div class="feature">
@@ -44,7 +44,7 @@
   <div class="dashboard-section">
     <div class="dashboard-content">
       <div class="welcome-header">
-        <h1>Welcome back@if (user.name) {<span>, {{user.name}}</span>}!</h1>
+        <h1 data-testid="welcome-message">Welcome back@if (user.name) {<span>, {{user.name}}</span>}!</h1>
         <p>Ready to track some matches?</p>
       </div>
 
@@ -66,7 +66,10 @@
       <div class="action-card">
         <h3>Get Started</h3>
         <p>Create your first league or join an existing one to start tracking matches.</p>
-        <button class="btn btn-primary">Create League</button>
+        <div class="action-buttons">
+          <button class="btn btn-primary" routerLink="/leagues/create" data-testid="create-league-button">Create League</button>
+          <button class="btn btn-outline" routerLink="/leagues" data-testid="view-leagues-button">View My Leagues</button>
+        </div>
       </div>
     </div>
   </div>

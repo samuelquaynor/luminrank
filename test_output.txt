@@ -1,0 +1,21 @@
+
+> luminrank@0.0.0 test
+> ng test --browsers=ChromeHeadless --watch=false
+
+[32m✔[0m [33mConsole Ninja[0m extension is connected to [33mAngular[0m, see [36mhttps://tinyurl.com/2vt8jxzw[0m
+---------------------------------
+- Root directory:  /Users/samuelquaynor/Documents/luminrank
+- Working directory:  /Users/samuelquaynor/Documents/luminrank
+- Files: .env
+- Environment: none
+- Environment files: 
+ ✔ /Users/samuelquaynor/Documents/luminrank/.env
+- Environment variables: NG_APP 
+ ✔ NG_APP_SUPABASE_ANON_KEY
+ ✔ NG_APP_SUPABASE_URL
+---------------------------------
+
+❯ Building...
+✔ Building...
+Application bundle generation failed. [2.393 seconds] - 2025-10-08T12:03:22.665Z
+

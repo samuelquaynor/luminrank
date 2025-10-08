@@ -1,0 +1,54 @@
+<div class="leagues-page">
+  <app-header></app-header>
+
+  <div class="leagues-container">
+    <div class="leagues-header">
+      <h1>My Leagues</h1>
+      <div class="header-actions">
+        <button class="btn btn-outline" routerLink="/leagues/join">Join League</button>
+        <button class="btn btn-primary" routerLink="/leagues/create">Create League</button>
+      </div>
+    </div>
+
+    @if (loading$ | async) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading leagues...</p>
+      </div>
+    }
+
+    @if (error$ | async; as error) {
+      <div class="error-state">
+        <p>{{ error }}</p>
+        <button class="btn btn-outline" (click)="ngOnInit()">Retry</button>
+      </div>
+    }
+
+    @if ((leagues$ | async); as leagues) {
+      @if (leagues.length === 0 && !(loading$ | async)) {
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
+          <h2>No Leagues Yet</h2>
+          <p>Create your first league or join an existing one to get started.</p>
+          <div class="empty-actions">
+            <button class="btn btn-primary" routerLink="/leagues/create">Create League</button>
+            <button class="btn btn-outline" routerLink="/leagues/join">Join League</button>
+          </div>
+        </div>
+      } @else {
+        <div class="leagues-grid">
+          @for (league of leagues; track league.id) {
+            <app-league-card 
+              [league]="league"
+              [memberCount]="0"
+              [creatorName]="'You'">
+            </app-league-card>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>
+

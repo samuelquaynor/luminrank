@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable, map, take } from 'rxjs';
+import { Observable, map, take, filter, timeout, catchError, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import * as AuthSelectors from '../../features/auth/store/auth.selectors';
+import * as AuthActions from '../../features/auth/store/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,22 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> {
-    return this.store.select(AuthSelectors.selectIsAuthenticated).pipe(
+    // First, trigger auth check if not already done
+    this.store.dispatch(AuthActions.checkAuth());
+    
+    // Wait for loading to complete, then check auth status
+    return this.store.select(AuthSelectors.selectIsLoading).pipe(
+      filter(loading => !loading), // Wait until loading is false
       take(1),
-      map(isAuthenticated => {
+      timeout(5000), // Timeout after 5 seconds
+      catchError(() => of(false)), // If timeout, treat as not authenticated
+      map(() => {
+        // Now check if authenticated
+        let isAuthenticated = false;
+        this.store.select(AuthSelectors.selectIsAuthenticated).pipe(take(1)).subscribe(auth => {
+          isAuthenticated = auth;
+        });
+        
         if (isAuthenticated) {
           return true;
         } else {

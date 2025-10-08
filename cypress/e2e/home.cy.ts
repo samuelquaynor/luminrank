@@ -15,15 +15,15 @@ describe('Home Page', () => {
   });
 
   it('should display user dashboard for authenticated users', () => {
-    cy.createTestUser().then((user) => {
-      cy.visit('/auth');
-      cy.get('input[formControlName="email"]').type(user.email);
-      cy.get('input[formControlName="password"]').type(user.password);
-      cy.get('button[type="submit"]').click();
-      
-      cy.url().should('eq', Cypress.config().baseUrl + '/', { timeout: 10000 });
-      cy.contains('Welcome back').should('be.visible');
-      cy.contains('button', 'Sign Out').should('be.visible');
-    });
+    cy.createAndLoginTestUser();
+    
+    // Should be on home page
+    cy.url().should('eq', Cypress.config().baseUrl + '/', { timeout: 10000 });
+    cy.get('[data-testid="welcome-message"]').should('be.visible');
+    cy.contains('button', 'Sign Out').should('be.visible');
+    
+    // Should see authenticated user features
+    cy.get('[data-testid="create-league-button"]').should('be.visible');
+    cy.get('[data-testid="view-leagues-button"]').should('be.visible');
   });
 });

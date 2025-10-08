@@ -1,7 +1,7 @@
 <div class="auth-container">
   <div class="auth-card">
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form" data-testid="login-form">
       <div class="form-group">
         <label for="email">Email</label>
         <input
@@ -11,6 +11,7 @@
           placeholder="Enter your email"
           class="form-control"
           [class.is-invalid]="isFieldInvalid('email')"
+          data-testid="login-email-input"
         />
         @if (isFieldInvalid('email')) {
           <div class="error-message invalid-feedback">
@@ -33,6 +34,7 @@
           placeholder="Enter your password"
           class="form-control"
           [class.is-invalid]="isFieldInvalid('password')"
+          data-testid="login-password-input"
         />
         @if (isFieldInvalid('password')) {
           <div class="error-message invalid-feedback">
@@ -56,6 +58,7 @@
         type="submit"
         class="btn btn-primary btn-block"
         [disabled]="loginForm.invalid || (isLoading$ | async)"
+        data-testid="login-submit-button"
       >
         @if (isLoading$ | async) {
           <span class="spinner"></span>

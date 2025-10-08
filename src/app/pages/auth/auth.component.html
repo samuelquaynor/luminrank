@@ -17,13 +17,15 @@
       <button 
         class="tab-button" 
         [class.active]="showLogin"
-        (click)="showLogin = true">
+        (click)="showLogin = true"
+        data-testid="signin-tab">
         Sign In
       </button>
       <button 
         class="tab-button" 
         [class.active]="!showLogin"
-        (click)="showLogin = false">
+        (click)="showLogin = false"
+        data-testid="signup-tab">
         Sign Up
       </button>
     </div>

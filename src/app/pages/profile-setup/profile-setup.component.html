@@ -13,7 +13,7 @@
     </div>
 
     <!-- Profile Form -->
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="setup-form">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="setup-form" data-testid="profile-setup-form">
       <div class="form-group">
         <label for="name">What should we call you?</label>
         <input
@@ -24,6 +24,7 @@
           class="form-control"
           [class.is-invalid]="isFieldInvalid('name')"
           autofocus
+          data-testid="profile-name-input"
         />
         @if (isFieldInvalid('name')) {
           <div class="error-message">
@@ -48,6 +49,7 @@
           type="submit"
           class="btn btn-primary btn-block"
           [disabled]="isLoading"
+          data-testid="profile-continue-button"
         >
           @if (isLoading) {
             <span class="spinner"></span>

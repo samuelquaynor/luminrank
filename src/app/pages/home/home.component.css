@@ -383,6 +383,16 @@
   line-height: 1.6;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.action-buttons button {
+  min-width: 150px;
+}
+
 /* Footer */
 .footer {
   border-top: 1px solid #1a1a1a;
@@ -435,6 +445,14 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+
   .btn {
     padding: 10px 20px;
     font-size: 14px;

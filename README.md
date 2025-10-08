@@ -1,261 +1,230 @@
-# LuminRank - NgRx Authentication System
+# LuminRank
 
-A production-ready Angular application with JWT authentication, role-based access control, and comprehensive testing setup using NgRx, Cypress, and Jasmine.
+**Illuminate the Competition**
 
-## Features
+A modern, full-stack sports league management platform built with Angular and Supabase. Create leagues, track matches, manage standings, and compete with friends across multiple games.
 
-- 🔐 JWT-based authentication with email/password
-- 👥 Role-based access control (Admin/User)
-- 🏪 NgRx state management for authentication
-- 🛡️ Route guards for protected and admin-only pages
-- 🔄 HTTP interceptors for automatic token attachment
-- 🧪 Comprehensive unit tests with Jasmine
-- 🌐 End-to-end tests with Cypress
-- 📱 Responsive design with modern UI
-- 🚀 Production-ready architecture
+## ✨ Features
 
-## Project Structure
+### Phase 1: Core League Management ✅ COMPLETE
+- 🏆 **Create & Manage Leagues** - Custom leagues for any game type
+- 👥 **Member Management** - Invite via code or shareable link
+- ⚙️ **Flexible Settings** - Customize scoring systems and rules
+- 🔐 **Secure Access** - Row Level Security with proper permissions
+- 📊 **Real-time Updates** - Instant sync across all members
+- 🎨 **Modern UI** - Dark theme with beautiful, responsive design
+
+### Coming Soon
+- 📅 Phase 2: Match Management
+- 📈 Phase 3: Standings & Statistics
+- 🏅 Phase 4: Achievements & Rewards
+
+## 🚀 Tech Stack
+
+- **Frontend:** Angular 20 (Standalone Components, Zoneless, SSR)
+- **State Management:** NgRx (Actions, Reducers, Effects, Selectors)
+- **Backend:** Supabase (PostgreSQL, Auth, RLS, Real-time)
+- **Testing:** Jasmine, Karma, Cypress, pgTAP
+- **CI/CD:** GitHub Actions
+- **Styling:** Custom CSS with modern design system
+
+## 📁 Project Structure
 
 ```
 src/app/
 ├── core/
-│   ├── guards/           # Route protection guards
-│   ├── interceptors/     # HTTP interceptors
-│   ├── models/          # TypeScript interfaces
-│   └── services/        # Core services
+│   ├── guards/           # Route protection (AuthGuard)
+│   ├── models/           # TypeScript interfaces
+│   ├── providers/        # DI providers (Supabase)
+│   └── services/         # Core services (Storage)
 ├── features/
-│   └── auth/
-│       ├── components/  # Auth-related components
-│       └── store/       # NgRx store (actions, reducer, effects, selectors)
-├── shared/
-│   └── components/      # Reusable components
-└── store/
-    └── app.state.ts     # Root application state
+│   ├── auth/            # Authentication feature
+│   │   ├── components/  # Login, Register
+│   │   └── store/       # Auth NgRx store
+│   └── leagues/         # League management feature
+│       ├── components/  # League UI components
+│       ├── models/      # League interfaces
+│       ├── services/    # League, Member, Settings services
+│       └── store/       # League NgRx store
+├── pages/               # Page components
+│   ├── auth/           # Auth page
+│   ├── home/           # Home page
+│   ├── leagues/        # League pages
+│   └── profile-setup/  # Profile setup
+└── shared/
+    └── components/      # Reusable components (Header, LeagueCard)
 
-cypress/                 # E2E test files
-├── e2e/
-│   ├── auth/           # Authentication test suites
-│   └── role-based-access.cy.ts
-├── fixtures/           # Test data
-└── support/            # Custom commands and configuration
+supabase/
+├── migrations/          # Database migrations
+├── tests/              # pgTAP database tests
+└── config.toml         # Supabase configuration
+
+cypress/
+├── e2e/                # E2E test suites
+└── support/            # Custom commands
+
+docs/                   # 📚 All documentation
 ```
 
-## Getting Started
+## 🏁 Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- npm or yarn
+- Node.js (v22 or higher)
+- npm
+- Docker (for local Supabase)
 
 ### Installation
 
-1. Clone the repository
-2. Install dependencies:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd luminrank
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-### Development
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your Supabase credentials
+   ```
 
-Start the development server:
-```bash
-npm start
-```
+4. **Start Supabase (local development)**
+   ```bash
+   npx supabase start
+   ```
+
+5. **Start the development server**
+   ```bash
+   npm start
+   ```
 
 The application will be available at `http://localhost:4200`
 
-### Testing
+## 🧪 Testing
 
-#### Unit Tests
+### Quick Test Commands
 ```bash
-npm test                 # Run unit tests once
-npm run test:watch      # Run unit tests in watch mode
+# Unit tests (mocked, fast)
+npm test -- --watch=false --exclude="**/*.integration.spec.ts"
+
+# Integration tests (requires Supabase)
+npm test -- --watch=false --include="**/*.integration.spec.ts"
+
+# Database tests
+npx supabase test db
+
+# E2E tests
+npx cypress run
 ```
 
-#### E2E Tests
+### Test Coverage
+- **Database Tests:** 16/16 ✅ (100%)
+- **Unit Tests:** 94/94 ✅ (100%)
+- **Integration Tests:** 14/14 ✅ (100%)
+- **E2E Tests:** 22/22 ✅ (100%)
+
+**Total: 146/146 tests passing (100%)** 🎉
+
+## 📚 Documentation
+
+All project documentation is in the [`docs/`](docs/) directory:
+
+- **[Documentation Index](docs/README.md)** - Start here!
+- **[Backend Logic Plan](docs/BACKEND_LOGIC_PLAN.md)** - Architecture overview
+- **[Implementation Phases](docs/IMPLEMENTATION_PHASES.md)** - Development roadmap
+- **[Phase 1 Complete](docs/PHASE1_COMPLETE.md)** - What's been built
+- **[GitHub Actions Setup](docs/SETUP.md)** - CI/CD configuration
+- **[Secrets Template](docs/SECRETS_TEMPLATE.md)** - Quick secrets reference
+
+## 🚀 Deployment
+
+### CI/CD Pipeline
+- **Unit tests** run on every push/PR
+- **Migrations** auto-deploy to production on `main` push
+- See [docs/SETUP.md](docs/SETUP.md) for configuration
+
+### Manual Deployment
 ```bash
-npm run e2e             # Open Cypress test runner
-npm run e2e:run         # Run E2E tests headlessly
+# Link to your Supabase project
+npx supabase link --project-ref <your-project-ref>
+
+# Deploy migrations
+npx supabase db push
+
+# Build and deploy frontend (configure for your hosting)
+npm run build
 ```
 
-### Building
+## 🎮 How It Works
 
-```bash
-npm run build           # Build for production
-```
+### For League Creators
+1. **Sign up** and complete your profile
+2. **Create a league** with custom settings
+3. **Share the invite link** with friends
+4. **Manage settings** and members
+5. **Track competition** (coming in Phase 2)
 
-## Authentication
+### For League Members
+1. **Click an invite link** or enter invite code
+2. **Auto-join** the league instantly
+3. **View standings** and match history
+4. **Compete** with other members
 
-### Mock Users
+## 🏗️ Architecture Highlights
 
-The application includes pre-configured mock users for testing:
+### Backend (Supabase)
+- **PostgreSQL** with Row Level Security
+- **Auto-generated** invite codes via triggers
+- **Helper functions** to avoid RLS recursion
+- **Comprehensive indexes** for performance
 
-| Email | Password | Role | Description |
-|-------|----------|------|-------------|
-| admin@example.com | admin123 | Admin | Full access including admin panel |
-| user@example.com | user123 | User | Standard user access |
-| test@example.com | test123 | User | Additional test user |
-
-### Authentication Flow
-
-1. **Login**: Users can login with email/password
-2. **Registration**: New users can create accounts (defaults to User role)
-3. **Token Storage**: JWT tokens are stored in localStorage
-4. **Auto-refresh**: Tokens are automatically attached to HTTP requests
-5. **Session Persistence**: Authentication state persists across page reloads
-
-### Route Protection
-
-- **Public Routes**: `/login`, `/register`
-- **Protected Routes**: `/dashboard` (requires authentication)
-- **Admin Routes**: `/admin` (requires Admin role)
-- **Unauthorized**: `/unauthorized` (access denied page)
-
-## State Management
-
-The application uses NgRx for state management with the following structure:
-
-### Auth State
-```typescript
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  loading: boolean;
-  error: string | null;
-  isAuthenticated: boolean;
-}
-```
-
-### Key Actions
-- `login` - Initiate login process
-- `loginSuccess` - Handle successful login
-- `loginFailure` - Handle login errors
-- `register` - Initiate registration process
-- `logout` - Logout user
-- `checkAuth` - Verify authentication on app init
-
-### Selectors
-- `selectIsAuthenticated` - Check if user is logged in
-- `selectUser` - Get current user data
-- `selectUserRole` - Get user role
-- `selectIsAdmin` - Check if user is admin
-- `selectIsLoading` - Check loading state
-- `selectError` - Get error messages
-
-## Testing
-
-### Unit Tests
-
-Comprehensive unit tests cover:
-- Services (Auth, Storage)
-- NgRx store (Actions, Reducer, Effects, Selectors)
-- Guards (Auth, Role-based)
-- Components (Login, Register)
-- HTTP Interceptors
-
-### E2E Tests
-
-Cypress tests cover complete user workflows:
-- Login flow with valid/invalid credentials
-- Registration flow with validation
-- Logout functionality
-- Protected route access
-- Role-based access control
-- Session persistence
-
-### Test Commands
-
-```bash
-# Run all unit tests
-npm test
-
-# Run unit tests in watch mode
-npm run test:watch
-
-# Open Cypress test runner
-npm run e2e
-
-# Run E2E tests headlessly
-npm run e2e:run
-```
-
-## Custom Cypress Commands
-
-The project includes custom Cypress commands for easier testing:
-
-```typescript
-// Login with credentials
-cy.login('user@example.com', 'user123');
-
-// Register new user
-cy.register('newuser@example.com', 'password123', 'New User');
-
-// Logout current user
-cy.logout();
-
-// Check authentication state
-cy.checkAuth();
-```
-
-## Architecture Decisions
-
-### Why NgRx?
-- Predictable state management
-- Excellent debugging with Redux DevTools
-- Time-travel debugging
-- Consistent data flow
-- Great for complex applications
-
-### Why Functional Interceptors?
-- Modern Angular approach
-- Better tree-shaking
-- Cleaner dependency injection
-- Easier testing
-
-### Why Standalone Components?
-- Reduced bundle size
-- Better lazy loading
-- Simplified module system
-- Future-proof architecture
-
-## Production Considerations
+### Frontend (Angular)
+- **Standalone components** for better tree-shaking
+- **Zoneless change detection** for performance
+- **Server-Side Rendering** for SEO
+- **NgRx** for predictable state management
 
 ### Security
-- JWT tokens stored in localStorage (consider httpOnly cookies for production)
-- Input validation on both client and server
-- XSS protection through Angular's built-in sanitization
-- CSRF protection (implement on backend)
+- Row Level Security on all tables
+- Auth guards on protected routes
+- Proper permission checks (creator/admin/member)
+- Secure token storage and management
 
-### Performance
-- Lazy-loaded routes
-- OnPush change detection strategy
-- Tree-shaking enabled
-- Bundle optimization
+## 🎯 Current Status
 
-### Monitoring
-- Redux DevTools for state inspection
-- Error handling with user-friendly messages
-- Loading states for better UX
+**Phase 1: COMPLETE ✅**
+- All core league features implemented
+- 146/146 tests passing (100%) 🎉
+- Production-ready with CI/CD
+- Join-by-link feature bonus!
 
-## Future Enhancements
+**Next: Phase 2 - Match Management**
 
-- [ ] Password reset functionality
-- [ ] Email verification
-- [ ] Refresh token implementation
-- [ ] Social login (Google, GitHub)
-- [ ] Multi-factor authentication
-- [ ] User profile management
-- [ ] Audit logging
-- [ ] API rate limiting
+## 📖 Learn More
 
-## Contributing
+Visit the [`docs/`](docs/) directory for comprehensive documentation:
+- Architecture and design decisions
+- Implementation phases and roadmap
+- CI/CD setup instructions
+- Testing strategies
 
-1. Fork the repository
-2. Create a feature branch
+## 🤝 Contributing
+
+1. Read [`docs/IMPLEMENTATION_PHASES.md`](docs/IMPLEMENTATION_PHASES.md) to understand the roadmap
+2. Create a feature branch from `dev`
 3. Write tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
+4. Ensure all tests pass locally
+5. Submit a PR to `dev` for review
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License.
+MIT License - See LICENSE file for details
+
+---
+
+**Built with ❤️ using Angular and Supabase**
