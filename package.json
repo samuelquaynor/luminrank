@@ -49,6 +49,7 @@
     "@angular/build": "^20.3.4",
     "@angular/cli": "^20.3.4",
     "@angular/compiler-cli": "^20.3.0",
+    "@ngx-env/builder": "^20.1.1",
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
