@@ -5,15 +5,12 @@ export enum UserRole {
 
 export interface User {
   id: string;
-  email: string;
-  name: string;
+  email?: string;
+  name?: string;
   role: UserRole;
   createdAt: Date;
   lastLoginAt: Date | null;
   isActive?: boolean;
-  // Simplified profile fields directly on User
-  firstName?: string;
-  lastName?: string;
   avatarUrl?: string;
   phone?: string;
 }
@@ -26,7 +23,12 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   password: string;
-  name: string;
+}
+
+export interface UpdateUserData {
+  name?: string;
+  avatarUrl?: string;
+  phone?: string;
 }
 
 export interface AuthResponse {

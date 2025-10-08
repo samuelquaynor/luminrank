@@ -22,7 +22,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.login),
       switchMap(({ credentials }) =>
-        this.authService.login(credentials).pipe(
+        this.authService.loginWithEmail(credentials).pipe(
           map((response) => AuthActions.loginSuccess({ response })),
           catchError((error) => of(AuthActions.loginFailure({ error: error.message })))
         )
@@ -48,7 +48,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.register),
       switchMap(({ registerData }) =>
-        this.authService.register(registerData).pipe(
+        this.authService.registerWithEmail(registerData).pipe(
           map((response) => AuthActions.registerSuccess({ response })),
           catchError((error) => of(AuthActions.registerFailure({ error: error.message })))
         )

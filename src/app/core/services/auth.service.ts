@@ -23,7 +23,7 @@ export class AuthService {
   /**
    * Login with email and password using Supabase Auth
    */
-  login(credentials: LoginCredentials): Observable<AuthResponse> {
+  loginWithEmail(credentials: LoginCredentials): Observable<AuthResponse> {
     return from(
       this.supabase.auth.signInWithPassword({
         email: credentials.email,
@@ -70,18 +70,14 @@ export class AuthService {
   }
 
   /**
-   * Register a new user using Supabase Auth
+   * Register a new user with email and password using Supabase Auth
+   * User profile data (name, etc.) can be updated later via updateProfile
    */
-  register(registerData: RegisterData): Observable<AuthResponse> {
+  registerWithEmail(registerData: RegisterData): Observable<AuthResponse> {
     return from(
       this.supabase.auth.signUp({
         email: registerData.email,
-        password: registerData.password,
-        options: {
-          data: {
-            name: registerData.name
-          }
-        }
+        password: registerData.password
       })
     ).pipe(
       switchMap((response: SupabaseAuthResponse) => {

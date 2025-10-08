@@ -22,8 +22,8 @@ describe('Login', () => {
       cy.get('button[type="submit"]').click();
       // Wait for redirect to home page
       cy.url().should('eq', Cypress.config().baseUrl + '/', { timeout: 10000 });
-      // Check for authenticated state - Logout button should be visible
-      cy.contains('button', 'Logout').should('be.visible');
+      // Check for authenticated state - Sign Out button should be visible
+      cy.contains('button', 'Sign Out').should('be.visible');
     });
   });
 });

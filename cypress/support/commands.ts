@@ -17,9 +17,9 @@ declare global {
       
       /**
        * Custom command to register a new user
-       * @example cy.register('newuser@example.com', 'password123', 'New User')
+       * @example cy.register('newuser@example.com', 'password123')
        */
-      register(email: string, password: string, name: string): Chainable<void>;
+      register(email: string, password: string): Chainable<void>;
       
       /**
        * Custom command to check if user is authenticated
@@ -50,10 +50,9 @@ Cypress.Commands.add('logout', () => {
 });
 
 // Register command
-Cypress.Commands.add('register', (email: string, password: string, name: string) => {
+Cypress.Commands.add('register', (email: string, password: string) => {
   cy.visit('/auth');
-  cy.contains('button', 'Register').click();
-  cy.get('input[formControlName="name"]').type(name);
+  cy.contains('button', 'Sign Up').click();
   cy.get('input[formControlName="email"]').type(email);
   cy.get('input[formControlName="password"]').type(password);
   cy.get('input[formControlName="confirmPassword"]').type(password);
@@ -70,13 +69,11 @@ Cypress.Commands.add('createTestUser', () => {
   const timestamp = Date.now();
   const credentials = {
     email: `testuser${timestamp}@example.com`,
-    password: 'TestPassword123!',
-    name: `Test User ${timestamp}`
+    password: 'TestPassword123!'
   };
 
   cy.visit('/auth');
-  cy.contains('button', 'Register').click();
-  cy.get('input[formControlName="name"]').type(credentials.name);
+  cy.contains('button', 'Sign Up').click();
   cy.get('input[formControlName="email"]').type(credentials.email);
   cy.get('input[formControlName="password"]').type(credentials.password);
   cy.get('input[formControlName="confirmPassword"]').type(credentials.password);
@@ -86,7 +83,7 @@ Cypress.Commands.add('createTestUser', () => {
   cy.url().should('eq', Cypress.config().baseUrl + '/', { timeout: 10000 });
   
   // Logout after registration
-  cy.contains('button', 'Logout').click();
+  cy.contains('button', 'Sign Out').click();
   
   // Return credentials for use in tests
   cy.wrap(credentials);

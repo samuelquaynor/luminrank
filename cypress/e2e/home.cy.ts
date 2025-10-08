@@ -13,7 +13,7 @@ describe('Home Page', () => {
 
   it('should show login tab by default on auth page', () => {
     cy.visit('/auth');
-    cy.contains('button', 'Login').should('have.class', 'active');
+    cy.contains('button', 'Sign In').should('have.class', 'active');
   });
 });
 
