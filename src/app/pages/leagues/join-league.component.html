@@ -1,0 +1,65 @@
+<div class="join-league-page">
+  <app-header></app-header>
+
+  <div class="join-container">
+    <div class="join-card">
+      <div class="join-header">
+        <h1>Join a League</h1>
+        <p>Enter the invite code shared by your league creator</p>
+      </div>
+
+      <form [formGroup]="joinForm" (ngSubmit)="onSubmit()" data-testid="join-league-form">
+        <div class="form-group">
+          <label for="code">Invite Code</label>
+          <input
+            type="text"
+            id="code"
+            formControlName="code"
+            placeholder="LMNR-ABC123"
+            class="form-control"
+            [class.error]="code?.invalid && code?.touched"
+            data-testid="invite-code-input"
+          />
+          @if (code?.invalid && code?.touched) {
+            <span class="error-message">
+              @if (code?.errors?.['required']) {
+                Invite code is required
+              }
+              @if (code?.errors?.['pattern']) {
+                Invalid code format (should be LMNR-XXXXXX)
+              }
+            </span>
+          }
+        </div>
+
+        @if (error$ | async; as error) {
+          <div class="form-error">
+            {{ error }}
+          </div>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" routerLink="/leagues" data-testid="cancel-join-button">Cancel</button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="joinForm.invalid || (loading$ | async)"
+            data-testid="submit-join-league-button"
+          >
+            @if (loading$ | async) {
+              <span class="btn-spinner"></span>
+              Joining...
+            } @else {
+              Join League
+            }
+          </button>
+        </div>
+      </form>
+
+      <div class="help-text">
+        <p>Don't have an invite code? Ask a league creator to share their code with you.</p>
+      </div>
+    </div>
+  </div>
+</div>
+

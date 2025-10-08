@@ -1,0 +1,153 @@
+.join-league-page {
+  min-height: 100vh;
+  background: #000;
+}
+
+.join-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.join-card {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 40px;
+}
+
+.join-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.join-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #fff;
+}
+
+.join-header p {
+  font-size: 14px;
+  color: #999;
+  margin: 0;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #fff;
+}
+
+.form-control.error {
+  border-color: #ef4444;
+}
+
+.form-control::placeholder {
+  color: #666;
+  text-transform: none;
+  letter-spacing: normal;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.error-message {
+  display: block;
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 6px;
+}
+
+.form-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+  color: #ef4444;
+  font-size: 14px;
+  text-align: center;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.form-actions button {
+  flex: 1;
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #000;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 8px;
+}
+
+.help-text {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #222;
+  text-align: center;
+}
+
+.help-text p {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .join-container {
+    padding: 40px 16px;
+  }
+
+  .join-card {
+    padding: 24px;
+  }
+
+  .join-header h1 {
+    font-size: 24px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+

@@ -1,0 +1,262 @@
+<div class="league-detail-page">
+  <app-header></app-header>
+
+  @if (loading$ | async) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading league...</p>
+    </div>
+  }
+
+  @if ((league$ | async); as league) {
+    <div class="league-container">
+      <!-- League Header -->
+      <div class="league-header">
+        <div class="header-content">
+          @if (!editingLeague) {
+            <div class="header-main">
+              <h1 data-testid="league-detail-name">{{ league.name }}</h1>
+              <span class="league-status" [class]="'status-' + league.status">{{ league.status }}</span>
+              @if ((currentUserId$ | async); as userId) {
+                @if (isCreator(league, userId)) {
+                  <button class="btn btn-sm btn-outline" (click)="toggleEditLeague()" data-testid="edit-league-button">Edit</button>
+                }
+              }
+            </div>
+            @if (league.description) {
+              <p class="league-description">{{ league.description }}</p>
+            }
+          } @else {
+            <!-- Edit League Form -->
+            @if (leagueForm) {
+              <form [formGroup]="leagueForm" class="edit-league-form">
+                <div class="form-group">
+                  <label for="name">League Name</label>
+                  <input 
+                    type="text" 
+                    id="name"
+                    formControlName="name" 
+                    class="form-control"
+                    data-testid="edit-league-name-input"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea 
+                    id="description"
+                    formControlName="description" 
+                    class="form-control"
+                    rows="3"
+                    data-testid="edit-league-description-input"
+                  ></textarea>
+                </div>
+                <div class="form-actions">
+                  <button type="button" class="btn btn-outline" (click)="cancelEditLeague()" data-testid="cancel-edit-league-button">Cancel</button>
+                  <button type="button" class="btn btn-primary" (click)="saveLeague()" [disabled]="leagueForm.invalid" data-testid="save-league-button">Save Changes</button>
+                </div>
+              </form>
+            }
+          }
+          
+          @if (!editingLeague) {
+            <div class="league-meta">
+              <span class="meta-item">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 10a2 2 0 114 0 2 2 0 01-4 0z"/>
+                </svg>
+                {{ league.gameType }}
+              </span>
+              <span class="meta-item">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                </svg>
+                {{ league.memberCount }} member{{ league.memberCount !== 1 ? 's' : '' }}
+              </span>
+            </div>
+          }
+        </div>
+
+        <div class="header-actions">
+          <div class="invite-code-box">
+            <span class="invite-label">Invite Code</span>
+            <div class="invite-code-group">
+              <span class="invite-code" data-testid="league-invite-code">{{ league.inviteCode }}</span>
+              <button 
+                type="button" 
+                class="btn btn-icon" 
+                (click)="copyInviteCode(league.inviteCode)"
+                [title]="copiedCode ? 'Copied!' : 'Copy code'"
+                data-testid="copy-invite-code-button"
+              >
+                @if (copiedCode) {
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                  </svg>
+                } @else {
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/>
+                    <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+          
+          @if ((currentUserId$ | async); as userId) {
+            @if (!isCreator(league, userId)) {
+              <button class="btn btn-outline btn-danger" (click)="leaveLeague()" data-testid="leave-league-button">Leave League</button>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button 
+          class="tab" 
+          [class.active]="activeTab === 'members'"
+          (click)="switchTab('members')"
+          data-testid="members-tab-button"
+        >
+          Members
+        </button>
+        <button 
+          class="tab" 
+          [class.active]="activeTab === 'settings'"
+          (click)="switchTab('settings')"
+          data-testid="settings-tab-button"
+        >
+          Settings
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        @if (activeTab === 'members') {
+          <div class="members-tab">
+            <div class="tab-header">
+              <h2>League Members</h2>
+            </div>
+
+            @if ((members$ | async); as members) {
+              <div class="members-list">
+                @for (member of members; track member.id) {
+                  <div class="member-item">
+                    <div class="member-info">
+                      <div class="member-avatar">
+                        @if (member.userAvatar) {
+                          <img [src]="member.userAvatar" [alt]="member.userName" />
+                        } @else {
+                          <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                          </svg>
+                        }
+                      </div>
+                      <div class="member-details">
+                        <span class="member-name">{{ member.userName || 'Unknown' }}</span>
+                        <span class="member-email">{{ member.userEmail }}</span>
+                      </div>
+                    </div>
+                    <span class="role-badge" [class]="getRoleBadgeClass(member.role)" data-testid="member-role-badge">
+                      {{ member.role }}
+                    </span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        @if (activeTab === 'settings') {
+          <div class="settings-tab">
+            <div class="tab-header">
+              <h2>League Settings</h2>
+              @if ((currentUserId$ | async); as userId) {
+                @if (isCreator(league, userId)) {
+                  @if (!editingSettings) {
+                    <button class="btn btn-outline" (click)="toggleEditSettings()" data-testid="edit-settings-button">Edit Settings</button>
+                  }
+                }
+              }
+            </div>
+
+            @if (settingsForm) {
+              <form [formGroup]="settingsForm">
+                <div class="settings-grid">
+                  <div class="setting-item">
+                    <label>Scoring System</label>
+                    <select 
+                      formControlName="scoringSystem" 
+                      class="form-control"
+                      [disabled]="!editingSettings"
+                      data-testid="scoring-system-select"
+                    >
+                      <option value="points">Points System</option>
+                      <option value="win_loss">Win/Loss Only</option>
+                      <option value="elo">ELO Rating</option>
+                    </select>
+                  </div>
+
+                  @if (settingsForm.value.scoringSystem === 'points') {
+                    <div class="setting-item">
+                      <label>Points per Win</label>
+                      <input 
+                        type="number" 
+                        formControlName="pointsPerWin" 
+                        class="form-control"
+                        [readonly]="!editingSettings"
+                        data-testid="points-per-win-input"
+                      />
+                    </div>
+
+                    <div class="setting-item">
+                      <label>Points per Draw</label>
+                      <input 
+                        type="number" 
+                        formControlName="pointsPerDraw" 
+                        class="form-control"
+                        [readonly]="!editingSettings"
+                        data-testid="points-per-draw-input"
+                      />
+                    </div>
+
+                    <div class="setting-item">
+                      <label>Points per Loss</label>
+                      <input 
+                        type="number" 
+                        formControlName="pointsPerLoss" 
+                        class="form-control"
+                        [readonly]="!editingSettings"
+                        data-testid="points-per-loss-input"
+                      />
+                    </div>
+                  }
+
+                  <div class="setting-item">
+                    <label class="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        formControlName="allowDraws"
+                        [disabled]="!editingSettings"
+                        data-testid="allow-draws-checkbox"
+                      />
+                      <span>Allow draw results</span>
+                    </label>
+                  </div>
+                </div>
+
+                @if (editingSettings) {
+                  <div class="settings-actions">
+                    <button type="button" class="btn btn-outline" (click)="cancelEditSettings()" data-testid="cancel-settings-button">Cancel</button>
+                    <button type="button" class="btn btn-primary" (click)="saveSettings()" data-testid="save-settings-button">Save Changes</button>
+                  </div>
+                }
+              </form>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+

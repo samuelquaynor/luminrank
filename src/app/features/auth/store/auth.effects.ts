@@ -95,7 +95,10 @@ export class AuthEffects {
         ofType(AuthActions.logoutSuccess),
         tap(() => {
           this.storageService.removeToken();
-          this.router.navigate(['/']);
+          // Only redirect if not already on auth page
+          if (!this.router.url.includes('/auth')) {
+            this.router.navigate(['/']);
+          }
         })
       ),
     { dispatch: false }

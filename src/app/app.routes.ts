@@ -20,6 +20,32 @@ export const routes: Routes = [
       import('./pages/profile-setup/profile-setup.component').then((m) => m.ProfileSetupComponent),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'leagues',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/leagues/leagues-list.component').then((m) => m.LeaguesListComponent),
+      },
+      {
+        path: 'create',
+        loadComponent: () =>
+          import('./pages/leagues/create-league.component').then((m) => m.CreateLeagueComponent),
+      },
+      {
+        path: 'join',
+        loadComponent: () =>
+          import('./pages/leagues/join-league.component').then((m) => m.JoinLeagueComponent),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import('./pages/leagues/league-detail.component').then((m) => m.LeagueDetailComponent),
+      },
+    ],
+  },
   // Admin routes commented out for now
   // {
   //   path: 'dashboard',

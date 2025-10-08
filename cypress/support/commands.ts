@@ -1,62 +1,46 @@
 /// <reference types="cypress" />
 
-declare global {
-  namespace Cypress {
-    interface Chainable {
-      /**
-       * Custom command to login with email and password
-       * @example cy.login('user@example.com', 'user123')
-       */
-      login(email: string, password: string): Chainable<void>;
-      
-      /**
-       * Custom command to logout
-       * @example cy.logout()
-       */
-      logout(): Chainable<void>;
-      
-      /**
-       * Custom command to register a new user
-       * @example cy.register('newuser@example.com', 'password123')
-       */
-      register(email: string, password: string): Chainable<void>;
-      
-      /**
-       * Custom command to check if user is authenticated
-       * @example cy.checkAuth()
-       */
-      checkAuth(): Chainable<void>;
-      
-      /**
-       * Custom command to create a test user with auto-generated credentials
-       * @example cy.createTestUser().then(({ email, password, name }) => { ... })
-       */
-      createTestUser(): Chainable<{ email: string; password: string; name: string }>;
-    }
-  }
-}
-
-// Login command
-Cypress.Commands.add('login', (email: string, password: string) => {
+// Login command - navigates to auth page, logs in, and waits for redirect
+Cypress.Commands.add('loginUser', (email: string, password: string) => {
   cy.visit('/auth');
-  cy.get('input[formControlName="email"]').type(email);
-  cy.get('input[formControlName="password"]').type(password);
-  cy.get('button[type="submit"]').click();
+  cy.get('[data-testid="login-email-input"]').clear().type(email);
+  cy.get('[data-testid="login-password-input"]').clear().type(password);
+  cy.get('[data-testid="login-submit-button"]').click();
+  
+  // Wait for navigation away from auth page
+  cy.url({ timeout: 15000 }).should('not.include', '/auth');
+});
+
+// Register command - navigates to auth page, registers, completes profile setup
+Cypress.Commands.add('registerUser', (email: string, password: string, name: string) => {
+  // Clear any existing auth state
+  cy.clearLocalStorage();
+  cy.visit('/auth');
+  cy.wait(500); // Wait for auth check to complete
+  cy.get('[data-testid="signup-tab"]', { timeout: 10000 }).should('be.visible').click();
+  cy.get('[data-testid="register-email-input"]', { timeout: 5000 }).should('be.visible').type(email);
+  cy.get('[data-testid="register-password-input"]').type(password);
+  cy.get('[data-testid="register-confirm-password-input"]').type(password);
+  cy.get('[data-testid="register-submit-button"]').click();
+  
+  // Wait for redirect to profile setup
+  cy.url({ timeout: 10000 }).should('include', '/profile-setup');
+  
+  // Fill in the name
+  cy.get('[data-testid="profile-name-input"]').type(name);
+  cy.get('[data-testid="profile-continue-button"]').click();
+  
+  // Wait for redirect to home
+  cy.url({ timeout: 10000 }).should('not.include', '/profile-setup');
 });
 
 // Logout command
 Cypress.Commands.add('logout', () => {
-  cy.contains('button', 'Logout').click();
-});
-
-// Register command
-Cypress.Commands.add('register', (email: string, password: string) => {
-  cy.visit('/auth');
-  cy.contains('button', 'Sign Up').click();
-  cy.get('input[formControlName="email"]').type(email);
-  cy.get('input[formControlName="password"]').type(password);
-  cy.get('input[formControlName="confirmPassword"]').type(password);
-  cy.get('button[type="submit"]').click();
+  cy.contains('button', 'Sign Out').click();
+  // Clear localStorage to ensure clean logout
+  cy.clearLocalStorage();
+  // Wait a bit for logout to complete
+  cy.wait(500);
 });
 
 // Check auth command
@@ -64,8 +48,8 @@ Cypress.Commands.add('checkAuth', () => {
   cy.window().its('localStorage').should('have.property', 'luminrank_auth_token');
 });
 
-// Create test user command
-Cypress.Commands.add('createTestUser', () => {
+// Create test user and login - generates unique credentials, registers, and logs in
+Cypress.Commands.add('createAndLoginTestUser', () => {
   const timestamp = Date.now();
   const credentials = {
     email: `testuser${timestamp}@example.com`,
@@ -73,25 +57,11 @@ Cypress.Commands.add('createTestUser', () => {
     name: `Test User ${timestamp}`
   };
 
-  cy.visit('/auth');
-  cy.contains('button', 'Sign Up').click();
-  cy.get('input[formControlName="email"]').type(credentials.email);
-  cy.get('input[formControlName="password"]').type(credentials.password);
-  cy.get('input[formControlName="confirmPassword"]').type(credentials.password);
-  cy.get('button[type="submit"]').click();
+  // Register the user
+  cy.registerUser(credentials.email, credentials.password, credentials.name);
   
-  // Wait for redirect to profile setup
-  cy.url().should('include', '/profile-setup', { timeout: 10000 });
-  
-  // Fill in the name
-  cy.get('input[formControlName="name"]').type(credentials.name);
-  cy.get('button[type="submit"]').click();
-  
-  // Wait for redirect to home
-  cy.url().should('eq', Cypress.config().baseUrl + '/', { timeout: 10000 });
-  
-  // Logout after registration
-  cy.contains('button', 'Sign Out').click();
+  // Verify we're on home page
+  cy.get('[data-testid="welcome-message"]', { timeout: 10000 }).should('be.visible');
   
   // Return credentials for use in tests
   cy.wrap(credentials);
