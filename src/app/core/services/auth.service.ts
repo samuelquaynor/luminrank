@@ -190,11 +190,11 @@ export class AuthService {
       }),
       catchError((error) => {
         console.error('Get profile error:', error);
-        // Return a default user if profile doesn't exist
+        // Return a default user if profile doesn't exist (without a name)
         return of({
           id: userId,
           email: '',
-          name: 'Unknown User',
+          name: undefined,
           role: UserRole.USER,
           createdAt: new Date(),
           lastLoginAt: null
@@ -242,6 +242,25 @@ export class AuthService {
           status: 500,
           timestamp: new Date().toISOString()
         }));
+      })
+    );
+  }
+
+  /**
+   * Update current user's profile
+   */
+  updateUserProfile(updates: { name?: string; avatarUrl?: string; phone?: string }): Observable<User> {
+    return from(this.supabase.auth.getUser()).pipe(
+      switchMap(({ data: { user }, error }) => {
+        if (error || !user) {
+          return throwError(() => ({
+            message: 'User not authenticated',
+            status: 401,
+            timestamp: new Date().toISOString()
+          }));
+        }
+
+        return this.updateProfile(user.id, updates);
       })
     );
   }

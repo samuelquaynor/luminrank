@@ -76,7 +76,7 @@ describe('RoleGuard', () => {
     // Act & Assert
     const result = await firstValueFrom(guard.canActivate(route as any, state));
     expect(result).toBe(false);
-    expect(router.navigate).toHaveBeenCalledWith(['/login'], {
+    expect(router.navigate).toHaveBeenCalledWith(['/auth'], {
       queryParams: { returnUrl: undefined }
     });
   });
@@ -142,7 +142,7 @@ describe('RoleGuard', () => {
     // Act & Assert
     const result = await firstValueFrom(guard.canActivate(route as any, state));
     expect(result).toBe(false);
-    expect(router.navigate).toHaveBeenCalledWith(['/login'], {
+    expect(router.navigate).toHaveBeenCalledWith(['/auth'], {
       queryParams: { returnUrl: undefined }
     });
   });
@@ -159,7 +159,7 @@ describe('RoleGuard', () => {
     // Act & Assert
     const result = await firstValueFrom(guard.canActivate(route as any, state));
     expect(result).toBe(false);
-    expect(router.navigate).toHaveBeenCalledWith(['/login'], {
+    expect(router.navigate).toHaveBeenCalledWith(['/auth'], {
       queryParams: { returnUrl: undefined }
     });
   });

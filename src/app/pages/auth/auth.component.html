@@ -30,8 +30,11 @@
 
     <!-- Auth Forms -->
     <div class="auth-forms">
-      <app-login *ngIf="showLogin"></app-login>
-      <app-register *ngIf="!showLogin"></app-register>
+      @if (showLogin) {
+        <app-login></app-login>
+      } @else {
+        <app-register></app-register>
+      }
     </div>
 
     <!-- Social Auth (Prepared for Google) -->

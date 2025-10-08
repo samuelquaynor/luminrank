@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { User } from '../../core/models/user.model';
 import * as AuthActions from '../../features/auth/store/auth.actions';
 import * as AuthSelectors from '../../features/auth/store/auth.selectors';
@@ -10,7 +11,7 @@ import * as AuthSelectors from '../../features/auth/store/auth.selectors';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, HeaderComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -25,10 +26,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(AuthActions.checkAuth());
-  }
-
-  logout(): void {
-    this.store.dispatch(AuthActions.logout());
   }
 }
 

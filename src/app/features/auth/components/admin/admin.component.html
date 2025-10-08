@@ -17,16 +17,18 @@
       <p>Welcome to the admin panel. You have full administrative privileges.</p>
     </div>
 
-    <div class="admin-stats" *ngIf="user$ | async as user">
-      <div class="stat-card">
-        <h3>Current User</h3>
-        <div class="user-info">
-          <p><strong>Email:</strong> {{ user.email }}</p>
-          <p><strong>Role:</strong> {{ user.role }}</p>
-          <p><strong>ID:</strong> {{ user.id }}</p>
+    @if (user$ | async; as user) {
+      <div class="admin-stats">
+        <div class="stat-card">
+          <h3>Current User</h3>
+          <div class="user-info">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Role:</strong> {{ user.role }}</p>
+            <p><strong>ID:</strong> {{ user.id }}</p>
+          </div>
         </div>
       </div>
-    </div>
+    }
 
     <div class="admin-actions">
       <h3>Administrative Actions</h3>

@@ -15,18 +15,25 @@ export const routes: Routes = [
       import('./pages/auth/auth.component').then((m) => m.AuthComponent),
   },
   {
-    path: 'dashboard',
+    path: 'profile-setup',
     loadComponent: () =>
-      import('./features/auth/components/admin/admin.component').then((m) => m.AdminComponent),
+      import('./pages/profile-setup/profile-setup.component').then((m) => m.ProfileSetupComponent),
     canActivate: [AuthGuard],
   },
-  {
-    path: 'admin',
-    loadComponent: () =>
-      import('./features/auth/components/admin/admin.component').then((m) => m.AdminComponent),
-    canActivate: [RoleGuard],
-    data: { roles: [UserRole.ADMIN] },
-  },
+  // Admin routes commented out for now
+  // {
+  //   path: 'dashboard',
+  //   loadComponent: () =>
+  //     import('./features/auth/components/admin/admin.component').then((m) => m.AdminComponent),
+  //   canActivate: [AuthGuard],
+  // },
+  // {
+  //   path: 'admin',
+  //   loadComponent: () =>
+  //     import('./features/auth/components/admin/admin.component').then((m) => m.AdminComponent),
+  //   canActivate: [RoleGuard],
+  //   data: { roles: [UserRole.ADMIN] },
+  // },
   {
     path: 'unauthorized',
     loadComponent: () =>

@@ -29,11 +29,13 @@ import * as AuthSelectors from '../../store/auth.selectors';
           <p><strong>User ID:</strong> {{ (userId$ | async) }}</p>
         </div>
         
-        <div class="info-card" *ngIf="isAdmin$ | async">
-          <h3>Admin Panel</h3>
-          <p>You have admin privileges!</p>
-          <button class="btn btn-primary" routerLink="/admin">Go to Admin Panel</button>
-        </div>
+        @if (isAdmin$ | async) {
+          <div class="info-card">
+            <h3>Admin Panel</h3>
+            <p>You have admin privileges!</p>
+            <button class="btn btn-primary" routerLink="/admin">Go to Admin Panel</button>
+          </div>
+        }
       </div>
     </div>
   `,

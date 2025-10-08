@@ -46,7 +46,7 @@ describe('AuthGuard', () => {
 
     const result = await firstValueFrom(guard.canActivate({} as any, { url: '/dashboard' } as any));
     expect(result).toBeFalsy();
-    expect(router.navigate).toHaveBeenCalledWith(['/login'], {
+    expect(router.navigate).toHaveBeenCalledWith(['/auth'], {
       queryParams: { returnUrl: '/dashboard' }
     });
   });

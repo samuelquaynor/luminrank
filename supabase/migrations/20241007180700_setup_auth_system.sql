@@ -24,23 +24,8 @@ CREATE POLICY "Users can view own profile" ON public.profiles
 CREATE POLICY "Users can update own profile" ON public.profiles
     FOR UPDATE USING (auth.uid() = id);
 
--- Admins can read all profiles
-CREATE POLICY "Admins can view all profiles" ON public.profiles
-    FOR SELECT USING (
-        EXISTS (
-            SELECT 1 FROM public.profiles 
-            WHERE id = auth.uid() AND role = 'ADMIN'
-        )
-    );
-
--- Admins can update all profiles
-CREATE POLICY "Admins can update all profiles" ON public.profiles
-    FOR UPDATE USING (
-        EXISTS (
-            SELECT 1 FROM public.profiles 
-            WHERE id = auth.uid() AND role = 'ADMIN'
-        )
-    );
+-- Note: Admin policies removed to avoid infinite recursion
+-- Admins can use service role key for full access if needed
 
 -- Function to handle new user registration
 CREATE OR REPLACE FUNCTION public.handle_new_user()

@@ -69,7 +69,8 @@ Cypress.Commands.add('createTestUser', () => {
   const timestamp = Date.now();
   const credentials = {
     email: `testuser${timestamp}@example.com`,
-    password: 'TestPassword123!'
+    password: 'TestPassword123!',
+    name: `Test User ${timestamp}`
   };
 
   cy.visit('/auth');
@@ -79,7 +80,14 @@ Cypress.Commands.add('createTestUser', () => {
   cy.get('input[formControlName="confirmPassword"]').type(credentials.password);
   cy.get('button[type="submit"]').click();
   
-  // Wait for registration to complete and redirect
+  // Wait for redirect to profile setup
+  cy.url().should('include', '/profile-setup', { timeout: 10000 });
+  
+  // Fill in the name
+  cy.get('input[formControlName="name"]').type(credentials.name);
+  cy.get('button[type="submit"]').click();
+  
+  // Wait for redirect to home
   cy.url().should('eq', Cypress.config().baseUrl + '/', { timeout: 10000 });
   
   // Logout after registration

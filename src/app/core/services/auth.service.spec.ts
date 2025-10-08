@@ -32,12 +32,12 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should have login method', () => {
-    expect(service.login).toBeDefined();
+  it('should have loginWithEmail method', () => {
+    expect(service.loginWithEmail).toBeDefined();
   });
 
-  it('should have register method', () => {
-    expect(service.register).toBeDefined();
+  it('should have registerWithEmail method', () => {
+    expect(service.registerWithEmail).toBeDefined();
   });
 
   it('should have logout method', () => {
