@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { HeaderComponent } from '../../shared/components/header/header.component';
@@ -20,12 +20,14 @@ export class JoinLeagueComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private store = inject(Store);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private actions$ = inject(Actions);
 
   joinForm: FormGroup;
   loading$: Observable<boolean> = this.store.select(LeagueSelectors.selectLeagueLoading);
   error$: Observable<string | null> = this.store.select(LeagueSelectors.selectLeagueError);
   private subscription?: Subscription;
+  autoJoining = false;
 
   constructor() {
     this.joinForm = this.fb.group({
@@ -40,6 +42,19 @@ export class JoinLeagueComponent implements OnInit, OnDestroy {
     ).subscribe(({ league }) => {
       this.router.navigate(['/leagues', league.id]);
     });
+
+    // Check if code is provided in route params
+    const codeParam = this.route.snapshot.paramMap.get('code');
+    if (codeParam) {
+      const formattedCode = codeParam.toUpperCase();
+      this.joinForm.patchValue({ code: formattedCode });
+      
+      // Auto-submit if code is valid
+      if (this.joinForm.valid) {
+        this.autoJoining = true;
+        this.onSubmit();
+      }
+    }
   }
 
   ngOnDestroy(): void {

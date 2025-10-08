@@ -40,6 +40,11 @@ export const routes: Routes = [
           import('./pages/leagues/join-league.component').then((m) => m.JoinLeagueComponent),
       },
       {
+        path: 'join/:code',
+        loadComponent: () =>
+          import('./pages/leagues/join-league.component').then((m) => m.JoinLeagueComponent),
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('./pages/leagues/league-detail.component').then((m) => m.LeagueDetailComponent),

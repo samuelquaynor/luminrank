@@ -3,12 +3,19 @@
 
   <div class="join-container">
     <div class="join-card">
-      <div class="join-header">
-        <h1>Join a League</h1>
-        <p>Enter the invite code shared by your league creator</p>
-      </div>
+      @if (autoJoining) {
+        <div class="auto-join-message">
+          <div class="spinner"></div>
+          <h2>Joining League...</h2>
+          <p>Please wait while we add you to the league</p>
+        </div>
+      } @else {
+        <div class="join-header">
+          <h1>Join a League</h1>
+          <p>Enter the invite code shared by your league creator</p>
+        </div>
 
-      <form [formGroup]="joinForm" (ngSubmit)="onSubmit()" data-testid="join-league-form">
+        <form [formGroup]="joinForm" (ngSubmit)="onSubmit()" data-testid="join-league-form">
         <div class="form-group">
           <label for="code">Invite Code</label>
           <input
@@ -56,9 +63,10 @@
         </div>
       </form>
 
-      <div class="help-text">
-        <p>Don't have an invite code? Ask a league creator to share their code with you.</p>
-      </div>
+        <div class="help-text">
+          <p>Don't have an invite code? Ask a league creator to share their code with you.</p>
+        </div>
+      }
     </div>
   </div>
 </div>

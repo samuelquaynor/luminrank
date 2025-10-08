@@ -1,12 +1,28 @@
 import { TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideZonelessChangeDetection()]
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter([]),
+        provideMockStore({
+          initialState: {
+            auth: {
+              user: null,
+              token: null,
+              loading: false,
+              error: null,
+              isAuthenticated: false
+            }
+          }
+        })
+      ]
     }).compileComponents();
   });
 

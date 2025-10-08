@@ -77,28 +77,54 @@
         </div>
 
         <div class="header-actions">
-          <div class="invite-code-box">
-            <span class="invite-label">Invite Code</span>
-            <div class="invite-code-group">
-              <span class="invite-code" data-testid="league-invite-code">{{ league.inviteCode }}</span>
-              <button 
-                type="button" 
-                class="btn btn-icon" 
-                (click)="copyInviteCode(league.inviteCode)"
-                [title]="copiedCode ? 'Copied!' : 'Copy code'"
-                data-testid="copy-invite-code-button"
-              >
-                @if (copiedCode) {
-                  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
-                  </svg>
-                } @else {
-                  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/>
-                    <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
-                  </svg>
-                }
-              </button>
+          <div class="invite-section">
+            <div class="invite-code-box">
+              <span class="invite-label">Invite Code</span>
+              <div class="invite-code-group">
+                <span class="invite-code" data-testid="league-invite-code">{{ league.inviteCode }}</span>
+                <button 
+                  type="button" 
+                  class="btn btn-icon" 
+                  (click)="copyInviteCode(league.inviteCode)"
+                  [title]="copiedCode ? 'Copied!' : 'Copy code'"
+                  data-testid="copy-invite-code-button"
+                >
+                  @if (copiedCode) {
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                    </svg>
+                  } @else {
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/>
+                      <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
+                    </svg>
+                  }
+                </button>
+              </div>
+            </div>
+            
+            <div class="invite-link-box">
+              <span class="invite-label">Share Link</span>
+              <div class="invite-code-group">
+                <span class="invite-link" data-testid="league-invite-link">{{ getInviteLink(league.inviteCode) }}</span>
+                <button 
+                  type="button" 
+                  class="btn btn-icon" 
+                  (click)="copyInviteLink(league.inviteCode)"
+                  [title]="copiedLink ? 'Copied!' : 'Copy link'"
+                  data-testid="copy-invite-link-button"
+                >
+                  @if (copiedLink) {
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                    </svg>
+                  } @else {
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                    </svg>
+                  }
+                </button>
+              </div>
             </div>
           </div>
           

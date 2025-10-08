@@ -104,6 +104,49 @@ describe('Leagues', () => {
     });
   });
 
+  it('should join a league via invite link', () => {
+    // Create a league and get the invite link
+    cy.visit('/');
+    cy.get('[data-testid="create-league-button"]').click();
+    cy.wait(1000);
+    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Link Join League');
+    cy.get('[data-testid="league-gametype-select"]').select('Chess');
+    cy.get('[data-testid="submit-create-league-button"]').click();
+    
+    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.get('[data-testid="league-invite-code"]').invoke('text').then((inviteCode) => {
+      const code = inviteCode.trim();
+      
+      // Logout and create second user
+      cy.logout();
+      
+      const timestamp = Date.now();
+      cy.registerUser(
+        `linkjoinuser${timestamp}@example.com`,
+        'TestPassword123!',
+        'Link Join User'
+      );
+      
+      // Wait for home page
+      cy.get('[data-testid="welcome-message"]', { timeout: 10000 }).should('be.visible');
+      cy.wait(3000);
+      
+      // Visit the invite link directly
+      cy.visit(`/leagues/join/${code}`);
+      cy.wait(2000);
+      
+      // Should auto-join and redirect to league detail
+      cy.url({ timeout: 15000 }).should('match', /\/leagues\/[a-f0-9-]+$/);
+      cy.get('[data-testid="league-detail-name"]').should('contain', 'Link Join League');
+      
+      // Verify we're in the members list
+      cy.get('[data-testid="members-tab-button"]').click();
+      cy.wait(2000);
+      cy.get('.member-item', { timeout: 10000 }).should('have.length', 2);
+      cy.contains('.member-name', 'Link Join User').should('be.visible');
+    });
+  });
+
   it('should view league details and members', () => {
     // Navigate to home first
     cy.visit('/');
@@ -138,8 +181,13 @@ describe('Leagues', () => {
     cy.get('[data-testid="scoring-system-select"]').should('have.value', 'points');
     cy.get('[data-testid="points-per-win-input"]').should('have.value', '3');
     
-    // Copy invite code
+    // Verify invite code and link
     cy.get('[data-testid="league-invite-code"]').should('contain', 'LMNR-');
+    cy.get('[data-testid="league-invite-link"]').should('contain', '/leagues/join/LMNR-');
+    
+    // Test copy link button
+    cy.get('[data-testid="copy-invite-link-button"]').click();
+    // Note: We can't easily test clipboard content in Cypress, but we can verify the button was clicked
   });
 
   it('should update league settings', () => {

@@ -37,6 +37,7 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   editingSettings = false;
   editingLeague = false;
   copiedCode = false;
+  copiedLink = false;
   private subscription?: Subscription;
 
   ngOnInit(): void {
@@ -98,6 +99,21 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     navigator.clipboard.writeText(code).then(() => {
       this.copiedCode = true;
       setTimeout(() => this.copiedCode = false, 2000);
+    });
+  }
+
+  getInviteLink(code: string): string {
+    if (typeof window !== 'undefined') {
+      return `${window.location.origin}/leagues/join/${code}`;
+    }
+    return '';
+  }
+
+  copyInviteLink(code: string): void {
+    const link = this.getInviteLink(code);
+    navigator.clipboard.writeText(link).then(() => {
+      this.copiedLink = true;
+      setTimeout(() => this.copiedLink = false, 2000);
     });
   }
 
