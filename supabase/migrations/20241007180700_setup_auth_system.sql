@@ -1,5 +1,5 @@
 -- Enable necessary extensions
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Note: gen_random_uuid() is built into PostgreSQL 13+ and doesn't require an extension
 
 -- Create profiles table
 CREATE TABLE IF NOT EXISTS public.profiles (

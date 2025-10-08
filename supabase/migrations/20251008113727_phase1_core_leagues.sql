@@ -1,10 +1,9 @@
 -- Phase 1: Core League Management
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Note: gen_random_uuid() is built into PostgreSQL 13+ and doesn't require an extension
 
 -- Create leagues table
 CREATE TABLE IF NOT EXISTS public.leagues (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   description TEXT,
   created_by UUID NOT NULL,
@@ -22,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.leagues (
 
 -- Create league_settings table
 CREATE TABLE IF NOT EXISTS public.league_settings (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   league_id UUID REFERENCES public.leagues(id) ON DELETE CASCADE UNIQUE NOT NULL,
   scoring_system TEXT DEFAULT 'points' CHECK (scoring_system IN ('win_loss', 'points', 'elo')),
   points_per_win INTEGER DEFAULT 3 CHECK (points_per_win > 0),
@@ -35,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.league_settings (
 
 -- Create league_members table
 CREATE TABLE IF NOT EXISTS public.league_members (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   league_id UUID REFERENCES public.leagues(id) ON DELETE CASCADE NOT NULL,
   user_id UUID NOT NULL CONSTRAINT league_members_user_id_fkey REFERENCES public.profiles(id) ON DELETE CASCADE,
   joined_at TIMESTAMPTZ DEFAULT NOW(),
@@ -47,7 +46,7 @@ CREATE TABLE IF NOT EXISTS public.league_members (
 
 -- Create league_invites table (for Phase 1, mainly for tracking)
 CREATE TABLE IF NOT EXISTS public.league_invites (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   league_id UUID REFERENCES public.leagues(id) ON DELETE CASCADE NOT NULL,
   invited_by UUID NOT NULL REFERENCES public.profiles(id),
   invited_email TEXT NOT NULL,
