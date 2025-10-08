@@ -6,45 +6,43 @@ import { UserRole } from './core/models/user.model';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/dashboard',
-    pathMatch: 'full'
+    loadComponent: () =>
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
   },
   {
-    path: 'login',
-    loadComponent: () => import('./features/auth/components/login/login.component').then(m => m.LoginComponent)
+    path: 'auth',
+    loadComponent: () =>
+      import('./pages/auth/auth.component').then((m) => m.AuthComponent),
   },
   {
-    path: 'register',
-    loadComponent: () => import('./features/auth/components/register/register.component').then(m => m.RegisterComponent)
+    path: 'profile-setup',
+    loadComponent: () =>
+      import('./pages/profile-setup/profile-setup.component').then((m) => m.ProfileSetupComponent),
+    canActivate: [AuthGuard],
   },
-  {
-    path: 'dashboard',
-    loadComponent: () => import('./features/auth/components/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'admin',
-    loadComponent: () => import('./features/auth/components/admin/admin.component').then(m => m.AdminComponent),
-    canActivate: [RoleGuard],
-    data: { roles: [UserRole.ADMIN] }
-  },
+  // Admin routes commented out for now
+  // {
+  //   path: 'dashboard',
+  //   loadComponent: () =>
+  //     import('./features/auth/components/admin/admin.component').then((m) => m.AdminComponent),
+  //   canActivate: [AuthGuard],
+  // },
+  // {
+  //   path: 'admin',
+  //   loadComponent: () =>
+  //     import('./features/auth/components/admin/admin.component').then((m) => m.AdminComponent),
+  //   canActivate: [RoleGuard],
+  //   data: { roles: [UserRole.ADMIN] },
+  // },
   {
     path: 'unauthorized',
-    loadComponent: () => import('./features/auth/components/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)
-  },
-  {
-    path: 'profile',
-    loadComponent: () => import('./features/user/components/user-profile/user-profile.component').then(m => m.UserProfileComponent),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'users',
-    loadComponent: () => import('./features/user/components/user-management/user-management.component').then(m => m.UserManagementComponent),
-    canActivate: [RoleGuard],
-    data: { roles: [UserRole.ADMIN] }
+    loadComponent: () =>
+      import('./features/auth/components/unauthorized/unauthorized.component').then(
+        (m) => m.UnauthorizedComponent
+      ),
   },
   {
     path: '**',
-    redirectTo: '/dashboard'
-  }
+    redirectTo: '',
+  },
 ];

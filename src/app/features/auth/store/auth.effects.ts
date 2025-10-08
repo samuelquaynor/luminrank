@@ -22,7 +22,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.login),
       switchMap(({ credentials }) =>
-        this.authService.login(credentials).pipe(
+        this.authService.loginWithEmail(credentials).pipe(
           map((response) => AuthActions.loginSuccess({ response })),
           catchError((error) => of(AuthActions.loginFailure({ error: error.message })))
         )
@@ -37,7 +37,12 @@ export class AuthEffects {
         ofType(AuthActions.loginSuccess),
         tap(({ response }) => {
           this.storageService.saveToken(response.token);
-          this.router.navigate(['/dashboard']);
+          // Redirect to profile setup if user doesn't have a name
+          if (!response.user.name) {
+            this.router.navigate(['/profile-setup']);
+          } else {
+            this.router.navigate(['/']);
+          }
         })
       ),
     { dispatch: false }
@@ -48,7 +53,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.register),
       switchMap(({ registerData }) =>
-        this.authService.register(registerData).pipe(
+        this.authService.registerWithEmail(registerData).pipe(
           map((response) => AuthActions.registerSuccess({ response })),
           catchError((error) => of(AuthActions.registerFailure({ error: error.message })))
         )
@@ -63,7 +68,8 @@ export class AuthEffects {
         ofType(AuthActions.registerSuccess),
         tap(({ response }) => {
           this.storageService.saveToken(response.token);
-          this.router.navigate(['/dashboard']);
+          // Redirect to profile setup after registration
+          this.router.navigate(['/profile-setup']);
         })
       ),
     { dispatch: false }
@@ -89,7 +95,7 @@ export class AuthEffects {
         ofType(AuthActions.logoutSuccess),
         tap(() => {
           this.storageService.removeToken();
-          this.router.navigate(['/login']);
+          this.router.navigate(['/']);
         })
       ),
     { dispatch: false }

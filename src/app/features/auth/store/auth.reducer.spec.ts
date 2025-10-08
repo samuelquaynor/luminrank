@@ -66,7 +66,7 @@ describe('Auth Reducer', () => {
   describe('register', () => {
     it('should set loading to true and clear error', () => {
       const action = AuthActions.register({ 
-        registerData: { email: 'test@example.com', password: 'password', name: 'Test User' } 
+        registerData: { email: 'test@example.com', password: 'password' } 
       });
       const state = authReducer(initialState, action);
       

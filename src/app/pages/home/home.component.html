@@ -1,0 +1,74 @@
+<div class="home-page">
+  <!-- Navigation -->
+  <app-header></app-header>
+
+  <!-- Hero Section for Non-Authenticated Users -->
+  @if (!(isAuthenticated$ | async)) {
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-badge">Social Ranking Platform</div>
+      <h1 class="hero-title">Illuminate the Competition</h1>
+      <p class="hero-subtitle">
+        Turn your iMessage games into organized leagues. Track matches, update standings, 
+        and visualize leaderboards—all automatically.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-large btn-primary" routerLink="/auth">Start Your League</button>
+      </div>
+      <div class="hero-features">
+        <div class="feature">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 2L12.5 7.5L18 8.5L14 13L15 18.5L10 15.5L5 18.5L6 13L2 8.5L7.5 7.5L10 2Z"/>
+          </svg>
+          <span>Auto Rankings</span>
+        </div>
+        <div class="feature">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M4 4h12v2H4V4zm0 5h12v2H4V9zm0 5h12v2H4v-2z"/>
+          </svg>
+          <span>Live Leaderboards</span>
+        </div>
+        <div class="feature">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/>
+          </svg>
+          <span>Season Tracking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- User Dashboard for Authenticated Users -->
+  @if ((isAuthenticated$ | async) && (user$ | async); as user) {
+  <div class="dashboard-section">
+    <div class="dashboard-content">
+      <div class="welcome-header">
+        <h1>Welcome back@if (user.name) {<span>, {{user.name}}</span>}!</h1>
+        <p>Ready to track some matches?</p>
+      </div>
+
+      <div class="quick-stats">
+        <div class="stat-card">
+          <div class="stat-value">0</div>
+          <div class="stat-label">Active Leagues</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">0</div>
+          <div class="stat-label">Matches Played</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Current Rank</div>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <h3>Get Started</h3>
+        <p>Create your first league or join an existing one to start tracking matches.</p>
+        <button class="btn btn-primary">Create League</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

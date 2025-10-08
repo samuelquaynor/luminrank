@@ -1,7 +1,19 @@
-// Re-export user models from the user feature module
-export type { User } from '../../features/user/models/user.model';
-export { UserRole } from '../../features/user/models/user.model';
-import type { User } from '../../features/user/models/user.model';
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  USER = 'USER'
+}
+
+export interface User {
+  id: string;
+  email?: string;
+  name?: string;
+  role: UserRole;
+  createdAt: Date;
+  lastLoginAt: Date | null;
+  isActive?: boolean;
+  avatarUrl?: string;
+  phone?: string;
+}
 
 export interface LoginCredentials {
   email: string;
@@ -11,7 +23,12 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   password: string;
-  name: string;
+}
+
+export interface UpdateUserData {
+  name?: string;
+  avatarUrl?: string;
+  phone?: string;
 }
 
 export interface AuthResponse {

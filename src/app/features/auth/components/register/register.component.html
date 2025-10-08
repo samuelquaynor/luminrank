@@ -1,28 +1,7 @@
 <div class="auth-container">
   <div class="auth-card">
-    <div class="auth-header">
-      <h2>Create Account</h2>
-      <p>Join us today! Create your account to get started.</p>
-    </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          placeholder="Enter your full name"
-          class="form-control"
-          [class.is-invalid]="isFieldInvalid('name')"
-        />
-        <div *ngIf="isFieldInvalid('name')" class="error-message invalid-feedback">
-          <div *ngIf="registerForm.get('name')?.errors?.['required']">
-            Name is required
-          </div>
-        </div>
-      </div>
-
       <div class="form-group">
         <label for="email">Email</label>
         <input
@@ -33,14 +12,16 @@
           class="form-control"
           [class.is-invalid]="isFieldInvalid('email')"
         />
-        <div *ngIf="isFieldInvalid('email')" class="error-message invalid-feedback">
-          <div *ngIf="registerForm.get('email')?.errors?.['required']">
-            Email is required
+        @if (isFieldInvalid('email')) {
+          <div class="error-message invalid-feedback">
+            @if (registerForm.get('email')?.errors?.['required']) {
+              <div>Email is required</div>
+            }
+            @if (registerForm.get('email')?.errors?.['email']) {
+              <div>Please enter a valid email address</div>
+            }
           </div>
-          <div *ngIf="registerForm.get('email')?.errors?.['email']">
-            Please enter a valid email address
-          </div>
-        </div>
+        }
       </div>
 
       <div class="form-group">
@@ -53,22 +34,26 @@
           class="form-control"
           [class.is-invalid]="isFieldInvalid('password')"
         />
-        <div *ngIf="isFieldInvalid('password')" class="error-message invalid-feedback">
-          <div *ngIf="registerForm.get('password')?.errors?.['required']">
-            Password is required
+        @if (isFieldInvalid('password')) {
+          <div class="error-message invalid-feedback">
+            @if (registerForm.get('password')?.errors?.['required']) {
+              <div>Password is required</div>
+            }
+            @if (registerForm.get('password')?.errors?.['minlength']) {
+              <div>Password must be at least 6 characters</div>
+            }
           </div>
-          <div *ngIf="registerForm.get('password')?.errors?.['minlength']">
-            Password must be at least 6 characters
-          </div>
-        </div>
+        }
         
         <!-- Password strength indicator -->
-        <div class="password-strength" *ngIf="registerForm.get('password')?.value">
-          <div class="strength-bar">
-            <div class="strength-fill" [class]="getPasswordStrengthClass()"></div>
+        @if (registerForm.get('password')?.value) {
+          <div class="password-strength">
+            <div class="strength-bar">
+              <div class="strength-fill" [class]="getPasswordStrengthClass()"></div>
+            </div>
+            <span class="strength-text">{{ getPasswordStrengthText() }}</span>
           </div>
-          <span class="strength-text">{{ getPasswordStrengthText() }}</span>
-        </div>
+        }
       </div>
 
       <div class="form-group">
@@ -81,26 +66,34 @@
           class="form-control"
           [class.is-invalid]="isFieldInvalid('confirmPassword') || isPasswordMismatch()"
         />
-        <div *ngIf="isFieldInvalid('confirmPassword')" class="error-message invalid-feedback">
-          <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
-            Please confirm your password
+        @if (isFieldInvalid('confirmPassword')) {
+          <div class="error-message invalid-feedback">
+            @if (registerForm.get('confirmPassword')?.errors?.['required']) {
+              <div>Please confirm your password</div>
+            }
           </div>
-        </div>
-        <div *ngIf="isPasswordMismatch()" class="error-message invalid-feedback">
-          Passwords do not match
-        </div>
+        }
+        @if (isPasswordMismatch()) {
+          <div class="error-message invalid-feedback">
+            Passwords do not match
+          </div>
+        }
       </div>
 
-      <div *ngIf="error$ | async as error" class="alert alert-danger">
-        {{ error }}
-      </div>
+      @if (error$ | async; as error) {
+        <div class="alert alert-danger">
+          {{ error }}
+        </div>
+      }
 
       <button
         type="submit"
         class="btn btn-primary btn-block"
         [disabled]="registerForm.invalid || (isLoading$ | async)"
       >
-        <span *ngIf="isLoading$ | async" class="spinner"></span>
+        @if (isLoading$ | async) {
+          <span class="spinner"></span>
+        }
         {{ (isLoading$ | async) ? 'Creating Account...' : 'Create Account' }}
       </button>
     </form>
