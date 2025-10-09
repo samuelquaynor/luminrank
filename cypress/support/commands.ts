@@ -66,3 +66,28 @@ Cypress.Commands.add('createAndLoginTestUser', () => {
   // Return credentials for use in tests
   cy.wrap(credentials);
 });
+
+// Create league helper - handles the form filling with proper waits
+Cypress.Commands.add('createLeague', (name: string, gameType: string, description?: string) => {
+  // Navigate to create page
+  cy.get('[data-testid="create-league-button"]').click();
+  cy.url({ timeout: 10000 }).should('include', '/leagues/create');
+  
+  // Wait for page to fully load and stabilize
+  cy.get('h1').should('contain', 'Create a League');
+  cy.wait(2000);
+  
+  // Fill form with force: true to avoid detachment issues
+  cy.get('[data-testid="league-name-input"]').should('be.visible').clear().type(name, { force: true });
+  if (description) {
+    cy.get('[data-testid="league-description-input"]').should('be.visible').clear().type(description, { force: true });
+  }
+  cy.get('[data-testid="league-gametype-select"]').should('be.visible').select(gameType);
+  cy.wait(500);
+  
+  // Submit
+  cy.get('[data-testid="submit-create-league-button"]').should('not.be.disabled').click();
+  
+  // Wait for redirect
+  cy.url({ timeout: 20000 }).should('match', /\/leagues\/[a-f0-9-]+$/);
+});

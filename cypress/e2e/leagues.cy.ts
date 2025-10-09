@@ -9,36 +9,8 @@ describe('Leagues', () => {
   });
 
   it('should create a league successfully', () => {
-    // Navigate to create league page
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.url({ timeout: 10000 }).should('include', '/leagues/create');
-
-    // Verify we're on the create page
-    cy.get('h1').should('contain', 'Create a League');
-
-    // Fill in the form
-    cy.get('[data-testid="league-name-input"]').should('be.visible').type('Test League');
-    cy.get('[data-testid="league-description-input"]').should('be.visible').type('A test league for GamePigeon');
-    cy.get('[data-testid="league-gametype-select"]').should('be.visible').select('GamePigeon');
-
-    // Wait a moment for form to be ready
-    cy.wait(500);
-
-    // Submit the form
-    cy.get('[data-testid="submit-create-league-button"]').should('not.be.disabled').click();
-
-    // Debug: Check if we get an error message
-    cy.get('.form-error', { timeout: 2000 }).should('not.exist');
-
-    // Wait for redirect to league detail page (increased timeout)
-    cy.url({ timeout: 20000 }).should('match', /\/leagues\/[a-f0-9-]+$/);
-    
-    // Debug: Log current URL and page content
-    cy.url().then(url => cy.log('Current URL: ' + url));
-    cy.get('body').then($body => cy.log('Page content: ' + $body.text().substring(0, 200)));
-    
-    // Wait for league data to load
-    cy.get('.loading-container', { timeout: 2000 }).should('not.exist');
+    // Use the helper command
+    cy.createLeague('Test League', 'GamePigeon');
     
     // Verify league details are displayed
     cy.get('[data-testid="league-detail-name"]', { timeout: 15000 }).should('contain', 'Test League');
@@ -47,17 +19,12 @@ describe('Leagues', () => {
   });
 
   it('should join a league via invite code', () => {
-    // Navigate to create league page from home
+    // Create a league using the helper
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.url().should('include', '/leagues/create');
-    cy.wait(1000); // Wait for page to fully load
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Joinable League');
-    cy.get('[data-testid="league-gametype-select"]').select('Chess');
-    cy.get('[data-testid="submit-create-league-button"]').click();
+    cy.createLeague('Joinable League', 'Chess');
     
-    // Wait for redirect and get the invite code
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    // Get the invite code
+    cy.wait(1000);
     cy.get('[data-testid="league-invite-code"]').invoke('text').then((inviteCode) => {
       const code = inviteCode.trim();
       
@@ -105,15 +72,11 @@ describe('Leagues', () => {
   });
 
   it('should join a league via invite link', () => {
-    // Create a league and get the invite link
+    // Create a league using the helper
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.wait(1000);
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Link Join League');
-    cy.get('[data-testid="league-gametype-select"]').select('Chess');
-    cy.get('[data-testid="submit-create-league-button"]').click();
+    cy.createLeague('Link Join League', 'Chess');
     
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.wait(1000);
     cy.get('[data-testid="league-invite-code"]').invoke('text').then((inviteCode) => {
       const code = inviteCode.trim();
       
@@ -148,17 +111,9 @@ describe('Leagues', () => {
   });
 
   it('should view league details and members', () => {
-    // Navigate to home first
+    // Create a league using the helper
     cy.visit('/');
-    cy.get('[data-testid="welcome-message"]').should('be.visible');
-    
-    // Create a league
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.url().should('include', '/leagues/create');
-    cy.get('h1', { timeout: 10000 }).should('contain', 'Create a League');
-    cy.get('[data-testid="league-name-input"]').should('be.visible').type('Detail Test League');
-    cy.get('[data-testid="league-gametype-select"]').select('Pool');
-    cy.get('[data-testid="submit-create-league-button"]').click();
+    cy.createLeague('Detail Test League', 'Pool');
     
     // Should be on league detail page
     cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
@@ -194,12 +149,9 @@ describe('Leagues', () => {
   });
 
   it('should update league settings', () => {
-    // Create a league
+    // Create a league using the helper
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Settings Update League');
-    cy.get('[data-testid="league-gametype-select"]').select('Chess');
-    cy.get('[data-testid="submit-create-league-button"]').click();
+    cy.createLeague('Settings Update League', 'Chess');
     
     // Navigate to settings tab
     cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
@@ -225,13 +177,9 @@ describe('Leagues', () => {
   });
 
   it('should update league name and description', () => {
-    // Create a league
+    // Create a league using the helper with description
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Original League Name');
-    cy.get('[data-testid="league-description-input"]').type('Original description');
-    cy.get('[data-testid="league-gametype-select"]').select('Pool');
-    cy.get('[data-testid="submit-create-league-button"]').click();
+    cy.createLeague('Original League Name', 'Pool', 'Original description');
     
     // Verify original name and description
     cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
@@ -262,14 +210,9 @@ describe('Leagues', () => {
   });
 
   it('should leave a league', () => {
-    // Create a league
+    // Create a league using the helper
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('League to Leave');
-    cy.get('[data-testid="league-gametype-select"]').select('Chess');
-    cy.get('[data-testid="submit-create-league-button"]').click();
-    
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.createLeague('League to Leave', 'Chess');
     cy.get('[data-testid="league-invite-code"]').invoke('text').then((inviteCode) => {
       const code = inviteCode.trim();
       
@@ -307,23 +250,13 @@ describe('Leagues', () => {
   });
 
   it('should view leagues list', () => {
-    // Create multiple leagues
+    // Create multiple leagues using the helper
     cy.visit('/');
-    
-    // Create first league
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('First League');
-    cy.get('[data-testid="league-gametype-select"]').select('Chess');
-    cy.get('[data-testid="submit-create-league-button"]').click();
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.createLeague('First League', 'Chess');
     
     // Go back to home and create second league
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Second League');
-    cy.get('[data-testid="league-gametype-select"]').select('Pool');
-    cy.get('[data-testid="submit-create-league-button"]').click();
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.createLeague('Second League', 'Pool');
     
     // Navigate to leagues list
     cy.visit('/leagues');
@@ -342,24 +275,14 @@ describe('Leagues', () => {
   });
 
   it('should navigate between different leagues', () => {
-    // Create two leagues
+    // Create two leagues using the helper
     cy.visit('/');
-    
-    // Create first league
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Navigation League 1');
-    cy.get('[data-testid="league-gametype-select"]').select('Chess');
-    cy.get('[data-testid="submit-create-league-button"]').click();
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.createLeague('Navigation League 1', 'Chess');
     const firstLeagueUrl = cy.url();
     
     // Create second league
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Navigation League 2');
-    cy.get('[data-testid="league-gametype-select"]').select('Pool');
-    cy.get('[data-testid="submit-create-league-button"]').click();
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.createLeague('Navigation League 2', 'Pool');
     
     // Navigate back to leagues list
     cy.visit('/leagues');
@@ -381,15 +304,9 @@ describe('Leagues', () => {
   });
 
   it('should redirect unauthenticated user to auth and back after registration', () => {
-    // First, create a league as authenticated user to get an invite code
+    // Create a league using the helper
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.wait(1000);
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Redirect Test League');
-    cy.get('[data-testid="league-gametype-select"]').select('Chess');
-    cy.get('[data-testid="submit-create-league-button"]').click();
-
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.createLeague('Redirect Test League', 'Chess');
     
     // Get the invite code
     cy.get('[data-testid="league-invite-code"]').invoke('text').then((inviteCode) => {
@@ -442,15 +359,9 @@ describe('Leagues', () => {
   });
 
   it('should redirect existing user back after login', () => {
-    // Create a league to get a join URL
+    // Create a league using the helper
     cy.visit('/');
-    cy.get('[data-testid="create-league-button"]').click();
-    cy.wait(1000);
-    cy.get('[data-testid="league-name-input"]', { timeout: 10000 }).should('be.visible').type('Login Redirect League');
-    cy.get('[data-testid="league-gametype-select"]').select('Pool');
-    cy.get('[data-testid="submit-create-league-button"]').click();
-
-    cy.url().should('match', /\/leagues\/[a-f0-9-]+$/);
+    cy.createLeague('Login Redirect League', 'Pool');
     
     cy.get('[data-testid="league-invite-code"]').invoke('text').then((inviteCode) => {
       const code = inviteCode.trim();

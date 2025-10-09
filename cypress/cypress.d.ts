@@ -31,5 +31,11 @@ declare namespace Cypress {
      * @example cy.createAndLoginTestUser().then(({ email, password, name }) => { ... })
      */
     createAndLoginTestUser(): Chainable<{ email: string; password: string; name: string }>;
+    
+    /**
+     * Custom command to create a league with proper waits to avoid re-render issues
+     * @example cy.createLeague('My League', 'Chess', 'Optional description')
+     */
+    createLeague(name: string, gameType: string, description?: string): Chainable<void>;
   }
 }
