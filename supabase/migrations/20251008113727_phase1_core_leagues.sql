@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS public.leagues (
 CREATE TABLE IF NOT EXISTS public.league_settings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   league_id UUID REFERENCES public.leagues(id) ON DELETE CASCADE UNIQUE NOT NULL,
-  scoring_system TEXT DEFAULT 'points' CHECK (scoring_system IN ('win_loss', 'points', 'elo')),
+  scoring_system TEXT DEFAULT 'points' CHECK (scoring_system IN ('win_loss', 'points')),
   points_per_win INTEGER DEFAULT 3 CHECK (points_per_win > 0),
   points_per_draw INTEGER DEFAULT 1 CHECK (points_per_draw >= 0),
   points_per_loss INTEGER DEFAULT 0 CHECK (points_per_loss >= 0),

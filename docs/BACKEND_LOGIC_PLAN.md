@@ -31,7 +31,7 @@ Build all backend logic and business rules for the league management system. Foc
 ```sql
 - id (uuid, primary key, default uuid_generate_v4())
 - league_id (uuid, references leagues(id) on delete cascade, unique, not null)
-- scoring_system (text, default 'points', check in ('win_loss', 'points', 'elo'))
+- scoring_system (text, default 'points', check in ('win_loss', 'points'))
 - points_per_win (integer, default 3, check > 0)
 - points_per_draw (integer, default 1, check >= 0)
 - points_per_loss (integer, default 0, check >= 0)
@@ -403,7 +403,6 @@ resolveDispute(disputeId, resolution, newScores?):
      - Calculate points based on scoring_system:
        * win_loss: wins only
        * points: (wins * points_per_win) + (draws * points_per_draw) + (losses * points_per_loss)
-       * elo: calculate ELO rating
      - Calculate form (last 5 matches: W/L/D)
   4. Sort by: points DESC, wins DESC, head-to-head
   5. Assign ranks
@@ -702,7 +701,7 @@ resolveLegDispute(disputeId, resolution):
 **Service Responsibilities:**
 
 - **Database operations** → Services call Supabase
-- **Complex algorithms** → Services (round-robin, ELO, leg winner calculation)
+- **Complex algorithms** → Services (round-robin, leg winner calculation)
 - **Business validation** → Services (submission windows, eligibility)
 - **Side effects** → NgRx Effects (notifications, real-time)
 

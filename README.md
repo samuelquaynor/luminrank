@@ -13,6 +13,7 @@ A modern, full-stack sports league management platform built with Angular and Su
 - 🔐 **Secure Access** - Row Level Security with proper permissions
 - 📊 **Real-time Updates** - Instant sync across all members
 - 🎨 **Modern UI** - Dark theme with beautiful, responsive design
+- 🔄 **Smart Redirects** - Preserves user intent through authentication flows
 
 ### Coming Soon
 - 📅 Phase 2: Match Management
@@ -186,8 +187,10 @@ npm run build
 ### Frontend (Angular)
 - **Standalone components** for better tree-shaking
 - **Zoneless change detection** for performance
-- **Server-Side Rendering** for SEO
+- **Server-Side Rendering** for SEO and performance
 - **NgRx** for predictable state management
+- **Clean architecture**: Router navigation in components, not effects
+- **Redirect tracking**: Preserves user intent through auth flows
 
 ### Security
 - Row Level Security on all tables
@@ -199,9 +202,9 @@ npm run build
 
 **Phase 1: COMPLETE ✅**
 - All core league features implemented
-- 146/146 tests passing (100%) 🎉
+- 135/135 tests passing (100%) 🎉
 - Production-ready with CI/CD
-- Join-by-link feature bonus!
+- Join-by-link feature with smart redirects!
 
 **Next: Phase 2 - Match Management**
 

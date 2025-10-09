@@ -19,8 +19,7 @@ export enum MemberStatus {
 
 export enum ScoringSystem {
   WIN_LOSS = 'win_loss',
-  POINTS = 'points',
-  ELO = 'elo'
+  POINTS = 'points'
 }
 
 export interface League {

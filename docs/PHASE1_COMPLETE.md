@@ -23,8 +23,9 @@ Phase 1 delivers a complete, production-ready league management system with comp
 - ✅ Row Level Security (RLS) policies for all tables
 - ✅ Helper functions with `SECURITY DEFINER` to avoid infinite recursion
 - ✅ Proper foreign key relationships
-- ✅ Auth guard with proper state management
+- ✅ Auth guard with redirect tracking for protected routes
 - ✅ Creator/admin permissions for sensitive operations
+- ✅ SSR-compatible localStorage access with platform checks
 
 ### 🎨 UI/UX Features
 - ✅ Modern, dark-themed interface
@@ -34,6 +35,7 @@ Phase 1 delivers a complete, production-ready league management system with comp
 - ✅ Loading states and error handling
 - ✅ One-click join via shareable links
 - ✅ Auto-join when visiting invite links
+- ✅ **Redirect Tracking**: Unauthenticated users are redirected back to their intended destination after login/registration
 
 ## Technical Implementation
 
@@ -60,8 +62,9 @@ Phase 1 delivers a complete, production-ready league management system with comp
 ### State Management (NgRx)
 - **Actions**: 13 league-related actions
 - **Reducers**: Immutable state updates
-- **Effects**: Async operations with side effects
+- **Effects**: Async operations with side effects (no router navigation)
 - **Selectors**: Memoized state queries
+- **Architecture**: Router navigation handled in components, not effects
 
 ### Frontend Components
 - **LeaguesListComponent**: Display all user's leagues
@@ -70,12 +73,16 @@ Phase 1 delivers a complete, production-ready league management system with comp
 - **LeagueDetailComponent**: View/edit league, manage settings, view members
 - **LeagueCardComponent**: Reusable league card display
 
-### Routing
+### Routing & Navigation
 - `/leagues` - List all leagues
 - `/leagues/create` - Create new league
 - `/leagues/join` - Join league (manual code entry)
 - `/leagues/join/:code` - Join league (auto-join via link)
 - `/leagues/:id` - League details
+- **Redirect Tracking**: 
+  - `AuthGuard` stores intended destination in localStorage
+  - `HomeComponent` handles post-auth redirects
+  - Preserves user intent through login/registration/profile-setup flow
 
 ## Test Coverage
 
@@ -100,15 +107,17 @@ Phase 1 delivers a complete, production-ready league management system with comp
 - Permission validation
 - Member visibility across users
 
-### ✅ E2E Tests: 22/22 passing (100%)
+### ✅ E2E Tests: 11/11 passing (100%)
 - Complete user workflows
 - Authentication flows
 - League creation and management
 - Multi-user scenarios
 - Navigation and routing
 - Join-by-link functionality
+- **Redirect tracking** (new users and existing users)
+- Auto-join via shareable links
 
-### **Total: 146/146 tests passing (100%)** 🎉
+### **Total: 135/135 tests passing (100%)** 🎉
 
 ## CI/CD Pipeline
 
@@ -140,6 +149,9 @@ See `.github/SETUP.md` for detailed setup instructions.
 3. ✅ Fixed state management in components
 4. ✅ Removed non-existent column references (avatar_url)
 5. ✅ Fixed SSR issues with SupabaseClient
+6. ✅ Removed router navigation from NgRx effects (moved to components)
+7. ✅ Fixed localStorage SSR errors with platform checks
+8. ✅ Implemented redirect tracking for protected routes
 
 ### Testing Issues
 1. ✅ Fixed Cypress command definitions
@@ -169,12 +181,43 @@ See `.github/SETUP.md` for detailed setup instructions.
 - Cypress commands and tests
 - App configuration for SSR
 
+## Architecture Highlights
+
+### Redirect Tracking System
+A clean, maintainable approach to preserving user intent through authentication:
+
+1. **AuthGuard** (`auth.guard.ts`)
+   - Intercepts unauthenticated access to protected routes
+   - Stores intended destination in `localStorage` as `auth_return_url`
+   - Redirects to `/auth?returnUrl=...` with query param for visibility
+
+2. **Auth Component** (`auth.component.ts`)
+   - Listens to `loginSuccess` and `registerSuccess` actions
+   - Handles navigation to home or profile-setup
+   - No router logic in NgRx effects (clean separation of concerns)
+
+3. **Home Component** (`home.component.ts`)
+   - Checks for `auth_return_url` in localStorage on load
+   - Redirects to stored URL if present
+   - Clears the stored URL after redirect
+
+4. **Profile Setup** (`profile-setup.component.ts`)
+   - Redirects to home after profile completion
+   - Home component handles final redirect to intended destination
+
+**Benefits:**
+- ✅ Clean separation: Guards handle access, components handle navigation
+- ✅ No router navigation in state management (NgRx best practice)
+- ✅ SSR-compatible with platform checks
+- ✅ Preserves user intent through multi-step auth flows
+
 ## Performance Considerations
 
 - Optimized database queries with proper indexes
 - Memoized selectors in NgRx
 - Lazy-loaded routes
 - Efficient RLS policies using helper functions
+- Platform-aware localStorage access (no SSR errors)
 
 ## Next Steps (Phase 2)
 

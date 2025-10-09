@@ -41,8 +41,7 @@ export class CreateLeagueComponent implements OnInit, OnDestroy {
 
   scoringSystems = [
     { value: ScoringSystem.POINTS, label: 'Points System', description: 'Win = 3pts, Draw = 1pt, Loss = 0pts' },
-    { value: ScoringSystem.WIN_LOSS, label: 'Win/Loss Only', description: 'Simple wins and losses count' },
-    { value: ScoringSystem.ELO, label: 'ELO Rating', description: 'Chess-style rating system' }
+    { value: ScoringSystem.WIN_LOSS, label: 'Win/Loss Only', description: 'Simple wins and losses count' }
   ];
 
   constructor() {

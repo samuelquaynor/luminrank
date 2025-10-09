@@ -1,0 +1,46 @@
+---
+alwaysApply: true
+---
+
+# LuminRank Project Rules
+
+## Testing
+- Use `data-testid` attributes for all Cypress element selection
+- Never use class names or text content for element selection in E2E tests
+- Preserve query params and localStorage when testing redirect flows
+- Stub clipboard API in Cypress tests to avoid focus issues
+
+## Architecture
+- **NO router navigation in NgRx effects** - Handle all navigation in components
+- Router navigation should only be in: Components, Guards
+- Effects should only handle data operations and side effects (not navigation)
+- Follow separation of concerns: Guards = access control, Components = navigation
+
+## State Management (NgRx)
+- Effects handle async operations and data transformations
+- Components listen to actions for navigation decisions
+- No router injection in effects unless absolutely necessary
+- Keep effects focused on data, not UI concerns
+
+## SSR Compatibility
+- Always check `isPlatformBrowser()` before accessing browser-only APIs
+- Use `PLATFORM_ID` injection for platform detection
+- Never access `localStorage`, `sessionStorage`, or `window` without platform checks
+- Use `gen_random_uuid()` instead of `uuid_generate_v4()` in PostgreSQL (built-in, no extension needed)
+
+## Database
+- Use `gen_random_uuid()` for UUID generation (PostgreSQL 13+ built-in)
+- Foreign keys should reference `public.profiles(id)`, not `auth.users(id)`
+- Use `SECURITY DEFINER` functions to bypass RLS when needed (avoid infinite recursion)
+- Always test RLS policies with pgTAP
+
+## Git Workflow
+- Never perform git operations automatically
+- User handles all commits, pushes, pulls, merges
+- Provide code changes only, let user manage version control
+
+## Code Style
+- Use standalone Angular components
+- Prefer reactive patterns (Observables) over imperative
+- Use strict TypeScript types
+- Follow Angular style guide for naming conventions

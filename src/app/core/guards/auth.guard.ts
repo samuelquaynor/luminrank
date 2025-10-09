@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, map, take, filter, timeout, catchError, of } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -10,6 +11,9 @@ import * as AuthActions from '../../features/auth/store/auth.actions';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
+
   constructor(
     private store: Store,
     private router: Router
@@ -38,6 +42,11 @@ export class AuthGuard implements CanActivate {
         if (isAuthenticated) {
           return true;
         } else {
+          // Store returnUrl in localStorage for the auth flow (only in browser)
+          if (this.isBrowser) {
+            localStorage.setItem('auth_return_url', state.url);
+          }
+          
           this.router.navigate(['/auth'], {
             queryParams: { returnUrl: state.url }
           });

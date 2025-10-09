@@ -143,7 +143,7 @@ describe('LeagueService Integration Tests', () => {
         gameType: 'Darts',
         isPrivate: false,
         settings: {
-          scoringSystem: ScoringSystem.ELO,
+          scoringSystem: ScoringSystem.WIN_LOSS,
           pointsPerWin: 5,
           pointsPerDraw: 2,
           pointsPerLoss: 0,

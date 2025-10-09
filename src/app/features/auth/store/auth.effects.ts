@@ -37,12 +37,7 @@ export class AuthEffects {
         ofType(AuthActions.loginSuccess),
         tap(({ response }) => {
           this.storageService.saveToken(response.token);
-          // Redirect to profile setup if user doesn't have a name
-          if (!response.user.name) {
-            this.router.navigate(['/profile-setup']);
-          } else {
-            this.router.navigate(['/']);
-          }
+          // Components will handle navigation by listening to this action
         })
       ),
     { dispatch: false }
@@ -68,8 +63,7 @@ export class AuthEffects {
         ofType(AuthActions.registerSuccess),
         tap(({ response }) => {
           this.storageService.saveToken(response.token);
-          // Redirect to profile setup after registration
-          this.router.navigate(['/profile-setup']);
+          // Components will handle navigation by listening to this action
         })
       ),
     { dispatch: false }
@@ -95,10 +89,7 @@ export class AuthEffects {
         ofType(AuthActions.logoutSuccess),
         tap(() => {
           this.storageService.removeToken();
-          // Only redirect if not already on auth page
-          if (!this.router.url.includes('/auth')) {
-            this.router.navigate(['/']);
-          }
+          // Components will handle navigation by listening to this action
         })
       ),
     { dispatch: false }
