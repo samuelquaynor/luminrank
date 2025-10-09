@@ -1,106 +1,86 @@
-<div class="min-h-screen flex items-center justify-center p-4 bg-bg-primary">
-  <div class="w-full max-w-md">
-    <!-- Card -->
-    <div class="card">
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6" data-testid="login-form">
-        
-        <!-- Email Field -->
-        <div class="form-group">
-          <label for="email" class="label">Email</label>
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            placeholder="Enter your email"
-            class="input"
-            [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-            data-testid="login-email-input"
-          />
-          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-            <div class="error-message">
-              @if (loginForm.get('email')?.errors?.['required']) {
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                </svg>
-                <span>Email is required</span>
-              }
-              @if (loginForm.get('email')?.errors?.['email']) {
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                </svg>
-                <span>Please enter a valid email address</span>
-              }
-            </div>
-          }
-        </div>
-
-        <!-- Password Field -->
-        <div class="form-group">
-          <label for="password" class="label">Password</label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            placeholder="Enter your password"
-            class="input"
-            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-            data-testid="login-password-input"
-          />
-          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-            <div class="error-message">
-              @if (loginForm.get('password')?.errors?.['required']) {
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                </svg>
-                <span>Password is required</span>
-              }
-              @if (loginForm.get('password')?.errors?.['minlength']) {
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                </svg>
-                <span>Password must be at least 6 characters</span>
-              }
-            </div>
-          }
-        </div>
-
-        <!-- Server Error -->
-        @if (error$ | async; as error) {
-          <div class="alert-error">
-            <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-            </svg>
-            <span>{{ error }}</span>
-          </div>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6" data-testid="login-form">
+  
+  <!-- Email Field -->
+  <div>
+    <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+      Email
+    </label>
+    <input
+      type="email"
+      id="email"
+      formControlName="email"
+      placeholder="Enter your email"
+      class="w-full px-4 py-3 bg-bg-tertiary border rounded-lg text-white placeholder-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white"
+      [class.border-red-500]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+      [class.border-border]="!(loginForm.get('email')?.invalid && loginForm.get('email')?.touched)"
+      data-testid="login-email-input"
+    />
+    @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+      <p class="mt-1 text-sm text-red-400">
+        @if (loginForm.get('email')?.hasError('required')) {
+          Email is required
         }
-
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          class="btn-primary w-full h-13 text-base relative overflow-hidden group"
-          [disabled]="loginForm.invalid || (isLoading$ | async)"
-          data-testid="login-submit-button"
-        >
-          <span class="relative z-10 flex items-center justify-center gap-2">
-            @if (isLoading$ | async) {
-              <span class="spinner"></span>
-              <span>Signing In...</span>
-            } @else {
-              <span>Sign In</span>
-            }
-          </span>
-          <!-- Ripple effect on hover -->
-          <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 transition-transform duration-300 rounded-lg"></span>
-        </button>
-      </form>
-
-      <!-- Footer -->
-      <div class="mt-8 text-center">
-        <p class="text-sm text-gray-400">
-          Don't have an account?
-          <a routerLink="/register" class="link ml-1">Sign up here</a>
-        </p>
-      </div>
-    </div>
+        @if (loginForm.get('email')?.hasError('email')) {
+          Please enter a valid email address
+        }
+      </p>
+    }
   </div>
-</div>
+
+  <!-- Password Field -->
+  <div>
+    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+      Password
+    </label>
+    <input
+      type="password"
+      id="password"
+      formControlName="password"
+      placeholder="Enter your password"
+      class="w-full px-4 py-3 bg-bg-tertiary border rounded-lg text-white placeholder-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white"
+      [class.border-red-500]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+      [class.border-border]="!(loginForm.get('password')?.invalid && loginForm.get('password')?.touched)"
+      data-testid="login-password-input"
+    />
+    @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+      <p class="mt-1 text-sm text-red-400">
+        @if (loginForm.get('password')?.hasError('required')) {
+          Password is required
+        }
+        @if (loginForm.get('password')?.hasError('minlength')) {
+          Password must be at least 6 characters
+        }
+      </p>
+    }
+  </div>
+
+  <!-- Server Error -->
+  @if (error$ | async; as error) {
+    <div class="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+      <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+      </svg>
+      <span>{{ error }}</span>
+    </div>
+  }
+
+  <!-- Submit Button -->
+  <button
+    type="submit"
+    class="w-full px-6 py-3 bg-white text-black rounded-lg font-semibold transition-all duration-200 hover:bg-gray-100 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-bg-secondary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+    [disabled]="loginForm.invalid || (isLoading$ | async)"
+    data-testid="login-submit-button"
+  >
+    @if (isLoading$ | async) {
+      <span class="flex items-center justify-center gap-2">
+        <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Signing In...
+      </span>
+    } @else {
+      Sign In
+    }
+  </button>
+</form>

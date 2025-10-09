@@ -117,10 +117,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   getPasswordStrengthClass(): string {
     const password = this.registerForm.get('password')?.value || '';
-    if (password.length < 6) return 'weak';
-    if (password.length < 8) return 'fair';
-    if (password.length < 10) return 'good';
-    return 'strong';
+    if (password.length < 6) return 'text-red-400 bg-red-400';
+    if (password.length < 8) return 'text-yellow-400 bg-yellow-400';
+    if (password.length < 10) return 'text-blue-400 bg-blue-400';
+    return 'text-green-400 bg-green-400';
   }
 
   getPasswordStrengthText(): string {
