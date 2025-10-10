@@ -6,15 +6,23 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { LeaderboardComponent } from '../../shared/components/leaderboard/leaderboard.component';
+import { MatchCardComponent } from '../../shared/components/match-card/match-card.component';
 import { LeagueWithDetails, LeagueMember, ScoringSystem } from '../../features/leagues/models/league.model';
+import { MatchWithDetails } from '../../features/matches/models/match.model';
+import { LeaderboardEntry } from '../../features/matches/models/leaderboard.model';
 import * as LeagueActions from '../../features/leagues/store/league.actions';
 import * as LeagueSelectors from '../../features/leagues/store/league.selectors';
 import * as AuthSelectors from '../../features/auth/store/auth.selectors';
+import * as MatchActions from '../../features/matches/store/match.actions';
+import * as MatchSelectors from '../../features/matches/store/match.selectors';
+import * as LeaderboardActions from '../../features/matches/store/leaderboard.actions';
+import * as LeaderboardSelectors from '../../features/matches/store/leaderboard.selectors';
 
 @Component({
   selector: 'app-league-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, LeaderboardComponent, MatchCardComponent],
   templateUrl: './league-detail.component.html',
   styleUrl: './league-detail.component.css'
 })
@@ -30,26 +38,41 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   members$!: Observable<LeagueMember[]>;
   loading$: Observable<boolean> = this.store.select(LeagueSelectors.selectLeagueLoading);
   currentUserId$: Observable<string | undefined> = this.store.select(AuthSelectors.selectUserId);
+  
+  // Phase 2: Match & Leaderboard
+  leaderboardEntries$!: Observable<LeaderboardEntry[]>;
+  matches$!: Observable<MatchWithDetails[]>;
+  leaderboardLoading$!: Observable<boolean>;
+  matchesLoading$!: Observable<boolean>;
 
-  activeTab: 'members' | 'settings' = 'members';
+  activeTab: 'leaderboard' | 'matches' | 'members' | 'settings' = 'leaderboard';
   settingsForm!: FormGroup;
   leagueForm!: FormGroup;
   editingSettings = false;
   editingLeague = false;
   copiedCode = false;
   copiedLink = false;
-  private subscription?: Subscription;
+  private leagueSubscription?: Subscription;
+  private actionsSubscription?: Subscription;
 
   ngOnInit(): void {
     this.leagueId = this.route.snapshot.paramMap.get('id')!;
     this.league$ = this.store.select(LeagueSelectors.selectSelectedLeague);
     this.members$ = this.store.select(LeagueSelectors.selectLeagueMembers(this.leagueId));
+    
+    // Phase 2: Load leaderboard and matches
+    this.leaderboardEntries$ = this.store.select(LeaderboardSelectors.selectLeaderboardEntries);
+    this.matches$ = this.store.select(MatchSelectors.selectAllMatches);
+    this.leaderboardLoading$ = this.store.select(LeaderboardSelectors.selectLeaderboardLoading);
+    this.matchesLoading$ = this.store.select(MatchSelectors.selectMatchLoading);
 
     this.store.dispatch(LeagueActions.loadLeague({ id: this.leagueId }));
     this.store.dispatch(LeagueActions.loadLeagueMembers({ leagueId: this.leagueId }));
+    this.store.dispatch(LeaderboardActions.loadLeaderboard({ leagueId: this.leagueId }));
+    this.store.dispatch(MatchActions.loadLeagueMatches({ leagueId: this.leagueId }));
 
     // Subscribe to league to initialize forms (only once)
-    const leagueSubscription = this.league$.subscribe(league => {
+    this.leagueSubscription = this.league$.subscribe(league => {
       if (league) {
         if (!this.settingsForm) {
           this.initializeSettingsForm(league);
@@ -57,13 +80,16 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
         if (!this.leagueForm) {
           this.initializeLeagueForm(league);
           // Unsubscribe after initializing to prevent re-renders
-          leagueSubscription.unsubscribe();
+          if (this.leagueSubscription) {
+            this.leagueSubscription.unsubscribe();
+            this.leagueSubscription = undefined;
+          }
         }
       }
     });
 
     // Handle leave league success
-    this.subscription = this.actions$.pipe(
+    this.actionsSubscription = this.actions$.pipe(
       ofType(LeagueActions.leaveLeagueSuccess)
     ).subscribe(() => {
       this.router.navigate(['/leagues']);
@@ -71,7 +97,8 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.leagueSubscription?.unsubscribe();
+    this.actionsSubscription?.unsubscribe();
   }
 
   initializeSettingsForm(league: LeagueWithDetails): void {
@@ -91,7 +118,7 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  switchTab(tab: 'members' | 'settings'): void {
+  switchTab(tab: 'leaderboard' | 'matches' | 'members' | 'settings'): void {
     this.activeTab = tab;
   }
 
@@ -174,6 +201,15 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
 
   isCreator(league: LeagueWithDetails, userId: string | undefined): boolean {
     return league.createdBy === userId;
+  }
+
+  isMember(league: LeagueWithDetails, userId: string | undefined): boolean {
+    // User is a member if they're the creator or in the members list
+    return this.isCreator(league, userId);
+  }
+
+  navigateToRecordMatch(): void {
+    this.router.navigate(['/leagues', this.leagueId, 'record-match']);
   }
 
   getRoleBadgeClass(role: string): string {

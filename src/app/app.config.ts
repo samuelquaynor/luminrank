@@ -11,6 +11,8 @@ import { routes } from './app.routes';
 import { appReducers } from './store/app.state';
 import { AuthEffects } from './features/auth/store/auth.effects';
 import { LeagueEffects } from './features/leagues/store/league.effects';
+import { MatchEffects } from './features/matches/store/match.effects';
+import { LeaderboardEffects } from './features/matches/store/leaderboard.effects';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { provideSupabase } from './core/providers/supabase.provider';
@@ -25,7 +27,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, errorInterceptor])
     ),
     provideStore(appReducers),
-    provideEffects([AuthEffects, LeagueEffects]),
+    provideEffects([AuthEffects, LeagueEffects, MatchEffects, LeaderboardEffects]),
     provideRouterStore(),
     provideStoreDevtools({
       maxAge: 25,

@@ -1,0 +1,49 @@
+<div
+  class="p-4 bg-bg-secondary rounded-lg border border-border hover:border-white/20 transition-all duration-200"
+  [attr.data-testid]="'match-card-' + match.id"
+>
+  <!-- Match Date -->
+  <div class="text-xs text-gray-500 mb-3">
+    {{ formatDate(match.match_date) }}
+  </div>
+
+  <!-- Match Participants -->
+  <div class="space-y-2">
+    <div
+      *ngFor="let participant of match.participants"
+      class="flex items-center justify-between"
+    >
+      <!-- Player Name -->
+      <div class="flex items-center gap-2">
+        <span
+          class="font-medium"
+          [class.text-white]="participant.profile_id === currentUserId"
+          [class.text-gray-300]="participant.profile_id !== currentUserId"
+        >
+          {{ participant.display_name }}
+        </span>
+        <span
+          *ngIf="participant.profile_id === currentUserId"
+          class="text-xs px-2 py-0.5 bg-white/10 text-white rounded"
+        >
+          You
+        </span>
+      </div>
+
+      <!-- Score and Result -->
+      <div class="flex items-center gap-3">
+        <span class="text-lg font-bold text-white">{{ participant.score }}</span>
+        <span
+          class="px-3 py-1 rounded-full text-sm font-medium"
+          [class.bg-green-500/20]="participant.result === 'win'"
+          [class.text-green-400]="participant.result === 'win'"
+          [class.bg-red-500/20]="participant.result === 'loss'"
+          [class.text-red-400]="participant.result === 'loss'"
+        >
+          {{ participant.result === 'win' ? 'WIN' : 'LOSS' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+

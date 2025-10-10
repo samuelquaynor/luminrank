@@ -177,24 +177,127 @@
 
       <!-- Tabs -->
       <div class="bg-bg-secondary border border-border rounded-2xl shadow-xl overflow-hidden">
-        <div class="flex border-b border-border">
+        <div class="flex border-b border-border overflow-x-auto">
+          <button 
+            (click)="switchTab('leaderboard')"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
+            [class]="activeTab === 'leaderboard' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
+            data-testid="leaderboard-tab-button">
+            🏆 Leaderboard
+          </button>
+          <button 
+            (click)="switchTab('matches')"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
+            [class]="activeTab === 'matches' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
+            data-testid="matches-tab-button">
+            📋 Matches
+          </button>
           <button 
             (click)="switchTab('members')"
-            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
             [class]="activeTab === 'members' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
             data-testid="members-tab-button">
-            Members
+            👥 Members
           </button>
           <button 
             (click)="switchTab('settings')"
-            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
             [class]="activeTab === 'settings' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
             data-testid="settings-tab-button">
-            Settings
+            ⚙️ Settings
           </button>
         </div>
 
         <div class="p-8">
+          <!-- Leaderboard Tab -->
+          @if (activeTab === 'leaderboard') {
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white">Leaderboard</h2>
+                @if ((currentUserId$ | async); as userId) {
+                  @if (isMember(league, userId)) {
+                    <button
+                      (click)="navigateToRecordMatch()"
+                      class="px-4 py-2 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100"
+                      data-testid="record-match-button">
+                      + Record Match
+                    </button>
+                  }
+                }
+              </div>
+
+              @if (leaderboardLoading$ | async) {
+                <div class="flex justify-center py-12">
+                  <svg class="animate-spin h-12 w-12 text-white" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              } @else {
+                @if ((leaderboardEntries$ | async); as entries) {
+                  @if ((currentUserId$ | async); as userId) {
+                    <app-leaderboard [entries]="entries" [currentUserId]="userId"></app-leaderboard>
+                  }
+                }
+              }
+            </div>
+          }
+
+          <!-- Matches Tab -->
+          @if (activeTab === 'matches') {
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white">Match History</h2>
+                @if ((currentUserId$ | async); as userId) {
+                  @if (isMember(league, userId)) {
+                    <button
+                      (click)="navigateToRecordMatch()"
+                      class="px-4 py-2 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100"
+                      data-testid="record-match-button-matches">
+                      + Record Match
+                    </button>
+                  }
+                }
+              </div>
+
+              @if (matchesLoading$ | async) {
+                <div class="flex justify-center py-12">
+                  <svg class="animate-spin h-12 w-12 text-white" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              } @else {
+                @if ((matches$ | async); as matches) {
+                  @if (matches.length === 0) {
+                    <div class="text-center py-12">
+                      <div class="text-6xl mb-4">📋</div>
+                      <h3 class="text-xl font-semibold text-white mb-2">No Matches Yet</h3>
+                      <p class="text-gray-400 mb-6">Be the first to record a match!</p>
+                      @if ((currentUserId$ | async); as userId) {
+                        @if (isMember(league, userId)) {
+                          <button
+                            (click)="navigateToRecordMatch()"
+                            class="px-6 py-3 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100">
+                            + Record Match
+                          </button>
+                        }
+                      }
+                    </div>
+                  } @else {
+                    <div class="space-y-4">
+                      @if ((currentUserId$ | async); as userId) {
+                        @for (match of matches; track match.id) {
+                          <app-match-card [match]="match" [currentUserId]="userId"></app-match-card>
+                        }
+                      }
+                    </div>
+                  }
+                }
+              }
+            </div>
+          }
+
           <!-- Members Tab -->
           @if (activeTab === 'members') {
             <div>

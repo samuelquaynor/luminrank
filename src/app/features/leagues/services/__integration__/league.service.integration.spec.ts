@@ -162,7 +162,7 @@ describe('LeagueService Integration Tests', () => {
 
       expect(error).toBeNull();
       expect(settings).toBeDefined();
-      expect(settings?.scoring_system).toBe('elo');
+      expect(settings?.scoring_system).toBe('win_loss');
     });
 
     it('should add creator as member automatically', async () => {

@@ -123,8 +123,13 @@ describe('Leagues', () => {
     cy.contains('Pool');
     cy.contains('1 member'); // Creator is automatically added
     
-    // Check Members tab (should be default - activeTab starts as 'members')
-    cy.wait(3000); // Wait for members to load from the store
+    // Check Leaderboard tab (default tab in Phase 2)
+    cy.get('[data-testid="leaderboard-tab-button"]').should('have.class', 'text-white');
+    cy.contains('No Matches Yet').should('be.visible');
+    
+    // Navigate to Members tab
+    cy.get('[data-testid="members-tab-button"]').click();
+    cy.wait(2000); // Wait for members to load
     
     // Verify members are displayed
     cy.get('.member-item', { timeout: 15000 }).should('have.length.at.least', 1);

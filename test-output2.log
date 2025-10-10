@@ -1,0 +1,286 @@
+
+> luminrank@0.0.0 test
+> ng test --include=**/__integration__/**/*.spec.ts --browsers=ChromeHeadless --watch=false
+
+---------------------------------
+- Root directory:  /Users/samuelquaynor/Documents/luminrank
+- Working directory:  /Users/samuelquaynor/Documents/luminrank
+- Files: .env
+- Environment: none
+- Environment files: 
+ ✔ /Users/samuelquaynor/Documents/luminrank/.env
+- Environment variables: NG_APP 
+ ✔ NG_APP_SUPABASE_ANON_KEY
+ ✔ NG_APP_SUPABASE_URL
+---------------------------------
+
+❯ Building...
+✔ Building...
+Initial chunk files                                                                        | Names                                                                                   |  Raw size
+chunk-QXWKM6KE.js                                                                          | -                                                                                       |   2.24 MB | 
+polyfills.js                                                                               | polyfills                                                                               | 943.14 kB | 
+chunk-437Y2MVK.js                                                                          | -                                                                                       | 390.33 kB | 
+test_main.js                                                                               | test_main                                                                               | 239.14 kB | 
+spec-app-features-leagues-services-__integration__-league.service.integration.spec.js      | spec-app-features-leagues-services-__integration__-league.service.integration.spec      |  36.94 kB | 
+spec-app-features-matches-services-__integration__-leaderboard.service.integration.spec.js | spec-app-features-matches-services-__integration__-leaderboard.service.integration.spec |  22.65 kB | 
+styles.css                                                                                 | styles                                                                                  |  22.18 kB | 
+spec-app-features-matches-services-__integration__-match.service.integration.spec.js       | spec-app-features-matches-services-__integration__-match.service.integration.spec       |  15.07 kB | 
+chunk-PFRIDOJV.js                                                                          | -                                                                                       |   8.89 kB | 
+chunk-NE2ZEM5M.js                                                                          | -                                                                                       |   3.24 kB | 
+chunk-O2A2MJNO.js                                                                          | -                                                                                       |   1.22 kB | 
+jasmine-cleanup-0.js                                                                       | jasmine-cleanup-0                                                                       | 604 bytes | 
+
+                                                                                           | Initial total                                                                           |   3.92 MB
+
+Lazy chunk files                                                                           | Names                                                                                   |  Raw size
+chunk-HLUZ36ZV.js                                                                          | browser                                                                                 | 289 bytes | 
+
+Application bundle generation complete. [2.960 seconds] - 2025-10-09T20:03:21.409Z
+
+09 10 2025 20:03:21.469:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9879/
+09 10 2025 20:03:21.469:INFO [launcher]: Launching browsers ChromeHeadless with concurrency unlimited
+09 10 2025 20:03:21.473:INFO [launcher]: Starting browser ChromeHeadless
+09 10 2025 20:03:22.039:INFO [Chrome Headless 141.0.0.0 (Mac OS 10.15.7)]: Connected on socket hl5lMDZax3u9XrhVAAAB with id 28961406
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 0 of 34 SUCCESS (0 secs / 0 secs)
+[1A[2KERROR: 'Error recording match:', Error: Match must have exactly 2 participants
+Error: Match must have exactly 2 participants
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:35:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 0 of 34 SUCCESS (0 secs / 0 secs)
+ERROR: 'Error recording match:', Error: Match must have exactly 2 participants
+Error: Match must have exactly 2 participants
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:35:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 1 of 34 SUCCESS (0 secs / 0.189 secs)
+[1A[2KERROR: 'Error recording match:', Error: Match must have exactly one winner and one loser
+Error: Match must have exactly one winner and one loser
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:44:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 1 of 34 SUCCESS (0 secs / 0.189 secs)
+ERROR: 'Error recording match:', Error: Match must have exactly one winner and one loser
+Error: Match must have exactly one winner and one loser
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:44:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 2 of 34 SUCCESS (0 secs / 0.378 secs)
+[1A[2KERROR: 'Error recording match:', Error: Match must have exactly one winner and one loser
+Error: Match must have exactly one winner and one loser
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:44:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 2 of 34 SUCCESS (0 secs / 0.378 secs)
+ERROR: 'Error recording match:', Error: Match must have exactly one winner and one loser
+Error: Match must have exactly one winner and one loser
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:44:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 3 of 34 SUCCESS (0 secs / 0.552 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 4 of 34 SUCCESS (0 secs / 0.758 secs)
+[1A[2KERROR: 'Error fetching league matches:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:139:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 4 of 34 SUCCESS (0 secs / 0.758 secs)
+ERROR: 'Error fetching league matches:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:139:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getLeagueMatches should retrieve all matches for a league FAILED
+	Error: column profiles_2.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:139:17
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 5 of 34 (1 FAILED) (0 secs / 0.956 secs)
+[1A[2KERROR: 'Error fetching league matches:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:139:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 5 of 34 (1 FAILED) (0 secs / 0.956 secs)
+ERROR: 'Error fetching league matches:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:139:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getLeagueMatches should return empty array for league with no matches FAILED
+	Error: column profiles_2.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:139:17
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 6 of 34 (2 FAILED) (0 secs / 0.967 secs)
+[1A[2KERROR: 'Error fetching match:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:185:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 6 of 34 (2 FAILED) (0 secs / 0.967 secs)
+ERROR: 'Error fetching match:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:185:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 7 of 34 (2 FAILED) (0 secs / 0.973 secs)
+[1A[2KERROR: 'Error fetching match:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:185:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 7 of 34 (2 FAILED) (0 secs / 0.973 secs)
+ERROR: 'Error fetching match:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:185:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getMatchById should retrieve a match by ID FAILED
+	Error: column profiles_2.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:185:17
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 8 of 34 (3 FAILED) (0 secs / 1.165 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 9 of 34 (3 FAILED) (0 secs / 1.362 secs)
+[1A[2KERROR: 'Error fetching player matches:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:233:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 9 of 34 (3 FAILED) (0 secs / 1.362 secs)
+ERROR: 'Error fetching player matches:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:233:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getPlayerMatches should return empty array for player with no matches FAILED
+	Error: column profiles_2.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:233:17
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 10 of 34 (4 FAILED) (0 secs / 1.534 secs)
+[1A[2KERROR: 'Error fetching player matches:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:233:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 10 of 34 (4 FAILED) (0 secs / 1.534 secs)
+ERROR: 'Error fetching player matches:', Error: column profiles_2.display_name does not exist
+Error: column profiles_2.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:233:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getPlayerMatches should retrieve all matches for a player FAILED
+	Error: column profiles_2.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:233:17
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 11 of 34 (5 FAILED) (0 secs / 1.752 secs)
+[1A[2KWARN: 'Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.'
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 11 of 34 (5 FAILED) (0 secs / 1.752 secs)
+WARN: 'Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.'
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 12 of 34 (5 FAILED) (0 secs / 2.142 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 13 of 34 (5 FAILED) (0 secs / 2.154 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 14 of 34 (5 FAILED) (0 secs / 2.346 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 15 of 34 (5 FAILED) (0 secs / 2.548 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 16 of 34 (5 FAILED) (0 secs / 2.916 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 17 of 34 (5 FAILED) (0 secs / 3.124 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 18 of 34 (5 FAILED) (0 secs / 3.294 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 19 of 34 (5 FAILED) (0 secs / 3.484 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 20 of 34 (5 FAILED) (0 secs / 3.857 secs)
+[1A[2KWARN: 'Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.'
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 20 of 34 (5 FAILED) (0 secs / 3.857 secs)
+WARN: 'Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.'
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 21 of 34 (5 FAILED) (0 secs / 3.872 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 22 of 34 (5 FAILED) (0 secs / 3.885 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 23 of 34 (5 FAILED) (0 secs / 3.899 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 24 of 34 (5 FAILED) (0 secs / 3.918 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 25 of 34 (5 FAILED) (0 secs / 3.929 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 26 of 34 (5 FAILED) (0 secs / 3.943 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 27 of 34 (5 FAILED) (0 secs / 3.959 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 28 of 34 (5 FAILED) (0 secs / 4.223 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 29 of 34 (5 FAILED) (0 secs / 4.492 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 30 of 34 (5 FAILED) (0 secs / 4.761 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 31 of 34 (5 FAILED) (0 secs / 5.022 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 32 of 34 (5 FAILED) (0 secs / 5.265 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 33 of 34 (5 FAILED) (0 secs / 5.278 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 34 of 34 (5 FAILED) (0 secs / 5.294 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 34 of 34 (5 FAILED) (5.86 secs / 5.294 secs)
+TOTAL: 5 FAILED, 29 SUCCESS

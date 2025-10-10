@@ -12,13 +12,21 @@ A modern, full-stack sports league management platform built with Angular and Su
 - ⚙️ **Flexible Settings** - Customize scoring systems and rules
 - 🔐 **Secure Access** - Row Level Security with proper permissions
 - 📊 **Real-time Updates** - Instant sync across all members
-- 🎨 **Modern UI** - Dark theme with beautiful, responsive design
+- 🎨 **Modern UI** - Dark theme with Tailwind CSS
 - 🔄 **Smart Redirects** - Preserves user intent through authentication flows
 
+### Phase 2: Match Recording & Leaderboard ✅ COMPLETE
+- 🎯 **Record Matches** - Simple form to log match results
+- 🏅 **Live Leaderboard** - Real-time rankings with stats
+- 📋 **Match History** - View all past matches
+- 🥇 **Trophy System** - Visual recognition for top 3 players
+- 📊 **Player Stats** - Wins, losses, points, win rate
+- ✨ **Smart Calculations** - Automatic standings updates
+
 ### Coming Soon
-- 📅 Phase 2: Match Management
-- 📈 Phase 3: Standings & Statistics
-- 🏅 Phase 4: Achievements & Rewards
+- 📅 Phase 3: Fixtures & Scheduling
+- 🏅 Phase 4: Match Confirmation & Disputes
+- 🚫 Phase 5: Forfeits & Auto-Management
 
 ## 🚀 Tech Stack
 
@@ -27,7 +35,7 @@ A modern, full-stack sports league management platform built with Angular and Su
 - **Backend:** Supabase (PostgreSQL, Auth, RLS, Real-time)
 - **Testing:** Jasmine, Karma, Cypress, pgTAP
 - **CI/CD:** GitHub Actions
-- **Styling:** Custom CSS with modern design system
+- **Styling:** Tailwind CSS with custom dark theme
 
 ## 📁 Project Structure
 
@@ -42,18 +50,23 @@ src/app/
 │   ├── auth/            # Authentication feature
 │   │   ├── components/  # Login, Register
 │   │   └── store/       # Auth NgRx store
-│   └── leagues/         # League management feature
-│       ├── components/  # League UI components
-│       ├── models/      # League interfaces
-│       ├── services/    # League, Member, Settings services
-│       └── store/       # League NgRx store
+│   ├── leagues/         # League management feature
+│   │   ├── components/  # League UI components
+│   │   ├── models/      # League interfaces
+│   │   ├── services/    # League, Member, Settings services
+│   │   └── store/       # League NgRx store
+│   └── matches/         # Match & Leaderboard feature (Phase 2)
+│       ├── models/      # Match, Leaderboard interfaces
+│       ├── services/    # Match, Leaderboard services
+│       └── store/       # Match & Leaderboard NgRx stores
 ├── pages/               # Page components
 │   ├── auth/           # Auth page
 │   ├── home/           # Home page
 │   ├── leagues/        # League pages
+│   ├── matches/        # Match pages (Phase 2)
 │   └── profile-setup/  # Profile setup
 └── shared/
-    └── components/      # Reusable components (Header, LeagueCard)
+    └── components/      # Reusable components (Header, LeagueCard, Leaderboard, MatchCard)
 
 supabase/
 ├── migrations/          # Database migrations
@@ -126,10 +139,15 @@ npx cypress run
 ### Test Coverage
 - **Database Tests:** 16/16 ✅ (100%)
 - **Unit Tests:** 94/94 ✅ (100%)
-- **Integration Tests:** 14/14 ✅ (100%)
-- **E2E Tests:** 22/22 ✅ (100%)
+- **Integration Tests:** 34/34 ✅ (100%)
+  - Phase 1: 14 league tests
+  - Phase 2: 20 match & leaderboard tests
+- **E2E Tests:** 34/34 ✅ (100%)
+  - 10 match tests
+  - 11 league tests
+  - 13 auth/home tests
 
-**Total: 146/146 tests passing (100%)** 🎉
+**Total: 178/178 tests passing (100%)** 🎉
 
 ## 📚 Documentation
 
@@ -138,7 +156,8 @@ All project documentation is in the [`docs/`](docs/) directory:
 - **[Documentation Index](docs/README.md)** - Start here!
 - **[Backend Logic Plan](docs/BACKEND_LOGIC_PLAN.md)** - Architecture overview
 - **[Implementation Phases](docs/IMPLEMENTATION_PHASES.md)** - Development roadmap
-- **[Phase 1 Complete](docs/PHASE1_COMPLETE.md)** - What's been built
+- **[Phase 1 Complete](docs/PHASE1_COMPLETE.md)** - League management
+- **[Phase 2 Complete](docs/PHASE2_COMPLETE.md)** - Match recording & leaderboard
 - **[GitHub Actions Setup](docs/SETUP.md)** - CI/CD configuration
 - **[Secrets Template](docs/SECRETS_TEMPLATE.md)** - Quick secrets reference
 
@@ -200,13 +219,15 @@ npm run build
 
 ## 🎯 Current Status
 
-**Phase 1: COMPLETE ✅**
+**Phase 1 + Phase 2: COMPLETE ✅**
 - All core league features implemented
-- 135/135 tests passing (100%) 🎉
+- Match recording with live leaderboard
+- 178/178 tests passing (100%) 🎉
+- **MVP ACHIEVED**: Fully functional competitive platform
+- Beautiful Tailwind CSS UI
 - Production-ready with CI/CD
-- Join-by-link feature with smart redirects!
 
-**Next: Phase 2 - Match Management**
+**Next: Phase 3 - Fixtures & Scheduling**
 
 ## 📖 Learn More
 

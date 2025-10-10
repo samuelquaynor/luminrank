@@ -1,0 +1,76 @@
+<div class="space-y-4">
+  <!-- Empty State -->
+  <div *ngIf="entries.length === 0" class="text-center py-12">
+    <div class="text-6xl mb-4">🏆</div>
+    <h3 class="text-xl font-semibold text-white mb-2">No Matches Yet</h3>
+    <p class="text-gray-400">Record your first match to see the leaderboard!</p>
+  </div>
+
+  <!-- Leaderboard Table -->
+  <div *ngIf="entries.length > 0" class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="border-b border-border">
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Rank</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Player</th>
+          <th class="text-center py-3 px-4 text-sm font-semibold text-gray-400">Played</th>
+          <th class="text-center py-3 px-4 text-sm font-semibold text-gray-400">Won</th>
+          <th class="text-center py-3 px-4 text-sm font-semibold text-gray-400">Lost</th>
+          <th class="text-center py-3 px-4 text-sm font-semibold text-gray-400">Points</th>
+          <th class="text-center py-3 px-4 text-sm font-semibold text-gray-400">Win %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let entry of entries"
+          [attr.data-testid]="'leaderboard-row-' + entry.rank"
+          class="border-b border-border/50 transition-colors duration-200 hover:bg-bg-tertiary/50"
+          [class.bg-white/5]="entry.profile_id === currentUserId"
+        >
+          <!-- Rank with Trophy Icons -->
+          <td class="py-4 px-4">
+            <div class="flex items-center gap-2">
+              <span *ngIf="entry.rank === 1" class="text-2xl">🥇</span>
+              <span *ngIf="entry.rank === 2" class="text-2xl">🥈</span>
+              <span *ngIf="entry.rank === 3" class="text-2xl">🥉</span>
+              <span
+                class="font-semibold"
+                [class.text-white]="entry.rank <= 3"
+                [class.text-gray-400]="entry.rank > 3"
+              >
+                {{ entry.rank }}
+              </span>
+            </div>
+          </td>
+
+          <!-- Player Name -->
+          <td class="py-4 px-4">
+            <div class="flex items-center gap-2">
+              <span
+                class="font-medium"
+                [class.text-white]="entry.profile_id === currentUserId"
+                [class.text-gray-300]="entry.profile_id !== currentUserId"
+              >
+                {{ entry.display_name }}
+              </span>
+              <span
+                *ngIf="entry.profile_id === currentUserId"
+                class="text-xs px-2 py-0.5 bg-white/10 text-white rounded"
+              >
+                You
+              </span>
+            </div>
+          </td>
+
+          <!-- Stats -->
+          <td class="py-4 px-4 text-center text-gray-300">{{ entry.matches_played }}</td>
+          <td class="py-4 px-4 text-center text-green-400 font-medium">{{ entry.wins }}</td>
+          <td class="py-4 px-4 text-center text-red-400 font-medium">{{ entry.losses }}</td>
+          <td class="py-4 px-4 text-center text-white font-bold">{{ entry.points }}</td>
+          <td class="py-4 px-4 text-center text-gray-300">{{ entry.win_rate.toFixed(1) }}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

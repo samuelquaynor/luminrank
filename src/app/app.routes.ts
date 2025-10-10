@@ -49,6 +49,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/leagues/league-detail.component').then((m) => m.LeagueDetailComponent),
       },
+      {
+        path: ':id/record-match',
+        loadComponent: () =>
+          import('./pages/matches/record-match.component').then((m) => m.RecordMatchComponent),
+      },
     ],
   },
   // Admin routes commented out for now

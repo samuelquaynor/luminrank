@@ -1,0 +1,835 @@
+
+> luminrank@0.0.0 test
+> ng test --include=**/__integration__/**/*.spec.ts --browsers=ChromeHeadless --watch=false
+
+---------------------------------
+- Root directory:  /Users/samuelquaynor/Documents/luminrank
+- Working directory:  /Users/samuelquaynor/Documents/luminrank
+- Files: .env
+- Environment: none
+- Environment files: 
+ ✔ /Users/samuelquaynor/Documents/luminrank/.env
+- Environment variables: NG_APP 
+ ✔ NG_APP_SUPABASE_ANON_KEY
+ ✔ NG_APP_SUPABASE_URL
+---------------------------------
+
+❯ Building...
+✔ Building...
+Initial chunk files                                                                        | Names                                                                                   |  Raw size
+chunk-QXWKM6KE.js                                                                          | -                                                                                       |   2.24 MB | 
+polyfills.js                                                                               | polyfills                                                                               | 943.14 kB | 
+chunk-437Y2MVK.js                                                                          | -                                                                                       | 390.33 kB | 
+test_main.js                                                                               | test_main                                                                               | 239.14 kB | 
+spec-app-features-leagues-services-__integration__-league.service.integration.spec.js      | spec-app-features-leagues-services-__integration__-league.service.integration.spec      |  36.93 kB | 
+styles.css                                                                                 | styles                                                                                  |  22.18 kB | 
+spec-app-features-matches-services-__integration__-leaderboard.service.integration.spec.js | spec-app-features-matches-services-__integration__-leaderboard.service.integration.spec |  21.08 kB | 
+spec-app-features-matches-services-__integration__-match.service.integration.spec.js       | spec-app-features-matches-services-__integration__-match.service.integration.spec       |  15.68 kB | 
+chunk-CXRYRG5C.js                                                                          | -                                                                                       |   8.91 kB | 
+chunk-NE2ZEM5M.js                                                                          | -                                                                                       |   3.24 kB | 
+chunk-O2A2MJNO.js                                                                          | -                                                                                       |   1.22 kB | 
+jasmine-cleanup-0.js                                                                       | jasmine-cleanup-0                                                                       | 604 bytes | 
+
+                                                                                           | Initial total                                                                           |   3.92 MB
+
+Lazy chunk files                                                                           | Names                                                                                   |  Raw size
+chunk-HLUZ36ZV.js                                                                          | browser                                                                                 | 289 bytes | 
+
+Application bundle generation complete. [3.049 seconds] - 2025-10-09T19:41:09.431Z
+
+09 10 2025 19:41:09.495:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9879/
+09 10 2025 19:41:09.496:INFO [launcher]: Launching browsers ChromeHeadless with concurrency unlimited
+09 10 2025 19:41:09.498:INFO [launcher]: Starting browser ChromeHeadless
+09 10 2025 19:41:10.201:INFO [Chrome Headless 141.0.0.0 (Mac OS 10.15.7)]: Connected on socket D_9ezu8y5OmNvh16AAAB with id 66785564
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 0 of 36 SUCCESS (0 secs / 0 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 0 of 36 SUCCESS (0 secs / 0 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getMatchById should fail to retrieve non-existent match FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 1 of 36 (1 FAILED) (0 secs / 0.521 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 1 of 36 (1 FAILED) (0 secs / 0.521 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getMatchById should retrieve a match by ID FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 2 of 36 (2 FAILED) (0 secs / 0.798 secs)
+[1A[2KERROR: 'Error recording match:', Error: Match must have exactly 2 participants
+Error: Match must have exactly 2 participants
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:35:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 2 of 36 (2 FAILED) (0 secs / 0.798 secs)
+ERROR: 'Error recording match:', Error: Match must have exactly 2 participants
+Error: Match must have exactly 2 participants
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:35:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests recordMatch should fail to record match with only 1 participant FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 3 of 36 (3 FAILED) (0 secs / 1.074 secs)
+[1A[2KERROR: 'Error recording match:', Error: Match must have exactly one winner and one loser
+Error: Match must have exactly one winner and one loser
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:44:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 3 of 36 (3 FAILED) (0 secs / 1.074 secs)
+ERROR: 'Error recording match:', Error: Match must have exactly one winner and one loser
+Error: Match must have exactly one winner and one loser
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:44:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests recordMatch should fail to record match without a winner FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 4 of 36 (4 FAILED) (0 secs / 1.346 secs)
+[1A[2KERROR: 'Error recording match:', Error: Match must have exactly one winner and one loser
+Error: Match must have exactly one winner and one loser
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:44:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 4 of 36 (4 FAILED) (0 secs / 1.346 secs)
+ERROR: 'Error recording match:', Error: Match must have exactly one winner and one loser
+Error: Match must have exactly one winner and one loser
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:44:35
+    at _Observable.init [as _subscribe] (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/throwError.js:5:51)
+    at _Observable._trySubscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:37:25)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:31:30
+    at errorContext (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/util/errorContext.js:19:9)
+    at _Observable.subscribe (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Observable.js:22:9)
+    at source.subscribe.isComplete (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/switchMap.js:14:51)
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests recordMatch should fail to record match with same result for both players FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected 'Match must have exactly one winner and one loser' to contain 'same result'.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:238:31
+	    at Generator.throw (<anonymous>)
+	    at rejected (chunk-NE2ZEM5M.js:62:29)
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 5 of 36 (5 FAILED) (0 secs / 1.608 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 5 of 36 (5 FAILED) (0 secs / 1.608 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests recordMatch should record a match with 2 participants FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 6 of 36 (6 FAILED) (0 secs / 1.879 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 6 of 36 (6 FAILED) (0 secs / 1.879 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getPlayerMatches should retrieve all matches for a player FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 7 of 36 (7 FAILED) (0 secs / 2.155 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 7 of 36 (7 FAILED) (0 secs / 2.155 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getPlayerMatches should return empty array for player with no matches FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 8 of 36 (8 FAILED) (0 secs / 2.433 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 8 of 36 (8 FAILED) (0 secs / 2.433 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getLeagueMatches should return empty array for league with no matches FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 9 of 36 (9 FAILED) (0 secs / 2.703 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 9 of 36 (9 FAILED) (0 secs / 2.703 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests getLeagueMatches should retrieve all matches for a league FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 10 of 36 (10 FAILED) (0 secs / 2.988 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 10 of 36 (10 FAILED) (0 secs / 2.988 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests cancelMatch should cancel a match by the recorder FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 11 of 36 (11 FAILED) (0 secs / 3.263 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 11 of 36 (11 FAILED) (0 secs / 3.263 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) MatchService Integration Tests cancelMatch should fail to cancel match by non-recorder FAILED
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:60:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: 'PGRST204', details: null, hint: null, message: 'Could not find the 'display_name' column of 'profiles' in the schema cache' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:78:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_members_league_id_user_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:111:26
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Expected Object({ code: '23505', details: null, hint: null, message: 'duplicate key value violates unique constraint "league_settings_league_id_key"' }) to be null.
+	    at <Jasmine>
+	    at src/app/features/matches/services/__integration__/match.service.integration.spec.ts:133:27
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 12 of 36 (12 FAILED) (0 secs / 3.536 secs)
+[1A[2KWARN: 'Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.'
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 12 of 36 (12 FAILED) (0 secs / 3.536 secs)
+WARN: 'Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.'
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 12 of 36 (12 FAILED) (0 secs / 3.536 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests isPlayerInTopN should return true for player in top N FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 13 of 36 (13 FAILED) (0 secs / 3.897 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 13 of 36 (13 FAILED) (0 secs / 3.897 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests isPlayerInTopN should return false for player not in top N FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 14 of 36 (14 FAILED) (0 secs / 4.252 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 14 of 36 (14 FAILED) (0 secs / 4.252 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests getPlayerStats should return null for player with no matches FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 15 of 36 (15 FAILED) (0 secs / 4.627 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 15 of 36 (15 FAILED) (0 secs / 4.627 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests getPlayerStats should return player stats for a player with matches FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 16 of 36 (16 FAILED) (0 secs / 4.981 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 16 of 36 (16 FAILED) (0 secs / 4.981 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests getTopPlayers should return top N players FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 17 of 36 (17 FAILED) (0 secs / 5.347 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 17 of 36 (17 FAILED) (0 secs / 5.347 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests getTopPlayers should return all players if N is greater than player count FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 18 of 36 (18 FAILED) (0 secs / 5.697 secs)
+[1A[2KERROR: 'Error fetching leaderboard:', Error: column p.display_name does not exist
+Error: column p.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/leaderboard.service.ts:34:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 18 of 36 (18 FAILED) (0 secs / 5.697 secs)
+ERROR: 'Error fetching leaderboard:', Error: column p.display_name does not exist
+Error: column p.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/leaderboard.service.ts:34:17
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests getLeagueLeaderboard should return empty leaderboard for league with no matches FAILED
+	Error: column p.display_name does not exist
+	    at src/app/features/matches/services/leaderboard.service.ts:34:17
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 19 of 36 (19 FAILED) (0 secs / 6.044 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 19 of 36 (19 FAILED) (0 secs / 6.044 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests getLeagueLeaderboard should calculate leaderboard correctly with multiple matches FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 20 of 36 (20 FAILED) (0 secs / 6.402 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 20 of 36 (20 FAILED) (0 secs / 6.402 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests getLeagueLeaderboard should calculate leaderboard correctly with one match FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 21 of 36 (21 FAILED) (0 secs / 6.765 secs)
+[1A[2KERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 21 of 36 (21 FAILED) (0 secs / 6.765 secs)
+ERROR: 'Error recording match:', Error: column profiles_1.display_name does not exist
+Error: column profiles_1.display_name does not exist
+    at http://localhost:9879/base/src/app/features/matches/services/match.service.ts:85:25
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+    at OperatorSubscriber._next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+    at OperatorSubscriber.next (http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+    at http://localhost:9879/base/node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeaderboardService Integration Tests getLeagueLeaderboard should handle tie-breaking correctly (same points, different win rates) FAILED
+	Error: column profiles_1.display_name does not exist
+	    at src/app/features/matches/services/match.service.ts:85:25
+	    at node_modules/rxjs/dist/esm/internal/operators/map.js:7:37
+	    at OperatorSubscriber._next (node_modules/rxjs/dist/esm/internal/operators/OperatorSubscriber.js:13:21)
+	    at OperatorSubscriber.next (node_modules/rxjs/dist/esm/internal/Subscriber.js:31:18)
+	    at node_modules/rxjs/dist/esm/internal/observable/innerFrom.js:61:28
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 22 of 36 (22 FAILED) (0 secs / 7.126 secs)
+[1A[2KWARN: 'Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.'
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 22 of 36 (22 FAILED) (0 secs / 7.126 secs)
+WARN: 'Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.'
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 23 of 36 (22 FAILED) (0 secs / 7.153 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 24 of 36 (22 FAILED) (0 secs / 7.209 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 25 of 36 (22 FAILED) (0 secs / 7.226 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 26 of 36 (22 FAILED) (0 secs / 7.493 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 27 of 36 (22 FAILED) (0 secs / 7.758 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7) LeagueService Integration Tests createLeague should create league settings automatically FAILED
+	Expected 'win_loss' to be 'elo'.
+	    at <Jasmine>
+	    at src/app/features/leagues/services/__integration__/league.service.integration.spec.ts:165:40
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-NE2ZEM5M.js:55:24)
+Chrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 28 of 36 (23 FAILED) (0 secs / 7.775 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 29 of 36 (23 FAILED) (0 secs / 7.792 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 30 of 36 (23 FAILED) (0 secs / 7.804 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 31 of 36 (23 FAILED) (0 secs / 7.816 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 32 of 36 (23 FAILED) (0 secs / 8.084 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 33 of 36 (23 FAILED) (0 secs / 8.101 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 34 of 36 (23 FAILED) (0 secs / 8.356 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 35 of 36 (23 FAILED) (0 secs / 8.627 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 36 of 36 (23 FAILED) (0 secs / 8.645 secs)
+[1A[2KChrome Headless 141.0.0.0 (Mac OS 10.15.7): Executed 36 of 36 (23 FAILED) (8.856 secs / 8.645 secs)
+TOTAL: 23 FAILED, 13 SUCCESS
