@@ -9,6 +9,20 @@ alwaysApply: true
 - Never use class names or text content for element selection in E2E tests
 - Preserve query params and localStorage when testing redirect flows
 - Stub clipboard API in Cypress tests to avoid focus issues
+- **ALWAYS write integration tests FIRST** to verify database queries and RLS policies work before implementing frontend/state management
+- Integration tests should follow the pattern in `league.service.integration.spec.ts`:
+  - Use `provideZonelessChangeDetection()` in TestBed
+  - Create one test user in `beforeAll`
+  - Each test creates its own league/data for isolation
+  - Use helper functions for common operations (createTestLeague, createOpponent)
+  - Sign back in as test user after creating new users (signUp auto-signs in)
+  - Clean up in `afterAll` (leagues cascade delete to matches, members, settings)
+  - Database column: profiles use `name`, not `display_name`
+- **Integration tests verify DATABASE operations**, E2E tests verify UI displays data correctly
+- E2E tests should verify data displays (not just empty states):
+  - Check for actual player names, scores, dates in rendered HTML
+  - Use `.should('contain', 'Player Name')` to verify data renders
+  - Test with real data, not just form validation
 
 ## Architecture
 - **NO router navigation in NgRx effects** - Handle all navigation in components

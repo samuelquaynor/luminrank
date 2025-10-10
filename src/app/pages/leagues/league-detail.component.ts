@@ -8,9 +8,11 @@ import { Actions, ofType } from '@ngrx/effects';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { LeaderboardComponent } from '../../shared/components/leaderboard/leaderboard.component';
 import { MatchCardComponent } from '../../shared/components/match-card/match-card.component';
+import { FixtureCardComponent } from '../../shared/components/fixture-card/fixture-card.component';
 import { LeagueWithDetails, LeagueMember, ScoringSystem } from '../../features/leagues/models/league.model';
 import { MatchWithDetails } from '../../features/matches/models/match.model';
 import { LeaderboardEntry } from '../../features/matches/models/leaderboard.model';
+import { FixtureWithDetails } from '../../features/fixtures/models/fixture.model';
 import * as LeagueActions from '../../features/leagues/store/league.actions';
 import * as LeagueSelectors from '../../features/leagues/store/league.selectors';
 import * as AuthSelectors from '../../features/auth/store/auth.selectors';
@@ -18,11 +20,15 @@ import * as MatchActions from '../../features/matches/store/match.actions';
 import * as MatchSelectors from '../../features/matches/store/match.selectors';
 import * as LeaderboardActions from '../../features/matches/store/leaderboard.actions';
 import * as LeaderboardSelectors from '../../features/matches/store/leaderboard.selectors';
+import * as FixtureActions from '../../features/fixtures/store/fixture.actions';
+import * as FixtureSelectors from '../../features/fixtures/store/fixture.selectors';
+import * as SeasonActions from '../../features/fixtures/store/season.actions';
+import * as SeasonSelectors from '../../features/fixtures/store/season.selectors';
 
 @Component({
   selector: 'app-league-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, LeaderboardComponent, MatchCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, LeaderboardComponent, MatchCardComponent, FixtureCardComponent],
   templateUrl: './league-detail.component.html',
   styleUrl: './league-detail.component.css'
 })
@@ -45,7 +51,12 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   leaderboardLoading$!: Observable<boolean>;
   matchesLoading$!: Observable<boolean>;
 
-  activeTab: 'leaderboard' | 'matches' | 'members' | 'settings' = 'leaderboard';
+  // Phase 3: Fixtures & Seasons
+  fixtures$!: Observable<FixtureWithDetails[]>;
+  activeSeason$!: Observable<any>;
+  fixturesLoading$!: Observable<boolean>;
+
+  activeTab: 'leaderboard' | 'matches' | 'fixtures' | 'members' | 'settings' = 'leaderboard';
   settingsForm!: FormGroup;
   leagueForm!: FormGroup;
   editingSettings = false;
@@ -70,6 +81,14 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     this.store.dispatch(LeagueActions.loadLeagueMembers({ leagueId: this.leagueId }));
     this.store.dispatch(LeaderboardActions.loadLeaderboard({ leagueId: this.leagueId }));
     this.store.dispatch(MatchActions.loadLeagueMatches({ leagueId: this.leagueId }));
+
+    // Phase 3: Load fixtures and seasons
+    this.fixtures$ = this.store.select(FixtureSelectors.selectAllFixtures);
+    this.activeSeason$ = this.store.select(SeasonSelectors.selectActiveSeason);
+    this.fixturesLoading$ = this.store.select(FixtureSelectors.selectFixtureLoading);
+    
+    this.store.dispatch(FixtureActions.loadLeagueFixtures({ leagueId: this.leagueId }));
+    this.store.dispatch(SeasonActions.loadActiveSeason({ leagueId: this.leagueId }));
 
     // Subscribe to league to initialize forms (only once)
     this.leagueSubscription = this.league$.subscribe(league => {
@@ -118,7 +137,7 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  switchTab(tab: 'leaderboard' | 'matches' | 'members' | 'settings'): void {
+  switchTab(tab: 'leaderboard' | 'matches' | 'fixtures' | 'members' | 'settings'): void {
     this.activeTab = tab;
   }
 
@@ -204,12 +223,25 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   }
 
   isMember(league: LeagueWithDetails, userId: string | undefined): boolean {
-    // User is a member if they're the creator or in the members list
-    return this.isCreator(league, userId);
+    if (!userId) return false;
+    // User is a member if they're the creator OR in the members list
+    if (this.isCreator(league, userId)) return true;
+    
+    // Check if user is in members list
+    let isMember = false;
+    this.members$.subscribe(members => {
+      isMember = members.some(m => m.userId === userId);
+    }).unsubscribe();
+    
+    return isMember;
   }
 
   navigateToRecordMatch(): void {
     this.router.navigate(['/leagues', this.leagueId, 'record-match']);
+  }
+
+  navigateToGenerateFixtures(): void {
+    this.router.navigate(['/leagues', this.leagueId, 'generate-fixtures']);
   }
 
   getRoleBadgeClass(role: string): string {

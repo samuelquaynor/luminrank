@@ -161,6 +161,14 @@ describe('MatchService Integration Tests', () => {
       expect(match.status).toBe(MatchStatus.COMPLETED);
       expect(match.participants.length).toBe(2);
 
+      // ✅ VERIFY PARTICIPANT DATA INCLUDES NAMES (for UI display)
+      expect(match.participants[0].display_name).toBeTruthy();
+      expect(match.participants[1].display_name).toBeTruthy();
+      expect(match.participants[0].score).toBe(10);
+      expect(match.participants[1].score).toBe(5);
+      expect(match.participants[0].result).toBe(MatchResult.WIN);
+      expect(match.participants[1].result).toBe(MatchResult.LOSS);
+
       // Cleanup
       await supabase.from('profiles').delete().eq('id', user2.id);
     });
@@ -267,6 +275,14 @@ describe('MatchService Integration Tests', () => {
       expect(matches.length).toBeGreaterThan(0);
       expect(matches[0].league_id).toBe(league.id);
       expect(matches[0].participants.length).toBe(2);
+
+      // ✅ VERIFY PARTICIPANT NAMES ARE INCLUDED (critical for UI display)
+      expect(matches[0].participants[0].display_name).toBeTruthy();
+      expect(matches[0].participants[1].display_name).toBeTruthy();
+      // Verify we can identify the winner by name
+      const winner = matches[0].participants.find(p => p.result === MatchResult.WIN);
+      expect(winner).toBeTruthy();
+      expect(winner!.display_name).toBe('Match Integration Test User');
 
       // Cleanup
       await supabase.from('profiles').delete().eq('id', user2.id);

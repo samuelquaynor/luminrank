@@ -11,39 +11,86 @@ describe('Matches', () => {
   });
 
   describe('Match Recording', () => {
-    it('should record a match successfully', () => {
+    it('should record a match and display real data in matches tab and leaderboard', () => {
       // Create a league
       cy.visit('/');
-      cy.createLeague('Match Test League', 'Chess');
+      cy.createLeague('Match Data Test League', 'Chess');
 
-      // Navigate to record match
-      cy.get('[data-testid="record-match-button"]').click();
-      cy.url().should('include', '/record-match');
-
-      // Verify we're on the record match page
-      cy.get('h1').should('contain', 'Record Match');
-
-      // Wait for page to stabilize
-      cy.wait(2000);
-
-      // Fill in match details
-      cy.get('[data-testid="match-date-input"]').should('be.visible');
+      // Navigate to settings to get invite code
+      cy.get('[data-testid="settings-tab-button"]').click();
+      cy.wait(1000);
       
-      // Select players (both dropdowns should have the current user)
-      cy.get('[data-testid="player1-select"]').should('be.visible').select(1); // Select first option (current user)
-      cy.get('[data-testid="player1-score-input"]').clear().type('10', { force: true });
-      cy.get('[data-testid="player1-result-select"]').select('win');
-
-      // For player 2, we need another user - for now, this test will create a league with only one member
-      // In a real scenario, we'd need to add another member first
-      // Let's skip the full flow for now and just verify the form exists
-      
-      cy.get('[data-testid="player2-select"]').should('be.visible');
-      cy.get('[data-testid="player2-score-input"]').should('be.visible');
-      cy.get('[data-testid="player2-result-select"]').should('be.visible');
-      
-      // Verify submit button exists
-      cy.get('[data-testid="submit-record-match-button"]').should('be.visible');
+      cy.get('[data-testid="league-invite-code"]').invoke('text').then((inviteCode) => {
+        const code = inviteCode.trim();
+        
+        // Logout and create second user
+        cy.logout();
+        
+        const timestamp = Date.now();
+        const opponentEmail = `matchopp${timestamp}@example.com`;
+        cy.registerUser(opponentEmail, 'TestPassword123!', 'Match Opponent');
+        
+        // Wait for home page
+        cy.get('[data-testid="welcome-message"]', { timeout: 10000 }).should('be.visible');
+        cy.wait(3000);
+        
+        // Join the league via invite link (auto-joins)
+        cy.visit(`/leagues/join/${code}`);
+        cy.wait(2000);
+        
+        // Should auto-join and redirect to league detail
+        cy.url({ timeout: 15000 }).should('match', /\/leagues\/[a-f0-9-]+$/);
+        cy.get('[data-testid="league-detail-name"]').should('contain', 'Match Data Test League');
+        
+        // Capture league ID
+        cy.url().then((url) => {
+          const urlMatches = url.match(/\/leagues\/([a-f0-9-]+)/);
+          const leagueId = urlMatches![1];
+          
+          // Record a match as the opponent (currently logged in)
+          cy.get('[data-testid="record-match-button"]').click();
+          cy.url().should('include', '/record-match');
+          cy.wait(2000);
+          
+          // Fill in match details with real data
+          cy.get('[data-testid="player1-select"]').select(1); // Match Opponent (current user)
+          cy.get('[data-testid="player1-score-input"]').clear().type('15', { force: true });
+          cy.get('[data-testid="player1-result-select"]').select('win');
+          
+          cy.get('[data-testid="player2-select"]').select(2); // Main user
+          cy.get('[data-testid="player2-score-input"]').clear().type('8', { force: true });
+          cy.get('[data-testid="player2-result-select"]').select('loss');
+          
+          cy.get('[data-testid="submit-record-match-button"]').click();
+          cy.url({ timeout: 15000 }).should('match', /\/leagues\/[a-f0-9-]+$/);
+          cy.wait(3000); // Wait for data to load
+          
+          // ✅ VERIFY LEADERBOARD DISPLAYS REAL DATA (not empty state)
+          cy.get('[data-testid="leaderboard-tab-button"]').should('have.class', 'text-white');
+          
+          // Check that leaderboard displays player names
+          cy.get('[data-testid^="leaderboard-row-"]', { timeout: 10000 }).should('have.length.at.least', 2);
+          cy.contains('Match Opponent').should('be.visible');
+          cy.contains(testUser.name).should('be.visible');
+          
+          // Verify actual stats are shown (not just empty state)
+          cy.get('[data-testid="leaderboard-row-1"]').should('be.visible');
+          // Check for actual numbers in the leaderboard (matches, wins, points)
+          cy.get('[data-testid="leaderboard-row-1"]').invoke('text').should('match', /[1-9]/); // Should contain at least one non-zero number
+          
+          // ✅ VERIFY MATCHES TAB DISPLAYS REAL DATA
+          cy.get('[data-testid="matches-tab-button"]').click();
+          cy.wait(2000);
+          
+          // Verify match card displays with real player names and scores
+          cy.get('[data-testid^="match-card-"]', { timeout: 10000 }).should('have.length', 1);
+          cy.contains('Match Opponent').should('be.visible');
+          cy.contains(testUser.name).should('be.visible');
+          cy.contains('15').should('be.visible'); // Winner score
+          cy.contains('8').should('be.visible'); // Loser score
+          cy.contains('WIN').should('be.visible'); // Result badge
+        });
+      });
     });
 
     it('should show validation errors for invalid match data', () => {

@@ -13,6 +13,8 @@ import { AuthEffects } from './features/auth/store/auth.effects';
 import { LeagueEffects } from './features/leagues/store/league.effects';
 import { MatchEffects } from './features/matches/store/match.effects';
 import { LeaderboardEffects } from './features/matches/store/leaderboard.effects';
+import { FixtureEffects } from './features/fixtures/store/fixture.effects';
+import { SeasonEffects } from './features/fixtures/store/season.effects';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { provideSupabase } from './core/providers/supabase.provider';
@@ -27,7 +29,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, errorInterceptor])
     ),
     provideStore(appReducers),
-    provideEffects([AuthEffects, LeagueEffects, MatchEffects, LeaderboardEffects]),
+    provideEffects([AuthEffects, LeagueEffects, MatchEffects, LeaderboardEffects, FixtureEffects, SeasonEffects]),
     provideRouterStore(),
     provideStoreDevtools({
       maxAge: 25,

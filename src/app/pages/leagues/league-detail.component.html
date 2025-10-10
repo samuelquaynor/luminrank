@@ -193,6 +193,13 @@
             📋 Matches
           </button>
           <button 
+            (click)="switchTab('fixtures')"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
+            [class]="activeTab === 'fixtures' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
+            data-testid="fixtures-tab-button">
+            📅 Fixtures
+          </button>
+          <button 
             (click)="switchTab('members')"
             class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
             [class]="activeTab === 'members' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
@@ -289,6 +296,70 @@
                       @if ((currentUserId$ | async); as userId) {
                         @for (match of matches; track match.id) {
                           <app-match-card [match]="match" [currentUserId]="userId"></app-match-card>
+                        }
+                      }
+                    </div>
+                  }
+                }
+              }
+            </div>
+          }
+
+          <!-- Fixtures Tab -->
+          @if (activeTab === 'fixtures') {
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h2 class="text-2xl font-bold text-white">Match Schedule</h2>
+                  @if (activeSeason$ | async; as season) {
+                    <p class="text-sm text-gray-400 mt-1">{{ season.name }}</p>
+                  }
+                </div>
+                @if ((currentUserId$ | async); as userId) {
+                  @if (isCreator(league, userId)) {
+                    <button
+                      (click)="navigateToGenerateFixtures()"
+                      class="px-4 py-2 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100"
+                      data-testid="generate-fixtures-button">
+                      Generate Fixtures
+                    </button>
+                  }
+                }
+              </div>
+
+              @if (fixturesLoading$ | async) {
+                <div class="flex justify-center py-12">
+                  <svg class="animate-spin h-12 w-12 text-white" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              } @else {
+                @if ((fixtures$ | async); as fixtures) {
+                  @if (fixtures.length === 0) {
+                    <div class="text-center py-12">
+                      <div class="text-6xl mb-4">📅</div>
+                      <h3 class="text-xl font-semibold text-white mb-2">No Fixtures Yet</h3>
+                      <p class="text-gray-400 mb-6">Generate fixtures to schedule matches</p>
+                      @if ((currentUserId$ | async); as userId) {
+                        @if (isCreator(league, userId)) {
+                          <button
+                            (click)="navigateToGenerateFixtures()"
+                            class="px-6 py-3 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100">
+                            Generate Fixtures
+                          </button>
+                        }
+                      }
+                    </div>
+                  } @else {
+                    <div class="space-y-6">
+                      @if ((currentUserId$ | async); as userId) {
+                        @for (fixture of fixtures; track fixture.id) {
+                          <app-fixture-card 
+                            [fixture]="fixture" 
+                            [currentUserId]="userId"
+                            [showRecordButton]="true">
+                          </app-fixture-card>
                         }
                       }
                     </div>

@@ -1,0 +1,317 @@
+<div class="min-h-screen bg-bg-primary text-text-primary pb-16">
+  <!-- Header -->
+  <div class="bg-bg-secondary border-b border-border sticky top-0 z-10">
+    <div class="max-w-4xl mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-lg font-bold">Generate Fixtures</h1>
+          <p class="text-xs text-gray-400 mt-0.5">Set up your match schedule</p>
+        </div>
+        <button
+          (click)="cancel()"
+          class="text-xs text-gray-400 hover:text-white transition-colors"
+          data-testid="cancel-button">
+          Cancel
+        </button>
+      </div>
+
+      <!-- Progress Steps -->
+      <div class="flex items-center gap-2 mt-3">
+        <div 
+          class="flex-1 flex items-center gap-1.5 cursor-pointer"
+          (click)="goToStep(1)">
+          <div 
+            class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors"
+            [class]="currentStep >= 1 ? 'bg-primary text-white' : 'bg-bg-tertiary text-gray-500'">
+            1
+          </div>
+          <div class="text-xs font-medium" [class.text-primary]="currentStep === 1">Season</div>
+        </div>
+        
+        <div class="h-px flex-shrink-0 w-6 bg-border"></div>
+        
+        <div 
+          class="flex-1 flex items-center gap-1.5 cursor-pointer"
+          (click)="goToStep(2)">
+          <div 
+            class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors"
+            [class]="currentStep >= 2 ? 'bg-primary text-white' : 'bg-bg-tertiary text-gray-500'">
+            2
+          </div>
+          <div class="text-xs font-medium" [class.text-primary]="currentStep === 2">Settings</div>
+        </div>
+        
+        <div class="h-px flex-shrink-0 w-6 bg-border"></div>
+        
+        <div class="flex-1 flex items-center gap-1.5">
+          <div 
+            class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors"
+            [class]="currentStep >= 3 ? 'bg-primary text-white' : 'bg-bg-tertiary text-gray-500'">
+            3
+          </div>
+          <div class="text-xs font-medium" [class.text-primary]="currentStep === 3">Review</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-4xl mx-auto px-4 py-4">
+    <!-- Step 1: Season Selection -->
+    @if (currentStep === 1) {
+      <div class="space-y-3" [formGroup]="seasonForm">
+        <div>
+          <h2 class="text-sm font-semibold mb-2">Select or Create Season</h2>
+          
+          <!-- Existing Seasons -->
+          @if (seasons$ | async; as seasons) {
+            @if (seasons.length > 0) {
+              <div class="space-y-2 mb-3">
+                @for (season of seasons; track season.id) {
+                  <button
+                    type="button"
+                    (click)="selectExistingSeason(season)"
+                    class="w-full text-left p-2.5 rounded border transition-all"
+                    [class]="selectedSeason?.id === season.id 
+                      ? 'bg-primary/10 border-primary text-white' 
+                      : 'bg-bg-secondary border-border hover:border-primary/50'"
+                    data-testid="select-season-button">
+                    <div class="flex items-center justify-between">
+                      <div class="flex-1">
+                        <div class="text-sm font-semibold">{{ season.name }}</div>
+                        <div class="text-[10px] text-gray-400 mt-0.5">
+                          Season {{ season.season_number }} • {{ season.status }}
+                        </div>
+                      </div>
+                      @if (selectedSeason?.id === season.id) {
+                        <span class="text-primary text-sm">✓</span>
+                      }
+                    </div>
+                  </button>
+                }
+              </div>
+            }
+          }
+
+          <!-- Create New Season Toggle -->
+          <button
+            type="button"
+            (click)="toggleCreateNewSeason()"
+            class="w-full p-2.5 rounded border transition-all text-left"
+            [class]="createNewSeason 
+              ? 'bg-primary/10 border-primary' 
+              : 'bg-bg-secondary border-border hover:border-primary/50'"
+            data-testid="create-new-season-button">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">{{ createNewSeason ? '✓' : '+' }}</span>
+              <span class="text-sm font-medium">Create New Season</span>
+            </div>
+          </button>
+
+          <!-- New Season Form -->
+          @if (createNewSeason) {
+            <div class="mt-3 p-3 bg-bg-secondary rounded border border-border space-y-2.5">
+              <div>
+                <label class="block text-xs font-medium text-gray-400 mb-1">Season Name</label>
+                <input
+                  type="text"
+                  formControlName="newSeasonName"
+                  class="w-full px-2.5 py-1.5 text-sm bg-bg-tertiary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+                  placeholder="e.g., Spring 2025"
+                  data-testid="season-name-input">
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs font-medium text-gray-400 mb-1">Season Number</label>
+                  <input
+                    type="number"
+                    formControlName="newSeasonNumber"
+                    min="1"
+                    class="w-full px-2.5 py-1.5 text-sm bg-bg-tertiary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+                    data-testid="season-number-input">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-gray-400 mb-1">Start Date</label>
+                  <input
+                    type="date"
+                    formControlName="startDate"
+                    class="w-full px-2.5 py-1.5 text-sm bg-bg-tertiary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+                    data-testid="season-start-date-input">
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Step 2: Settings -->
+    @if (currentStep === 2) {
+      <div class="space-y-3" [formGroup]="settingsForm">
+        <h2 class="text-sm font-semibold mb-2">Configure Fixture Settings</h2>
+
+        <div class="grid grid-cols-1 gap-2.5">
+          <!-- Start Date -->
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1">First Match Date</label>
+            <input
+              type="date"
+              formControlName="startDate"
+              class="w-full px-2.5 py-1.5 text-sm bg-bg-secondary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+              data-testid="fixtures-start-date-input">
+            <p class="text-[10px] text-gray-500 mt-1">When should the first round begin?</p>
+          </div>
+
+          <!-- Match Frequency -->
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1">Match Frequency (days)</label>
+            <input
+              type="number"
+              formControlName="matchFrequencyDays"
+              min="1"
+              max="365"
+              class="w-full px-2.5 py-1.5 text-sm bg-bg-secondary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+              data-testid="match-frequency-input">
+            <p class="text-[10px] text-gray-500 mt-1">Days between each round</p>
+          </div>
+
+          <!-- Submission Window -->
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1">Submission Window (hours)</label>
+            <input
+              type="number"
+              formControlName="submissionWindowHours"
+              min="1"
+              max="720"
+              class="w-full px-2.5 py-1.5 text-sm bg-bg-secondary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+              data-testid="submission-window-input">
+            <p class="text-[10px] text-gray-500 mt-1">Time allowed to submit results after match date</p>
+          </div>
+
+          <!-- Return Fixtures -->
+          <label class="flex items-center gap-2 p-2.5 bg-bg-secondary border border-border rounded cursor-pointer hover:border-primary/50 transition-colors">
+            <input
+              type="checkbox"
+              formControlName="includeReturnFixtures"
+              class="w-4 h-4 text-primary bg-bg-tertiary border-border rounded focus:ring-primary focus:ring-1"
+              data-testid="return-fixtures-checkbox">
+            <div class="flex-1">
+              <div class="text-sm font-medium">Double Round-Robin</div>
+              <div class="text-[10px] text-gray-500">Include return fixtures (home & away)</div>
+            </div>
+          </label>
+        </div>
+      </div>
+    }
+
+    <!-- Step 3: Review & Generate -->
+    @if (currentStep === 3) {
+      <div class="space-y-3">
+        <h2 class="text-sm font-semibold mb-2">Review & Generate</h2>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-2 gap-2">
+          @if (members$ | async; as members) {
+            <div class="p-2.5 bg-bg-secondary border border-border rounded">
+              <div class="text-[10px] text-gray-400 uppercase tracking-wide">Players</div>
+              <div class="text-lg font-bold mt-0.5">{{ members.length }}</div>
+            </div>
+
+            <div class="p-2.5 bg-bg-secondary border border-border rounded">
+              <div class="text-[10px] text-gray-400 uppercase tracking-wide">Total Rounds</div>
+              <div class="text-lg font-bold mt-0.5">
+                {{ calculateTotalRounds(members.length, settingsForm.value.includeReturnFixtures) }}
+              </div>
+            </div>
+
+            <div class="p-2.5 bg-bg-secondary border border-border rounded">
+              <div class="text-[10px] text-gray-400 uppercase tracking-wide">Total Fixtures</div>
+              <div class="text-lg font-bold mt-0.5">
+                {{ calculateTotalFixtures(members.length, settingsForm.value.includeReturnFixtures) }}
+              </div>
+            </div>
+
+            <div class="p-2.5 bg-bg-secondary border border-border rounded">
+              <div class="text-[10px] text-gray-400 uppercase tracking-wide">Frequency</div>
+              <div class="text-lg font-bold mt-0.5">{{ settingsForm.value.matchFrequencyDays }}d</div>
+            </div>
+          }
+        </div>
+
+        <!-- Details -->
+        <div class="p-3 bg-bg-secondary border border-border rounded space-y-2">
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-400">Season</span>
+            <span class="font-medium">{{ selectedSeason?.name || seasonForm.value.newSeasonName || 'None' }}</span>
+          </div>
+          <div class="h-px bg-border"></div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-400">First Match</span>
+            <span class="font-medium">{{ settingsForm.value.startDate | date: 'MMM d, y' }}</span>
+          </div>
+          <div class="h-px bg-border"></div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-400">Submission Window</span>
+            <span class="font-medium">{{ settingsForm.value.submissionWindowHours }}h</span>
+          </div>
+          <div class="h-px bg-border"></div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-400">Return Fixtures</span>
+            <span class="font-medium">{{ settingsForm.value.includeReturnFixtures ? 'Yes' : 'No' }}</span>
+          </div>
+        </div>
+
+        <!-- Warning -->
+        @if (members$ | async; as members) {
+          @if (members.length < 2) {
+            <div class="p-2.5 bg-red-500/10 border border-red-500/30 rounded">
+              <p class="text-xs text-red-400">⚠️ At least 2 active members required to generate fixtures.</p>
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <!-- Navigation Buttons -->
+    <div class="flex gap-2 mt-4 pt-3 border-t border-border">
+      @if (currentStep > 1) {
+        <button
+          type="button"
+          (click)="previousStep()"
+          class="flex-1 py-2 text-sm font-medium text-gray-300 bg-bg-tertiary rounded hover:bg-bg-tertiary/70 transition-colors"
+          data-testid="previous-button">
+          Previous
+        </button>
+      }
+
+      @if (currentStep < 3) {
+        <button
+          type="button"
+          (click)="nextStep()"
+          [disabled]="(currentStep === 1 && !validateStep1()) || (currentStep === 2 && !validateStep2())"
+          class="flex-1 py-2 text-sm font-semibold bg-primary text-white rounded hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          data-testid="next-button">
+          Continue
+        </button>
+      }
+
+      @if (currentStep === 3) {
+        <button
+          type="button"
+          (click)="generateFixtures()"
+          [disabled]="(fixtureLoading$ | async) || (members$ | async)!.length < 2"
+          class="flex-1 py-2 text-sm font-semibold bg-primary text-white rounded hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          data-testid="generate-button">
+          @if (fixtureLoading$ | async) {
+            <span>Generating...</span>
+          } @else {
+            <span>Generate Fixtures</span>
+          }
+        </button>
+      }
+    </div>
+  </div>
+</div>
+

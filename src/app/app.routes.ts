@@ -54,6 +54,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/matches/record-match.component').then((m) => m.RecordMatchComponent),
       },
+      {
+        path: ':id/generate-fixtures',
+        loadComponent: () =>
+          import('./pages/fixtures/generate-fixtures.component').then((m) => m.GenerateFixturesComponent),
+      },
     ],
   },
   // Admin routes commented out for now

@@ -1,0 +1,98 @@
+<div 
+  class="relative bg-bg-secondary border border-border rounded-lg p-3 hover:border-primary/50 transition-all"
+  [class.ring-1]="isParticipant()"
+  [class.ring-primary/30]="isParticipant()">
+  
+  <!-- Round Badge (Top Left) -->
+  <div class="absolute top-2 left-2 px-1.5 py-0.5 bg-bg-tertiary rounded text-[10px] font-medium text-gray-400">
+    R{{ fixture.round_number }}
+  </div>
+
+  <!-- Status Badge (Top Right) -->
+  <div 
+    class="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-medium border"
+    [ngClass]="getStatusColor()">
+    <span class="mr-0.5">{{ getStatusIcon() }}</span>
+    {{ fixture.status }}
+  </div>
+
+  <!-- Main Content -->
+  <div class="mt-5 space-y-2">
+    <!-- Players -->
+    <div class="flex items-center justify-between gap-2">
+      <!-- Home Player -->
+      <div class="flex-1 min-w-0">
+        <div 
+          class="text-sm font-semibold truncate"
+          [class.text-primary]="currentUserId === fixture.home_player_id">
+          {{ fixture.home_player_name }}
+        </div>
+        <div class="text-[10px] text-gray-500 uppercase tracking-wide">Home</div>
+      </div>
+
+      <!-- VS Divider -->
+      <div class="flex-shrink-0 px-2">
+        <div class="text-xs font-bold text-gray-500">VS</div>
+      </div>
+
+      <!-- Away Player -->
+      <div class="flex-1 min-w-0 text-right">
+        <div 
+          class="text-sm font-semibold truncate"
+          [class.text-primary]="currentUserId === fixture.away_player_id">
+          {{ fixture.away_player_name }}
+        </div>
+        <div class="text-[10px] text-gray-500 uppercase tracking-wide">Away</div>
+      </div>
+    </div>
+
+    <!-- Winner Badge (if completed) -->
+    @if (fixture.status === FixtureStatus.COMPLETED && fixture.winner_id) {
+      <div class="flex justify-center">
+        <div class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-500/10 border border-green-500/30 rounded text-[10px] text-green-400">
+          <span>🏆</span>
+          <span class="font-medium">
+            Winner: {{ fixture.winner_id === fixture.home_player_id ? fixture.home_player_name : fixture.away_player_name }}
+          </span>
+        </div>
+      </div>
+    }
+
+    <!-- Schedule Info -->
+    <div class="flex items-center justify-between text-[11px] text-gray-400 pt-1 border-t border-border/50">
+      <div class="flex items-center gap-1">
+        <span>📅</span>
+        <span>{{ formatDate(fixture.scheduled_date) }}</span>
+        <span class="text-gray-600">•</span>
+        <span>{{ formatTime(fixture.scheduled_date) }}</span>
+      </div>
+      
+      @if (fixture.status === FixtureStatus.SCHEDULED) {
+        <div class="flex items-center gap-1 text-gray-500">
+          <span>⏳</span>
+          <span>Due: {{ formatDate(fixture.submission_deadline) }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Action Button -->
+    @if (canRecordResult()) {
+      <a 
+        [routerLink]="['/leagues', fixture.league_id, 'record-match']"
+        [queryParams]="{ fixtureId: fixture.id }"
+        class="block w-full text-center py-1.5 bg-primary text-white text-xs font-semibold rounded hover:bg-primary/90 transition-colors"
+        data-testid="record-result-button">
+        Record Result
+      </a>
+    }
+
+    @if (fixture.status === FixtureStatus.COMPLETED && fixture.match_id) {
+      <a 
+        [routerLink]="['/leagues', fixture.league_id, 'matches', fixture.match_id]"
+        class="block w-full text-center py-1.5 bg-bg-tertiary text-gray-300 text-xs font-medium rounded hover:bg-bg-tertiary/70 transition-colors">
+        View Match Details
+      </a>
+    }
+  </div>
+</div>
+

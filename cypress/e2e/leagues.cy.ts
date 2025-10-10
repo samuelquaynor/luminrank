@@ -131,9 +131,11 @@ describe('Leagues', () => {
     cy.get('[data-testid="members-tab-button"]').click();
     cy.wait(2000); // Wait for members to load
     
-    // Verify members are displayed
+    // ✅ Verify members are displayed WITH REAL DATA
     cy.get('.member-item', { timeout: 15000 }).should('have.length.at.least', 1);
     cy.get('.member-name').first().should('be.visible');
+    // Verify the actual member name is displayed (not just that element exists)
+    cy.get('.member-name').first().invoke('text').should('have.length.greaterThan', 0);
     cy.get('[data-testid="member-role-badge"]').first().should('contain', 'creator');
     
     // Check Settings tab
