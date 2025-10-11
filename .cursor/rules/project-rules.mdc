@@ -58,3 +58,12 @@ alwaysApply: true
 - Prefer reactive patterns (Observables) over imperative
 - Use strict TypeScript types
 - Follow Angular style guide for naming conventions
+
+## UI/UX Design
+- **Compact spacing**: Use p-2/p-3/p-4 (8-16px), NOT p-8/p-12 (32-48px)
+- **Small fonts**: Headings 14-20px, body 12-14px, labels 10-11px
+- **Tight gaps**: gap-2/gap-3 (8-12px), NOT gap-6/gap-8 (24-32px)
+- **Small margins**: mb-2/mb-3 (8-12px), NOT mb-6/mb-8 (24-32px)
+- **Maximize space**: Every pixel counts, reduce all spacing by ~60%
+- **Small icons**: w-3/w-4 (12-16px), NOT w-5/w-6 (20-24px)
+- **Compact buttons**: px-3 py-1.5 text-sm, NOT px-8 py-4 text-lg

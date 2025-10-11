@@ -42,7 +42,12 @@ describe('MatchService Integration Tests', () => {
       email,
       password: 'TestPassword123!'
     });
-    await supabase.from('profiles').update({ name }).eq('id', user!.id);
+    
+    // Update profile with name
+    const { error: updateError } = await supabase.from('profiles').update({ name }).eq('id', user!.id);
+    if (updateError) {
+      console.error('Failed to update opponent profile:', updateError);
+    }
 
     // Sign back in as main test user (signUp auto-signs in the new user)
     await supabase.auth.signInWithPassword({
@@ -131,12 +136,17 @@ describe('MatchService Integration Tests', () => {
       // Create a second user for the match
       const user2 = await createOpponent(`match-opponent-${Date.now()}@example.com`, 'Opponent');
 
-      // Add both as league members
-      await supabase.from('league_members').insert([
-        { league_id: league.id, user_id: testUserId, role: 'creator', status: 'active' },
-        { league_id: league.id, user_id: user2.id, role: 'member', status: 'active' }
-      ]);
-
+      // Add opponent as league member (test user is already added by createTestLeague)
+      const { error: memberError } = await supabase.from('league_members').insert({
+        league_id: league.id,
+        user_id: user2.id,
+        role: 'member',
+        status: 'active'
+      });
+      if (memberError) {
+        console.error('Failed to add opponent as league member:', memberError);
+      }
+      
       // Create league settings
       await supabase.from('league_settings').insert({
         league_id: league.id,
@@ -164,10 +174,17 @@ describe('MatchService Integration Tests', () => {
       // ✅ VERIFY PARTICIPANT DATA INCLUDES NAMES (for UI display)
       expect(match.participants[0].display_name).toBeTruthy();
       expect(match.participants[1].display_name).toBeTruthy();
-      expect(match.participants[0].score).toBe(10);
-      expect(match.participants[1].score).toBe(5);
-      expect(match.participants[0].result).toBe(MatchResult.WIN);
-      expect(match.participants[1].result).toBe(MatchResult.LOSS);
+      
+      // Find winner and loser (order may vary)
+      const winner = match.participants.find(p => p.result === MatchResult.WIN);
+      const loser = match.participants.find(p => p.result === MatchResult.LOSS);
+      
+      expect(winner).toBeTruthy();
+      expect(loser).toBeTruthy();
+      expect(winner!.score).toBe(10);
+      expect(loser!.score).toBe(5);
+      expect(winner!.display_name).toBeTruthy();
+      expect(loser!.display_name).toBeTruthy();
 
       // Cleanup
       await supabase.from('profiles').delete().eq('id', user2.id);
@@ -251,11 +268,13 @@ describe('MatchService Integration Tests', () => {
       // Create opponent
       const user2 = await createOpponent(`match-get-matches-${Date.now()}@example.com`, 'Opponent');
 
-      // Add members
-      await supabase.from('league_members').insert([
-        { league_id: league.id, user_id: testUserId, role: 'creator', status: 'active' },
-        { league_id: league.id, user_id: user2.id, role: 'member', status: 'active' }
-      ]);
+      // Add opponent as member (test user already added by createTestLeague)
+      await supabase.from('league_members').insert({
+        league_id: league.id,
+        user_id: user2.id,
+        role: 'member',
+        status: 'active'
+      });
 
       // Record a match
       const request: CreateMatchRequest = {
