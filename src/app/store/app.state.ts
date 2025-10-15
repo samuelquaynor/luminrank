@@ -5,6 +5,7 @@ import { MatchState, matchReducer } from '../features/matches/store/match.reduce
 import { LeaderboardState, leaderboardReducer } from '../features/matches/store/leaderboard.reducer';
 import { FixtureState, fixtureReducer } from '../features/fixtures/store/fixture.reducer';
 import { SeasonState, seasonReducer } from '../features/fixtures/store/season.reducer';
+import { DisputeState, disputeReducer } from '../features/disputes/store/dispute.reducer';
 
 export interface AppState {
   auth: AuthState;
@@ -13,6 +14,7 @@ export interface AppState {
   leaderboard: LeaderboardState;
   fixture: FixtureState;
   season: SeasonState;
+  dispute: DisputeState;
 }
 
 export const appReducers = {
@@ -21,5 +23,6 @@ export const appReducers = {
   match: matchReducer,
   leaderboard: leaderboardReducer,
   fixture: fixtureReducer,
-  season: seasonReducer
+  season: seasonReducer,
+  dispute: disputeReducer
 };

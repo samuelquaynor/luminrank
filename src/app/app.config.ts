@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
@@ -15,6 +19,7 @@ import { MatchEffects } from './features/matches/store/match.effects';
 import { LeaderboardEffects } from './features/matches/store/leaderboard.effects';
 import { FixtureEffects } from './features/fixtures/store/fixture.effects';
 import { SeasonEffects } from './features/fixtures/store/season.effects';
+import { DisputeEffects } from './features/disputes/store/dispute.effects';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { provideSupabase } from './core/providers/supabase.provider';
@@ -25,16 +30,22 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor])
-    ),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideStore(appReducers),
-    provideEffects([AuthEffects, LeagueEffects, MatchEffects, LeaderboardEffects, FixtureEffects, SeasonEffects]),
+    provideEffects([
+      AuthEffects,
+      LeagueEffects,
+      MatchEffects,
+      LeaderboardEffects,
+      FixtureEffects,
+      SeasonEffects,
+      DisputeEffects,
+    ]),
     provideRouterStore(),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: false, // Set to true in production
     }),
-    provideSupabase()
-  ]
+    provideSupabase(),
+  ],
 };

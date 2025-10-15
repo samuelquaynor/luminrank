@@ -9,10 +9,16 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 import { LeaderboardComponent } from '../../shared/components/leaderboard/leaderboard.component';
 import { MatchCardComponent } from '../../shared/components/match-card/match-card.component';
 import { FixtureCardComponent } from '../../shared/components/fixture-card/fixture-card.component';
-import { LeagueWithDetails, LeagueMember, ScoringSystem } from '../../features/leagues/models/league.model';
+import { DisputeDialogComponent } from '../../features/disputes/components/dispute-dialog.component';
+import {
+  LeagueWithDetails,
+  LeagueMember,
+  ScoringSystem,
+} from '../../features/leagues/models/league.model';
 import { MatchWithDetails } from '../../features/matches/models/match.model';
 import { LeaderboardEntry } from '../../features/matches/models/leaderboard.model';
 import { FixtureWithDetails } from '../../features/fixtures/models/fixture.model';
+import { CreateDisputeRequest } from '../../features/disputes/models/dispute.model';
 import * as LeagueActions from '../../features/leagues/store/league.actions';
 import * as LeagueSelectors from '../../features/leagues/store/league.selectors';
 import * as AuthSelectors from '../../features/auth/store/auth.selectors';
@@ -24,13 +30,22 @@ import * as FixtureActions from '../../features/fixtures/store/fixture.actions';
 import * as FixtureSelectors from '../../features/fixtures/store/fixture.selectors';
 import * as SeasonActions from '../../features/fixtures/store/season.actions';
 import * as SeasonSelectors from '../../features/fixtures/store/season.selectors';
+import * as DisputeActions from '../../features/disputes/store/dispute.actions';
 
 @Component({
   selector: 'app-league-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, LeaderboardComponent, MatchCardComponent, FixtureCardComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HeaderComponent,
+    LeaderboardComponent,
+    MatchCardComponent,
+    FixtureCardComponent,
+    DisputeDialogComponent,
+  ],
   templateUrl: './league-detail.component.html',
-  styleUrl: './league-detail.component.css'
+  styleUrl: './league-detail.component.css',
 })
 export class LeagueDetailComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
@@ -44,7 +59,7 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   members$!: Observable<LeagueMember[]>;
   loading$: Observable<boolean> = this.store.select(LeagueSelectors.selectLeagueLoading);
   currentUserId$: Observable<string | undefined> = this.store.select(AuthSelectors.selectUserId);
-  
+
   // Phase 2: Match & Leaderboard
   leaderboardEntries$!: Observable<LeaderboardEntry[]>;
   matches$!: Observable<MatchWithDetails[]>;
@@ -66,11 +81,28 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   private leagueSubscription?: Subscription;
   private actionsSubscription?: Subscription;
 
+  // Phase 4: Disputes
+  showDisputeDialog = false;
+  selectedMatchForDispute?: MatchWithDetails;
+
   ngOnInit(): void {
     this.leagueId = this.route.snapshot.paramMap.get('id')!;
     this.league$ = this.store.select(LeagueSelectors.selectSelectedLeague);
     this.members$ = this.store.select(LeagueSelectors.selectLeagueMembers(this.leagueId));
-    
+
+    // Listen for dispute success and reload matches
+    this.actionsSubscription = this.actions$
+      .pipe(
+        ofType(
+          DisputeActions.createDisputeSuccess,
+          DisputeActions.resolveDisputeSuccess,
+          DisputeActions.withdrawDisputeSuccess
+        )
+      )
+      .subscribe(() => {
+        this.store.dispatch(MatchActions.loadLeagueMatches({ leagueId: this.leagueId }));
+      });
+
     // Phase 2: Load leaderboard and matches
     this.leaderboardEntries$ = this.store.select(LeaderboardSelectors.selectLeaderboardEntries);
     this.matches$ = this.store.select(MatchSelectors.selectAllMatches);
@@ -86,12 +118,12 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     this.fixtures$ = this.store.select(FixtureSelectors.selectAllFixtures);
     this.activeSeason$ = this.store.select(SeasonSelectors.selectActiveSeason);
     this.fixturesLoading$ = this.store.select(FixtureSelectors.selectFixtureLoading);
-    
+
     this.store.dispatch(FixtureActions.loadLeagueFixtures({ leagueId: this.leagueId }));
     this.store.dispatch(SeasonActions.loadActiveSeason({ leagueId: this.leagueId }));
 
     // Subscribe to league to initialize forms (only once)
-    this.leagueSubscription = this.league$.subscribe(league => {
+    this.leagueSubscription = this.league$.subscribe((league) => {
       if (league) {
         if (!this.settingsForm) {
           this.initializeSettingsForm(league);
@@ -108,11 +140,11 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     });
 
     // Handle leave league success
-    this.actionsSubscription = this.actions$.pipe(
-      ofType(LeagueActions.leaveLeagueSuccess)
-    ).subscribe(() => {
-      this.router.navigate(['/leagues']);
-    });
+    this.actionsSubscription = this.actions$
+      .pipe(ofType(LeagueActions.leaveLeagueSuccess))
+      .subscribe(() => {
+        this.router.navigate(['/leagues']);
+      });
   }
 
   ngOnDestroy(): void {
@@ -126,14 +158,14 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
       pointsPerWin: [league.settings.pointsPerWin, [Validators.required, Validators.min(1)]],
       pointsPerDraw: [league.settings.pointsPerDraw, [Validators.required, Validators.min(0)]],
       pointsPerLoss: [league.settings.pointsPerLoss, [Validators.required, Validators.min(0)]],
-      allowDraws: [league.settings.allowDraws]
+      allowDraws: [league.settings.allowDraws],
     });
   }
 
   initializeLeagueForm(league: LeagueWithDetails): void {
     this.leagueForm = this.fb.group({
       name: [league.name, [Validators.required, Validators.minLength(3)]],
-      description: [league.description || '']
+      description: [league.description || ''],
     });
   }
 
@@ -144,7 +176,7 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   copyInviteCode(code: string): void {
     navigator.clipboard.writeText(code).then(() => {
       this.copiedCode = true;
-      setTimeout(() => this.copiedCode = false, 2000);
+      setTimeout(() => (this.copiedCode = false), 2000);
     });
   }
 
@@ -159,7 +191,7 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     const link = this.getInviteLink(code);
     navigator.clipboard.writeText(link).then(() => {
       this.copiedLink = true;
-      setTimeout(() => this.copiedLink = false, 2000);
+      setTimeout(() => (this.copiedLink = false), 2000);
     });
   }
 
@@ -177,11 +209,13 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   cancelEditSettings(): void {
     this.editingSettings = false;
     // Reset form to original values
-    this.league$.subscribe(league => {
-      if (league) {
-        this.initializeSettingsForm(league);
-      }
-    }).unsubscribe();
+    this.league$
+      .subscribe((league) => {
+        if (league) {
+          this.initializeSettingsForm(league);
+        }
+      })
+      .unsubscribe();
   }
 
   toggleEditLeague(): void {
@@ -192,12 +226,14 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     if (this.leagueForm.valid) {
       const updateData = {
         name: this.leagueForm.value.name,
-        description: this.leagueForm.value.description
+        description: this.leagueForm.value.description,
       };
-      this.store.dispatch(LeagueActions.updateLeague({ 
-        id: this.leagueId, 
-        data: updateData 
-      }));
+      this.store.dispatch(
+        LeagueActions.updateLeague({
+          id: this.leagueId,
+          data: updateData,
+        })
+      );
       this.editingLeague = false;
     }
   }
@@ -205,11 +241,13 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   cancelEditLeague(): void {
     this.editingLeague = false;
     // Reset form to original values
-    this.league$.subscribe(league => {
-      if (league) {
-        this.initializeLeagueForm(league);
-      }
-    }).unsubscribe();
+    this.league$
+      .subscribe((league) => {
+        if (league) {
+          this.initializeLeagueForm(league);
+        }
+      })
+      .unsubscribe();
   }
 
   leaveLeague(): void {
@@ -226,13 +264,15 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     if (!userId) return false;
     // User is a member if they're the creator OR in the members list
     if (this.isCreator(league, userId)) return true;
-    
+
     // Check if user is in members list
     let isMember = false;
-    this.members$.subscribe(members => {
-      isMember = members.some(m => m.userId === userId);
-    }).unsubscribe();
-    
+    this.members$
+      .subscribe((members) => {
+        isMember = members.some((m) => m.userId === userId);
+      })
+      .unsubscribe();
+
     return isMember;
   }
 
@@ -242,6 +282,39 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
 
   navigateToGenerateFixtures(): void {
     this.router.navigate(['/leagues', this.leagueId, 'generate-fixtures']);
+  }
+
+  // Phase 4: Dispute handling
+  onDisputeMatch(matchId: string): void {
+    this.matches$
+      .subscribe((matches) => {
+        this.selectedMatchForDispute = matches.find((m) => m.id === matchId);
+        if (this.selectedMatchForDispute) {
+          this.showDisputeDialog = true;
+        }
+      })
+      .unsubscribe();
+  }
+
+  onSubmitDispute(request: CreateDisputeRequest): void {
+    this.store.dispatch(DisputeActions.createDispute({ request }));
+    this.showDisputeDialog = false;
+    this.selectedMatchForDispute = undefined;
+    // Note: Matches will be reloaded automatically when createDisputeSuccess action fires
+  }
+
+  onCancelDispute(): void {
+    this.showDisputeDialog = false;
+    this.selectedMatchForDispute = undefined;
+  }
+
+  getMatchParticipantsForDispute(): Array<{ id: string; name: string; score: number }> {
+    if (!this.selectedMatchForDispute) return [];
+    return this.selectedMatchForDispute.participants.map((p) => ({
+      id: p.profile_id,
+      name: p.display_name || 'Unknown',
+      score: p.score,
+    }));
   }
 
   getRoleBadgeClass(role: string): string {

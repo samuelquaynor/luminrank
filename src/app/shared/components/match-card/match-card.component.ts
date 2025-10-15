@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatchWithDetails } from '../../../features/matches/models/match.model';
 
 /**
  * Match Card Component - Displays a single match result
  * Phase 2: Match Recording & Leaderboard
+ * Phase 4: Added dispute functionality
  */
 @Component({
   selector: 'app-match-card',
@@ -15,6 +16,8 @@ import { MatchWithDetails } from '../../../features/matches/models/match.model';
 export class MatchCardComponent {
   @Input() match!: MatchWithDetails;
   @Input() currentUserId?: string;
+  @Input() canDispute: boolean = false;
+  @Output() dispute = new EventEmitter<string>(); // Emits match ID
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -37,6 +40,14 @@ export class MatchCardComponent {
         year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
       });
     }
+  }
+
+  onDispute(): void {
+    this.dispute.emit(this.match.id);
+  }
+
+  isMatchDisputed(): boolean {
+    return this.match.status === 'disputed';
   }
 }
 

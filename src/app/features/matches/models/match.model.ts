@@ -4,10 +4,12 @@
 
 /**
  * Match status enum
+ * Phase 4: Added DISPUTED status
  */
 export enum MatchStatus {
   COMPLETED = 'completed',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
+  DISPUTED = 'disputed'
 }
 
 /**

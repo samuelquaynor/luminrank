@@ -24,7 +24,7 @@ describe('MatchService Integration Tests', () => {
         name,
         created_by: testUserId,
         game_type: 'Chess',
-        status: 'active'
+        status: 'active',
       })
       .select()
       .single();
@@ -38,13 +38,18 @@ describe('MatchService Integration Tests', () => {
 
   // Helper function to create a user and sign back in as test user
   async function createOpponent(email: string, name: string) {
-    const { data: { user } } = await supabase.auth.signUp({
+    const {
+      data: { user },
+    } = await supabase.auth.signUp({
       email,
-      password: 'TestPassword123!'
+      password: 'TestPassword123!',
     });
-    
+
     // Update profile with name
-    const { error: updateError } = await supabase.from('profiles').update({ name }).eq('id', user!.id);
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ name })
+      .eq('id', user!.id);
     if (updateError) {
       console.error('Failed to update opponent profile:', updateError);
     }
@@ -52,7 +57,7 @@ describe('MatchService Integration Tests', () => {
     // Sign back in as main test user (signUp auto-signs in the new user)
     await supabase.auth.signInWithPassword({
       email: testUserEmail,
-      password: testUserPassword
+      password: testUserPassword,
     });
 
     return user!;
@@ -72,7 +77,7 @@ describe('MatchService Integration Tests', () => {
 
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: testUserEmail,
-      password: testUserPassword
+      password: testUserPassword,
     });
 
     if (authError || !authData.user) {
@@ -94,7 +99,7 @@ describe('MatchService Integration Tests', () => {
     // Sign in to get a valid session
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: testUserEmail,
-      password: testUserPassword
+      password: testUserPassword,
     });
 
     if (signInError) {
@@ -107,8 +112,8 @@ describe('MatchService Integration Tests', () => {
       providers: [
         provideZonelessChangeDetection(),
         MatchService,
-        { provide: SupabaseClient, useValue: supabase }
-      ]
+        { provide: SupabaseClient, useValue: supabase },
+      ],
     });
 
     service = TestBed.inject(MatchService);
@@ -118,10 +123,7 @@ describe('MatchService Integration Tests', () => {
     // Cleanup: Delete test user and related data
     if (testUserId) {
       // Delete leagues created by test user (cascades to matches, members, settings)
-      await supabase
-        .from('leagues')
-        .delete()
-        .eq('created_by', testUserId);
+      await supabase.from('leagues').delete().eq('created_by', testUserId);
 
       // Sign out
       await supabase.auth.signOut();
@@ -141,17 +143,17 @@ describe('MatchService Integration Tests', () => {
         league_id: league.id,
         user_id: user2.id,
         role: 'member',
-        status: 'active'
+        status: 'active',
       });
       if (memberError) {
         console.error('Failed to add opponent as league member:', memberError);
       }
-      
+
       // Create league settings
       await supabase.from('league_settings').insert({
         league_id: league.id,
         scoring_system: 'points',
-        points_per_win: 3
+        points_per_win: 3,
       });
 
       const request: CreateMatchRequest = {
@@ -159,8 +161,8 @@ describe('MatchService Integration Tests', () => {
         match_date: new Date().toISOString(),
         participants: [
           { profile_id: testUserId, score: 10, result: MatchResult.WIN },
-          { profile_id: user2.id, score: 5, result: MatchResult.LOSS }
-        ]
+          { profile_id: user2.id, score: 5, result: MatchResult.LOSS },
+        ],
       };
 
       const match = await firstValueFrom(service.recordMatch(request));
@@ -174,11 +176,11 @@ describe('MatchService Integration Tests', () => {
       // ✅ VERIFY PARTICIPANT DATA INCLUDES NAMES (for UI display)
       expect(match.participants[0].display_name).toBeTruthy();
       expect(match.participants[1].display_name).toBeTruthy();
-      
+
       // Find winner and loser (order may vary)
-      const winner = match.participants.find(p => p.result === MatchResult.WIN);
-      const loser = match.participants.find(p => p.result === MatchResult.LOSS);
-      
+      const winner = match.participants.find((p) => p.result === MatchResult.WIN);
+      const loser = match.participants.find((p) => p.result === MatchResult.LOSS);
+
       expect(winner).toBeTruthy();
       expect(loser).toBeTruthy();
       expect(winner!.score).toBe(10);
@@ -196,9 +198,7 @@ describe('MatchService Integration Tests', () => {
       const request: CreateMatchRequest = {
         league_id: league.id,
         match_date: new Date().toISOString(),
-        participants: [
-          { profile_id: testUserId, score: 10, result: MatchResult.WIN }
-        ]
+        participants: [{ profile_id: testUserId, score: 10, result: MatchResult.WIN }],
       };
 
       try {
@@ -219,8 +219,8 @@ describe('MatchService Integration Tests', () => {
         match_date: new Date().toISOString(),
         participants: [
           { profile_id: testUserId, score: 10, result: MatchResult.WIN },
-          { profile_id: user2.id, score: 10, result: MatchResult.WIN }
-        ]
+          { profile_id: user2.id, score: 10, result: MatchResult.WIN },
+        ],
       };
 
       try {
@@ -244,8 +244,8 @@ describe('MatchService Integration Tests', () => {
         match_date: new Date().toISOString(),
         participants: [
           { profile_id: testUserId, score: 10, result: MatchResult.LOSS },
-          { profile_id: user2.id, score: 10, result: MatchResult.LOSS }
-        ]
+          { profile_id: user2.id, score: 10, result: MatchResult.LOSS },
+        ],
       };
 
       try {
@@ -273,7 +273,7 @@ describe('MatchService Integration Tests', () => {
         league_id: league.id,
         user_id: user2.id,
         role: 'member',
-        status: 'active'
+        status: 'active',
       });
 
       // Record a match
@@ -282,8 +282,8 @@ describe('MatchService Integration Tests', () => {
         match_date: new Date().toISOString(),
         participants: [
           { profile_id: testUserId, score: 10, result: MatchResult.WIN },
-          { profile_id: user2.id, score: 5, result: MatchResult.LOSS }
-        ]
+          { profile_id: user2.id, score: 5, result: MatchResult.LOSS },
+        ],
       };
       await firstValueFrom(service.recordMatch(request));
 
@@ -299,7 +299,7 @@ describe('MatchService Integration Tests', () => {
       expect(matches[0].participants[0].display_name).toBeTruthy();
       expect(matches[0].participants[1].display_name).toBeTruthy();
       // Verify we can identify the winner by name
-      const winner = matches[0].participants.find(p => p.result === MatchResult.WIN);
+      const winner = matches[0].participants.find((p) => p.result === MatchResult.WIN);
       expect(winner).toBeTruthy();
       expect(winner!.display_name).toBe('Match Integration Test User');
 
@@ -327,7 +327,7 @@ describe('MatchService Integration Tests', () => {
       // Add members
       await supabase.from('league_members').insert([
         { league_id: league.id, user_id: testUserId, role: 'creator', status: 'active' },
-        { league_id: league.id, user_id: user2.id, role: 'member', status: 'active' }
+        { league_id: league.id, user_id: user2.id, role: 'member', status: 'active' },
       ]);
 
       // Record a match
@@ -336,8 +336,8 @@ describe('MatchService Integration Tests', () => {
         match_date: new Date().toISOString(),
         participants: [
           { profile_id: testUserId, score: 10, result: MatchResult.WIN },
-          { profile_id: user2.id, score: 5, result: MatchResult.LOSS }
-        ]
+          { profile_id: user2.id, score: 5, result: MatchResult.LOSS },
+        ],
       };
       const createdMatch = await firstValueFrom(service.recordMatch(request));
 
@@ -370,44 +370,49 @@ describe('MatchService Integration Tests', () => {
       const league = await createTestLeague('Player Matches Test');
 
       // Create opponent
-      const user2 = await createOpponent(`match-player-matches-${Date.now()}@example.com`, 'Opponent');
+      const user2 = await createOpponent(
+        `match-player-matches-${Date.now()}@example.com`,
+        'Opponent'
+      );
 
       // Add members
       await supabase.from('league_members').insert([
         { league_id: league.id, user_id: testUserId, role: 'creator', status: 'active' },
-        { league_id: league.id, user_id: user2.id, role: 'member', status: 'active' }
+        { league_id: league.id, user_id: user2.id, role: 'member', status: 'active' },
       ]);
 
       // Record multiple matches
-      await firstValueFrom(service.recordMatch({
-        league_id: league.id,
-        match_date: new Date().toISOString(),
-        participants: [
-          { profile_id: testUserId, score: 10, result: MatchResult.WIN },
-          { profile_id: user2.id, score: 5, result: MatchResult.LOSS }
-        ]
-      }));
+      await firstValueFrom(
+        service.recordMatch({
+          league_id: league.id,
+          match_date: new Date().toISOString(),
+          participants: [
+            { profile_id: testUserId, score: 10, result: MatchResult.WIN },
+            { profile_id: user2.id, score: 5, result: MatchResult.LOSS },
+          ],
+        })
+      );
 
-      await firstValueFrom(service.recordMatch({
-        league_id: league.id,
-        match_date: new Date().toISOString(),
-        participants: [
-          { profile_id: user2.id, score: 8, result: MatchResult.WIN },
-          { profile_id: testUserId, score: 3, result: MatchResult.LOSS }
-        ]
-      }));
+      await firstValueFrom(
+        service.recordMatch({
+          league_id: league.id,
+          match_date: new Date().toISOString(),
+          participants: [
+            { profile_id: user2.id, score: 8, result: MatchResult.WIN },
+            { profile_id: testUserId, score: 3, result: MatchResult.LOSS },
+          ],
+        })
+      );
 
       // Get player matches
-      const matches = await firstValueFrom(
-        service.getPlayerMatches(league.id, testUserId)
-      );
+      const matches = await firstValueFrom(service.getPlayerMatches(league.id, testUserId));
 
       expect(matches).toBeTruthy();
       expect(matches.length).toBe(2);
 
       // Verify all matches include the player
-      matches.forEach(match => {
-        const hasPlayer = match.participants.some(p => p.profile_id === testUserId);
+      matches.forEach((match) => {
+        const hasPlayer = match.participants.some((p) => p.profile_id === testUserId);
         expect(hasPlayer).toBe(true);
       });
 
@@ -420,11 +425,12 @@ describe('MatchService Integration Tests', () => {
       const league = await createTestLeague('No Matches Test');
 
       // Create a user who hasn't played
-      const user3 = await createOpponent(`match-no-matches-${Date.now()}@example.com`, 'No Matches User');
-
-      const matches = await firstValueFrom(
-        service.getPlayerMatches(league.id, user3.id)
+      const user3 = await createOpponent(
+        `match-no-matches-${Date.now()}@example.com`,
+        'No Matches User'
       );
+
+      const matches = await firstValueFrom(service.getPlayerMatches(league.id, user3.id));
 
       expect(matches).toEqual([]);
 
@@ -444,7 +450,7 @@ describe('MatchService Integration Tests', () => {
       // Add members
       await supabase.from('league_members').insert([
         { league_id: league.id, user_id: testUserId, role: 'creator', status: 'active' },
-        { league_id: league.id, user_id: user2.id, role: 'member', status: 'active' }
+        { league_id: league.id, user_id: user2.id, role: 'member', status: 'active' },
       ]);
 
       // Record a match
@@ -453,8 +459,8 @@ describe('MatchService Integration Tests', () => {
         match_date: new Date().toISOString(),
         participants: [
           { profile_id: testUserId, score: 10, result: MatchResult.WIN },
-          { profile_id: user2.id, score: 5, result: MatchResult.LOSS }
-        ]
+          { profile_id: user2.id, score: 5, result: MatchResult.LOSS },
+        ],
       };
       const match = await firstValueFrom(service.recordMatch(request));
 
@@ -467,6 +473,112 @@ describe('MatchService Integration Tests', () => {
 
       // Cleanup
       await supabase.from('profiles').delete().eq('id', user2.id);
+    });
+  });
+
+  describe('Multiple Matches Between Same Players', () => {
+    it('should allow recording multiple matches with the same participants', async () => {
+      const league = await createTestLeague('Multiple Matches League');
+      const opponent = await createOpponent(
+        `multi-match-${Date.now()}@example.com`,
+        'Multi Match Opponent'
+      );
+
+      await supabase.from('league_members').insert({
+        league_id: league.id,
+        user_id: opponent.id,
+        role: 'member',
+        status: 'active',
+      });
+
+      // Record first match
+      const match1Request: CreateMatchRequest = {
+        league_id: league.id,
+        match_date: new Date().toISOString(),
+        participants: [
+          { profile_id: testUserId, score: 10, result: MatchResult.WIN },
+          { profile_id: opponent.id, score: 5, result: MatchResult.LOSS },
+        ],
+      };
+      const match1 = await firstValueFrom(service.recordMatch(match1Request));
+
+      expect(match1).toBeTruthy();
+      expect(match1.participants.length).toBe(2);
+
+      // Record second match with same participants (different scores/result)
+      const match2Request: CreateMatchRequest = {
+        league_id: league.id,
+        match_date: new Date().toISOString(),
+        participants: [
+          { profile_id: opponent.id, score: 15, result: MatchResult.WIN },
+          { profile_id: testUserId, score: 8, result: MatchResult.LOSS },
+        ],
+      };
+      const match2 = await firstValueFrom(service.recordMatch(match2Request));
+
+      expect(match2).toBeTruthy();
+      expect(match2.id).not.toBe(match1.id);
+      expect(match2.participants.length).toBe(2);
+
+      // Verify both matches exist in database
+      const allMatches = await firstValueFrom(service.getLeagueMatches(league.id));
+      expect(allMatches.length).toBe(2);
+
+      // Verify participants are correctly linked to different matches
+      const match1Participant = allMatches.find((m) => m.id === match1.id);
+      const match2Participant = allMatches.find((m) => m.id === match2.id);
+
+      expect(match1Participant).toBeTruthy();
+      expect(match2Participant).toBeTruthy();
+
+      // Cleanup
+      await supabase.from('profiles').delete().eq('id', opponent.id);
+    });
+
+    it('should allow recording third match with same participants', async () => {
+      const league = await createTestLeague('Three Matches League');
+      const opponent = await createOpponent(
+        `three-match-${Date.now()}@example.com`,
+        'Three Match Opponent'
+      );
+
+      await supabase.from('league_members').insert({
+        league_id: league.id,
+        user_id: opponent.id,
+        role: 'member',
+        status: 'active',
+      });
+
+      // Record three consecutive matches
+      for (let i = 1; i <= 3; i++) {
+        const request: CreateMatchRequest = {
+          league_id: league.id,
+          match_date: new Date(Date.now() + i * 1000).toISOString(),
+          participants: [
+            { profile_id: testUserId, score: 10 + i, result: MatchResult.WIN },
+            { profile_id: opponent.id, score: 5 + i, result: MatchResult.LOSS },
+          ],
+        };
+
+        const match = await firstValueFrom(service.recordMatch(request));
+        expect(match).toBeTruthy();
+        expect(match.participants.length).toBe(2);
+      }
+
+      // Verify all three matches exist
+      const allMatches = await firstValueFrom(service.getLeagueMatches(league.id));
+      expect(allMatches.length).toBe(3);
+
+      // Verify all matches have correct participants
+      allMatches.forEach((match) => {
+        expect(match.participants.length).toBe(2);
+        const profileIds = match.participants.map((p) => p.profile_id).sort();
+        expect(profileIds).toContain(testUserId);
+        expect(profileIds).toContain(opponent.id);
+      });
+
+      // Cleanup
+      await supabase.from('profiles').delete().eq('id', opponent.id);
     });
   });
 });

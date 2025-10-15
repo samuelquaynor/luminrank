@@ -295,7 +295,12 @@
                     <div class="space-y-2">
                       @if ((currentUserId$ | async); as userId) {
                         @for (match of matches; track match.id) {
-                          <app-match-card [match]="match" [currentUserId]="userId"></app-match-card>
+                          <app-match-card 
+                            [match]="match" 
+                            [currentUserId]="userId"
+                            [canDispute]="true"
+                            (dispute)="onDisputeMatch($event)">
+                          </app-match-card>
                         }
                       }
                     </div>
@@ -303,6 +308,16 @@
                 }
               }
             </div>
+          }
+
+          <!-- Dispute Dialog -->
+          @if (showDisputeDialog && selectedMatchForDispute) {
+            <app-dispute-dialog
+              [matchId]="selectedMatchForDispute.id"
+              [matchParticipants]="getMatchParticipantsForDispute()"
+              (dispute)="onSubmitDispute($event)"
+              (cancel)="onCancelDispute()">
+            </app-dispute-dialog>
           }
 
           <!-- Fixtures Tab -->

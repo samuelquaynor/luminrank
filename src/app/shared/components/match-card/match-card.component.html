@@ -2,9 +2,14 @@
   class="p-4 bg-bg-secondary rounded-lg border border-border hover:border-white/20 transition-all duration-200"
   [attr.data-testid]="'match-card-' + match.id"
 >
-  <!-- Match Date -->
-  <div class="text-xs text-gray-500 mb-3">
-    {{ formatDate(match.match_date) }}
+  <!-- Header: Date and Disputed Badge -->
+  <div class="flex items-center justify-between mb-3">
+    <div class="text-xs text-gray-500">
+      {{ formatDate(match.match_date) }}
+    </div>
+    <div *ngIf="isMatchDisputed()" class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs font-medium rounded" data-testid="disputed-badge">
+      ⚠️ DISPUTED
+    </div>
   </div>
 
   <!-- Match Participants -->
@@ -44,6 +49,17 @@
         </span>
       </div>
     </div>
+  </div>
+
+  <!-- Dispute Button -->
+  <div *ngIf="canDispute && !isMatchDisputed()" class="mt-3 pt-3 border-t border-gray-700">
+    <button
+      (click)="onDispute()"
+      class="w-full py-1.5 text-sm font-medium text-gray-300 bg-gray-700 rounded hover:bg-gray-600 transition-colors"
+      data-testid="dispute-match-button"
+    >
+      Dispute Match
+    </button>
   </div>
 </div>
 

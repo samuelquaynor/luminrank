@@ -2,14 +2,20 @@ import { Injectable, inject } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, throwError } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
-import { Match, MatchWithDetails, CreateMatchRequest, MatchStatus, MatchParticipant } from '../models/match.model';
+import {
+  Match,
+  MatchWithDetails,
+  CreateMatchRequest,
+  MatchStatus,
+  MatchParticipant,
+} from '../models/match.model';
 
 /**
  * Match Service - Handles match recording and retrieval
  * Phase 2: Match Recording & Leaderboard
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MatchService {
   private supabase: SupabaseClient;
@@ -39,7 +45,7 @@ export class MatchService {
         const [p1, p2] = request.participants;
         const hasWinner = p1.result === 'win' || p2.result === 'win';
         const hasLoser = p1.result === 'loss' || p2.result === 'loss';
-        
+
         if (!hasWinner || !hasLoser) {
           return throwError(() => new Error('Match must have exactly one winner and one loser'));
         }
@@ -56,7 +62,7 @@ export class MatchService {
               league_id: request.league_id,
               match_date: request.match_date,
               recorded_by: user.id,
-              status: MatchStatus.COMPLETED
+              status: MatchStatus.COMPLETED,
             })
             .select()
             .single()
@@ -67,11 +73,11 @@ export class MatchService {
             }
 
             // Create participants
-            const participantsData = request.participants.map(p => ({
+            const participantsData = request.participants.map((p) => ({
               match_id: match.id,
               profile_id: p.profile_id,
               score: p.score,
-              result: p.result
+              result: p.result,
             }));
 
             return from(
@@ -93,19 +99,19 @@ export class MatchService {
                   score: p.score,
                   result: p.result,
                   created_at: p.created_at,
-                  display_name: p.profiles?.name
+                  display_name: p.profiles?.name,
                 }));
 
                 return {
                   ...match,
-                  participants: mappedParticipants
+                  participants: mappedParticipants,
                 } as MatchWithDetails;
               })
             );
           })
         );
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error recording match:', error);
         return throwError(() => error);
       })
@@ -119,7 +125,8 @@ export class MatchService {
     return from(
       this.supabase
         .from('matches')
-        .select(`
+        .select(
+          `
           *,
           match_participants!inner(
             id,
@@ -129,9 +136,9 @@ export class MatchService {
             created_at,
             profiles!match_participants_profile_id_fkey(name)
           )
-        `)
+        `
+        )
         .eq('league_id', leagueId)
-        .eq('status', MatchStatus.COMPLETED)
         .order('match_date', { ascending: false })
     ).pipe(
       map(({ data, error }) => {
@@ -148,11 +155,11 @@ export class MatchService {
             score: p.score,
             result: p.result,
             created_at: p.created_at,
-            display_name: p.profiles?.name
-          }))
+            display_name: p.profiles?.name,
+          })),
         })) as MatchWithDetails[];
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error fetching league matches:', error);
         return throwError(() => error);
       })
@@ -166,7 +173,8 @@ export class MatchService {
     return from(
       this.supabase
         .from('matches')
-        .select(`
+        .select(
+          `
           *,
           match_participants!inner(
             id,
@@ -176,7 +184,8 @@ export class MatchService {
             created_at,
             profiles!match_participants_profile_id_fkey(name)
           )
-        `)
+        `
+        )
         .eq('id', matchId)
         .single()
     ).pipe(
@@ -194,11 +203,11 @@ export class MatchService {
             score: p.score,
             result: p.result,
             created_at: p.created_at,
-            display_name: p.profiles?.name
-          }))
+            display_name: p.profiles?.name,
+          })),
         } as MatchWithDetails;
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error fetching match:', error);
         return throwError(() => error);
       })
@@ -212,7 +221,8 @@ export class MatchService {
     return from(
       this.supabase
         .from('matches')
-        .select(`
+        .select(
+          `
           *,
           match_participants!inner(
             id,
@@ -222,7 +232,8 @@ export class MatchService {
             created_at,
             profiles!match_participants_profile_id_fkey(name)
           )
-        `)
+        `
+        )
         .eq('league_id', leagueId)
         .eq('status', MatchStatus.COMPLETED)
         .eq('match_participants.profile_id', profileId)
@@ -242,11 +253,11 @@ export class MatchService {
             score: p.score,
             result: p.result,
             created_at: p.created_at,
-            display_name: p.profiles?.name
-          }))
+            display_name: p.profiles?.name,
+          })),
         })) as MatchWithDetails[];
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error fetching player matches:', error);
         return throwError(() => error);
       })
@@ -280,11 +291,10 @@ export class MatchService {
           })
         );
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error cancelling match:', error);
         return throwError(() => error);
       })
     );
   }
 }
-
