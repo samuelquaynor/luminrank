@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "test:watch": "ng test --watch",
+    "start": "nx serve",
+    "build": "nx build",
+    "watch": "nx build --watch --configuration development",
+    "test": "nx test",
+    "test:watch": "nx test --watch",
     "e2e": "cypress open",
     "e2e:run": "cypress run",
     "serve:ssr:luminrank": "node dist/luminrank/server/server.mjs"
@@ -46,10 +46,15 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular-devkit/core": "^20.3.4",
+    "@angular-devkit/schematics": "^20.3.4",
     "@angular/build": "^20.3.4",
     "@angular/cli": "^20.3.4",
     "@angular/compiler-cli": "^20.3.0",
     "@ngx-env/builder": "^20.1.1",
+    "@nx/angular": "21.6.4",
+    "@nx/workspace": "21.6.4",
+    "@schematics/angular": "^20.3.4",
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
@@ -60,6 +65,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "nx": "21.6.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
     "typescript": "~5.9.2"
