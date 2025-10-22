@@ -1,0 +1,537 @@
+<div class="min-h-screen bg-bg-primary">
+  <app-header></app-header>
+
+  <!-- Loading State -->
+  @if (loading$ | async) {
+    <div class="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-4">
+      <svg class="animate-spin h-16 w-16 mb-6 text-white" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="text-gray-400">Loading league...</p>
+    </div>
+  }
+
+  <!-- League Content -->
+  @if (league$ | async; as league) {
+    <div class="max-w-7xl mx-auto px-4 py-4 space-y-3">
+      
+      <!-- League Header Card -->
+      <div class="bg-bg-secondary border border-border rounded-lg shadow-xl p-4">
+        @if (!editingLeague) {
+          <!-- View Mode -->
+          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 flex-wrap mb-2">
+                <h1 class="text-xl font-bold text-white" data-testid="league-detail-name">{{ league.name }}</h1>
+                <span 
+                  class="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase"
+                  [class]="league.status === 'active' ? 'bg-green-500/20 text-green-400' : league.status === 'draft' ? 'bg-gray-500/20 text-gray-400' : 'bg-blue-500/20 text-blue-400'">
+                  {{ league.status }}
+                </span>
+                @if (currentUserId$ | async; as userId) {
+                  @if (isCreator(league, userId)) {
+                    <button 
+                      (click)="toggleEditLeague()"
+                      class="px-2 py-1 text-xs bg-transparent border border-white/20 text-white rounded font-medium transition-all duration-200 hover:border-white/40 hover:bg-white/5"
+                      data-testid="edit-league-button">
+                      Edit
+                    </button>
+                  }
+                }
+              </div>
+              
+              @if (league.description) {
+                <p class="text-sm text-gray-400 mb-2">{{ league.description }}</p>
+              }
+              
+              <div class="flex items-center gap-4 text-xs text-gray-400">
+                <span class="flex items-center gap-1">
+                  <svg class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 10a2 2 0 114 0 2 2 0 01-4 0z"/>
+                  </svg>
+                  {{ league.gameType }}
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                  </svg>
+                  {{ league.memberCount }} member{{ league.memberCount !== 1 ? 's' : '' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <!-- Edit Mode -->
+          @if (leagueForm) {
+            <form [formGroup]="leagueForm" class="space-y-4">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-300 mb-2">League Name</label>
+                <input 
+                  type="text" 
+                  id="name"
+                  formControlName="name" 
+                  class="w-full px-4 py-3 bg-bg-tertiary border border-border rounded-lg text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white"
+                  data-testid="edit-league-name-input"
+                />
+              </div>
+              <div>
+                <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                <textarea 
+                  id="description"
+                  formControlName="description" 
+                  rows="3"
+                  class="w-full px-4 py-3 bg-bg-tertiary border border-border rounded-lg text-white resize-none transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white"
+                  data-testid="edit-league-description-input"
+                ></textarea>
+              </div>
+              <div class="flex gap-3 pt-2">
+                <button 
+                  type="button" 
+                  (click)="cancelEditLeague()"
+                  class="px-4 py-2 bg-transparent border border-white/20 text-white rounded-lg font-medium transition-all duration-200 hover:border-white/40 hover:bg-white/5"
+                  data-testid="cancel-edit-league-button">
+                  Cancel
+                </button>
+                <button 
+                  type="button" 
+                  (click)="saveLeague()"
+                  [disabled]="leagueForm.invalid"
+                  class="px-4 py-2 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  data-testid="save-league-button">
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          }
+        }
+
+        <!-- Invite Section -->
+        @if (!editingLeague) {
+          <div class="border-t border-border pt-6 mt-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <!-- Invite Code -->
+              <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Invite Code</label>
+                <div class="flex items-center gap-2 px-4 py-3 bg-bg-tertiary border border-border rounded-lg">
+                  <span class="flex-1 font-mono text-white font-semibold" data-testid="league-invite-code">{{ league.inviteCode }}</span>
+                  <button 
+                    type="button" 
+                    (click)="copyInviteCode(league.inviteCode)"
+                    class="p-2 hover:bg-white/10 rounded transition-colors"
+                    [title]="copiedCode ? 'Copied!' : 'Copy code'"
+                    data-testid="copy-invite-code-button">
+                    @if (copiedCode) {
+                      <svg class="w-4 h-4 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                      </svg>
+                    } @else {
+                      <svg class="w-4 h-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/>
+                        <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
+                      </svg>
+                    }
+                  </button>
+                </div>
+              </div>
+
+              <!-- Share Link -->
+              <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Share Link</label>
+                <div class="flex items-center gap-2 px-4 py-3 bg-bg-tertiary border border-border rounded-lg">
+                  <span class="flex-1 text-sm text-white truncate" data-testid="league-invite-link">{{ getInviteLink(league.inviteCode) }}</span>
+                  <button 
+                    type="button" 
+                    (click)="copyInviteLink(league.inviteCode)"
+                    class="p-2 hover:bg-white/10 rounded transition-colors"
+                    [title]="copiedLink ? 'Copied!' : 'Copy link'"
+                    data-testid="copy-invite-link-button">
+                    @if (copiedLink) {
+                      <svg class="w-4 h-4 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                      </svg>
+                    } @else {
+                      <svg class="w-4 h-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                      </svg>
+                    }
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Leave League Button -->
+            @if (currentUserId$ | async; as userId) {
+              @if (!isCreator(league, userId)) {
+                <button 
+                  (click)="leaveLeague()"
+                  class="px-4 py-2 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg font-medium transition-all duration-200 hover:bg-red-500/20"
+                  data-testid="leave-league-button">
+                  Leave League
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Tabs -->
+      <div class="bg-bg-secondary border border-border rounded-2xl shadow-xl overflow-hidden">
+        <div class="flex border-b border-border overflow-x-auto">
+          <button 
+            (click)="switchTab('leaderboard')"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
+            [class]="activeTab === 'leaderboard' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
+            data-testid="leaderboard-tab-button">
+            🏆 Leaderboard
+          </button>
+          <button 
+            (click)="switchTab('matches')"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
+            [class]="activeTab === 'matches' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
+            data-testid="matches-tab-button">
+            📋 Matches
+          </button>
+          <button 
+            (click)="switchTab('fixtures')"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
+            [class]="activeTab === 'fixtures' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
+            data-testid="fixtures-tab-button">
+            📅 Fixtures
+          </button>
+          <button 
+            (click)="switchTab('members')"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
+            [class]="activeTab === 'members' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
+            data-testid="members-tab-button">
+            👥 Members
+          </button>
+          <button 
+            (click)="switchTab('settings')"
+            class="flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 whitespace-nowrap"
+            [class]="activeTab === 'settings' ? 'text-white bg-bg-tertiary border-b-2 border-white' : 'text-gray-400 hover:text-gray-300 hover:bg-bg-tertiary/50'"
+            data-testid="settings-tab-button">
+            ⚙️ Settings
+          </button>
+        </div>
+
+        <div class="p-4">
+          <!-- Leaderboard Tab -->
+          @if (activeTab === 'leaderboard') {
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-bold text-white">Leaderboard</h2>
+                @if (currentUserId$ | async; as userId) {
+                  @if (isMember(league, userId)) {
+                    <button
+                      (click)="navigateToRecordMatch()"
+                      class="px-3 py-1.5 text-sm bg-white text-black rounded font-semibold transition-all duration-200 hover:bg-gray-100"
+                      data-testid="record-match-button">
+                      + Record Match
+                    </button>
+                  }
+                }
+              </div>
+
+              @if (leaderboardLoading$ | async) {
+                <div class="flex justify-center py-8">
+                  <svg class="animate-spin h-12 w-12 text-white" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              } @else {
+                @if ((leaderboardEntries$ | async); as entries) {
+                  @if (currentUserId$ | async; as userId) {
+                    <app-leaderboard [entries]="entries" [currentUserId]="userId"></app-leaderboard>
+                  }
+                }
+              }
+            </div>
+          }
+
+          <!-- Matches Tab -->
+          @if (activeTab === 'matches') {
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-bold text-white">Match History</h2>
+                @if (currentUserId$ | async; as userId) {
+                  @if (isMember(league, userId)) {
+                    <button
+                      (click)="navigateToRecordMatch()"
+                      class="px-4 py-2 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100"
+                      data-testid="record-match-button-matches">
+                      + Record Match
+                    </button>
+                  }
+                }
+              </div>
+
+              @if (matchesLoading$ | async) {
+                <div class="flex justify-center py-12">
+                  <svg class="animate-spin h-12 w-12 text-white" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              } @else {
+                @if ((matches$ | async); as matches) {
+                  @if (matches.length === 0) {
+                    <div class="text-center py-8">
+                      <div class="text-4xl mb-2">📋</div>
+                      <h3 class="text-base font-semibold text-white mb-1">No Matches Yet</h3>
+                      <p class="text-sm text-gray-400 mb-3">Be the first to record a match!</p>
+                      @if (currentUserId$ | async; as userId) {
+                        @if (isMember(league, userId)) {
+                          <button
+                            (click)="navigateToRecordMatch()"
+                            class="px-6 py-3 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100">
+                            + Record Match
+                          </button>
+                        }
+                      }
+                    </div>
+                  } @else {
+                    <div class="space-y-2">
+                      @if (currentUserId$ | async; as userId) {
+                        @for (match of matches; track match.id) {
+                          <app-match-card 
+                            [match]="match" 
+                            [currentUserId]="userId"
+                            [canDispute]="true"
+                            (dispute)="onDisputeMatch($event)">
+                          </app-match-card>
+                        }
+                      }
+                    </div>
+                  }
+                }
+              }
+            </div>
+          }
+
+          <!-- Dispute Dialog -->
+          @if (showDisputeDialog && selectedMatchForDispute) {
+            <app-dispute-dialog
+              [matchId]="selectedMatchForDispute.id"
+              [matchParticipants]="getMatchParticipantsForDispute()"
+              (dispute)="onSubmitDispute($event)"
+              (cancel)="onCancelDispute()">
+            </app-dispute-dialog>
+          }
+
+          <!-- Fixtures Tab -->
+          @if (activeTab === 'fixtures') {
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div>
+                  <h2 class="text-lg font-bold text-white">Match Schedule</h2>
+                  @if (activeSeason$ | async; as season) {
+                    <p class="text-sm text-gray-400 mt-1">{{ season.name }}</p>
+                  }
+                </div>
+                @if (currentUserId$ | async; as userId) {
+                  @if (isCreator(league, userId)) {
+                    <button
+                      (click)="navigateToGenerateFixtures()"
+                      class="px-3 py-1.5 text-sm bg-white text-black rounded font-semibold transition-all duration-200 hover:bg-gray-100"
+                      data-testid="generate-fixtures-button">
+                      Generate Fixtures
+                    </button>
+                  }
+                }
+              </div>
+
+              @if (fixturesLoading$ | async) {
+                <div class="flex justify-center py-8">
+                  <svg class="animate-spin h-12 w-12 text-white" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              } @else {
+                @if ((fixtures$ | async); as fixtures) {
+                  @if (fixtures.length === 0) {
+                    <div class="text-center py-8">
+                      <div class="text-4xl mb-2">📅</div>
+                      <h3 class="text-base font-semibold text-white mb-1">No Fixtures Yet</h3>
+                      <p class="text-sm text-gray-400 mb-3">Generate fixtures to schedule matches</p>
+                      @if (currentUserId$ | async; as userId) {
+                        @if (isCreator(league, userId)) {
+                          <button
+                            (click)="navigateToGenerateFixtures()"
+                            class="px-6 py-3 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100">
+                            Generate Fixtures
+                          </button>
+                        }
+                      }
+                    </div>
+                  } @else {
+                    <div class="space-y-2">
+                      @if (currentUserId$ | async; as userId) {
+                        @for (fixture of fixtures; track fixture.id) {
+                          <app-fixture-card 
+                            [fixture]="fixture" 
+                            [currentUserId]="userId"
+                            [showRecordButton]="true">
+                          </app-fixture-card>
+                        }
+                      }
+                    </div>
+                  }
+                }
+              }
+            </div>
+          }
+
+          <!-- Members Tab -->
+          @if (activeTab === 'members') {
+            <div>
+              <h2 class="text-lg font-bold text-white mb-3">League Members</h2>
+              
+              @if (members$ | async; as members) {
+                <div class="space-y-2">
+                  @for (member of members; track member.id) {
+                    <div class="member-item flex items-center justify-between p-3 bg-bg-tertiary border border-border rounded-lg hover:border-border-hover transition-all duration-200">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-bg-elevated flex items-center justify-center overflow-hidden flex-shrink-0">
+                          @if (member.userAvatar) {
+                            <img [src]="member.userAvatar" [alt]="member.userName" class="w-full h-full object-cover" />
+                          } @else {
+                            <svg class="w-6 h-6 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                            </svg>
+                          }
+                        </div>
+                        <div>
+                          <div class="member-name font-semibold text-white">{{ member.userName || 'Unknown' }}</div>
+                          <div class="text-sm text-gray-400">{{ member.userEmail }}</div>
+                        </div>
+                      </div>
+                      <span 
+                        class="px-3 py-1 rounded-full text-xs font-semibold uppercase"
+                        [class]="member.role === 'creator' ? 'bg-white/20 text-white' : member.role === 'admin' ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'"
+                        data-testid="member-role-badge">
+                        {{ member.role }}
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Settings Tab -->
+          @if (activeTab === 'settings') {
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-bold text-white">League Settings</h2>
+                @if (currentUserId$ | async; as userId) {
+                  @if (isCreator(league, userId)) {
+                    @if (!editingSettings) {
+                      <button 
+                        (click)="toggleEditSettings()"
+                        class="px-4 py-2 bg-transparent border border-white/20 text-white rounded-lg font-medium transition-all duration-200 hover:border-white/40 hover:bg-white/5"
+                        data-testid="edit-settings-button">
+                        Edit Settings
+                      </button>
+                    }
+                  }
+                }
+              </div>
+
+              @if (settingsForm) {
+                <form [formGroup]="settingsForm" class="space-y-6">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Scoring System -->
+                    <div class="md:col-span-2">
+                      <label class="block text-sm font-medium text-gray-300 mb-2">Scoring System</label>
+                      <select 
+                        formControlName="scoringSystem" 
+                        [disabled]="!editingSettings"
+                        class="w-full px-4 py-3 bg-bg-tertiary border border-border rounded-lg text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        data-testid="scoring-system-select">
+                        <option value="points" class="bg-bg-tertiary">Points System</option>
+                        <option value="win_loss" class="bg-bg-tertiary">Win/Loss Only</option>
+                      </select>
+                    </div>
+
+                    <!-- Points Configuration -->
+                    @if (settingsForm.value.scoringSystem === 'points') {
+                      <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Points per Win</label>
+                        <input 
+                          type="number" 
+                          formControlName="pointsPerWin" 
+                          [readonly]="!editingSettings"
+                          class="w-full px-4 py-3 bg-bg-tertiary border border-border rounded-lg text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white read-only:opacity-50 read-only:cursor-not-allowed"
+                          data-testid="points-per-win-input"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Points per Draw</label>
+                        <input 
+                          type="number" 
+                          formControlName="pointsPerDraw" 
+                          [readonly]="!editingSettings"
+                          class="w-full px-4 py-3 bg-bg-tertiary border border-border rounded-lg text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white read-only:opacity-50 read-only:cursor-not-allowed"
+                          data-testid="points-per-draw-input"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Points per Loss</label>
+                        <input 
+                          type="number" 
+                          formControlName="pointsPerLoss" 
+                          [readonly]="!editingSettings"
+                          class="w-full px-4 py-3 bg-bg-tertiary border border-border rounded-lg text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white read-only:opacity-50 read-only:cursor-not-allowed"
+                          data-testid="points-per-loss-input"
+                        />
+                      </div>
+                    }
+
+                    <!-- Allow Draws -->
+                    <div class="md:col-span-2">
+                      <div class="flex items-center gap-3">
+                        <input 
+                          type="checkbox" 
+                          id="allowDraws"
+                          formControlName="allowDraws"
+                          [disabled]="!editingSettings"
+                          class="w-4 h-4 bg-bg-tertiary border-border rounded focus:ring-2 focus:ring-white/20 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                          data-testid="allow-draws-checkbox"
+                        />
+                        <label for="allowDraws" class="text-sm font-medium text-white">Allow draw results</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  @if (editingSettings) {
+                    <div class="flex gap-3 pt-6 border-t border-border">
+                      <button 
+                        type="button" 
+                        (click)="cancelEditSettings()"
+                        class="px-4 py-2 bg-transparent border border-white/20 text-white rounded-lg font-medium transition-all duration-200 hover:border-white/40 hover:bg-white/5"
+                        data-testid="cancel-settings-button">
+                        Cancel
+                      </button>
+                      <button 
+                        type="button" 
+                        (click)="saveSettings()"
+                        class="px-4 py-2 bg-white text-black rounded-lg font-medium transition-all duration-200 hover:bg-gray-100"
+                        data-testid="save-settings-button">
+                        Save Changes
+                      </button>
+                    </div>
+                  }
+                </form>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -6,13 +6,14 @@ import { map, catchError, switchMap, withLatestFrom } from 'rxjs/operators';
 import { DisputeService } from '../services/dispute.service';
 import * as DisputeActions from './dispute.actions';
 import * as MatchActions from '../../matches/store/match.actions';
-import * as LeagueSelectors from '../../leagues/store/league.selectors';
+import { LeagueSignalStore } from '../../leagues/store/league.signal-store';
 
 @Injectable()
 export class DisputeEffects {
   private actions$ = inject(Actions);
   private store = inject(Store);
   private disputeService = inject(DisputeService);
+  private leagueStore = inject(LeagueSignalStore);
 
   createDispute$ = createEffect(() =>
     this.actions$.pipe(
@@ -94,8 +95,8 @@ export class DisputeEffects {
         DisputeActions.resolveDisputeSuccess,
         DisputeActions.withdrawDisputeSuccess
       ),
-      withLatestFrom(this.store.select(LeagueSelectors.selectSelectedLeague)),
-      map(([_, league]) => {
+      map(() => {
+        const league = this.leagueStore.selectedLeague();
         if (league?.id) {
           return MatchActions.loadLeagueMatches({ leagueId: league.id });
         }

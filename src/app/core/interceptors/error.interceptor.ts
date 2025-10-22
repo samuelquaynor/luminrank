@@ -1,22 +1,20 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
-import * as AuthActions from '../../features/auth/store/auth.actions';
+import { AuthSignalStore } from '../../features/auth/store/auth.signal-store';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  const store = inject(Store);
+  const authStore = inject(AuthSignalStore);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
         // Unauthorized - token expired or invalid
-        store.dispatch(AuthActions.logout());
-        router.navigate(['/login']);
+        authStore.logout();
+        router.navigate(['/auth']);
       } else if (error.status === 403) {
         // Forbidden - user doesn't have permission
         router.navigate(['/unauthorized']);

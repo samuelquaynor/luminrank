@@ -1,6 +1,6 @@
 export enum UserRole {
   ADMIN = 'ADMIN',
-  USER = 'USER'
+  USER = 'USER',
 }
 
 export interface User {
@@ -25,10 +25,36 @@ export interface RegisterData {
   password: string;
 }
 
+export interface CreateUserData {
+  email: string;
+  name: string;
+  role?: UserRole;
+}
+
 export interface UpdateUserData {
+  email?: string;
   name?: string;
+  role?: UserRole;
+  isActive?: boolean;
   avatarUrl?: string;
   phone?: string;
+}
+
+export interface UserListResponse {
+  users: User[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface UserState {
+  users: User[];
+  selectedUser: User | null;
+  loading: boolean;
+  error: string | null;
+  searchTerm: string;
+  currentPage: number;
+  totalCount: number;
 }
 
 export interface AuthResponse {

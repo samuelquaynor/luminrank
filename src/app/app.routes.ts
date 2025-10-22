@@ -7,17 +7,17 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./pages/home/home.component').then((m) => m.HomeComponent),
+      import('./features/home/pages/home.component').then((m) => m.HomeComponent),
   },
   {
     path: 'auth',
     loadComponent: () =>
-      import('./pages/auth/auth.component').then((m) => m.AuthComponent),
+      import('./features/auth/pages/auth.component').then((m) => m.AuthComponent),
   },
   {
     path: 'profile-setup',
     loadComponent: () =>
-      import('./pages/profile-setup/profile-setup.component').then((m) => m.ProfileSetupComponent),
+      import('./features/user/pages/profile-setup.component').then((m) => m.ProfileSetupComponent),
     canActivate: [AuthGuard],
   },
   {
@@ -27,37 +27,51 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./pages/leagues/leagues-list.component').then((m) => m.LeaguesListComponent),
+          import('./features/leagues/pages/leagues-list.component').then(
+            (m) => m.LeaguesListComponent
+          ),
       },
       {
         path: 'create',
         loadComponent: () =>
-          import('./pages/leagues/create-league.component').then((m) => m.CreateLeagueComponent),
+          import('./features/leagues/pages/create-league.component').then(
+            (m) => m.CreateLeagueComponent
+          ),
       },
       {
         path: 'join',
         loadComponent: () =>
-          import('./pages/leagues/join-league.component').then((m) => m.JoinLeagueComponent),
+          import('./features/leagues/pages/join-league.component').then(
+            (m) => m.JoinLeagueComponent
+          ),
       },
       {
         path: 'join/:code',
         loadComponent: () =>
-          import('./pages/leagues/join-league.component').then((m) => m.JoinLeagueComponent),
+          import('./features/leagues/pages/join-league.component').then(
+            (m) => m.JoinLeagueComponent
+          ),
       },
       {
         path: ':id',
         loadComponent: () =>
-          import('./pages/leagues/league-detail.component').then((m) => m.LeagueDetailComponent),
+          import('./features/leagues/pages/league-detail.component').then(
+            (m) => m.LeagueDetailComponent
+          ),
       },
       {
         path: ':id/record-match',
         loadComponent: () =>
-          import('./pages/matches/record-match.component').then((m) => m.RecordMatchComponent),
+          import('./features/matches/pages/record-match.component').then(
+            (m) => m.RecordMatchComponent
+          ),
       },
       {
         path: ':id/generate-fixtures',
         loadComponent: () =>
-          import('./pages/fixtures/generate-fixtures.component').then((m) => m.GenerateFixturesComponent),
+          import('./features/fixtures/pages/generate-fixtures.component').then(
+            (m) => m.GenerateFixturesComponent
+          ),
       },
     ],
   },
@@ -65,13 +79,13 @@ export const routes: Routes = [
   // {
   //   path: 'dashboard',
   //   loadComponent: () =>
-  //     import('./features/auth/components/admin/admin.component').then((m) => m.AdminComponent),
+  //     import('./features/admin/pages/admin.component').then((m) => m.AdminComponent),
   //   canActivate: [AuthGuard],
   // },
   // {
   //   path: 'admin',
   //   loadComponent: () =>
-  //     import('./features/auth/components/admin/admin.component').then((m) => m.AdminComponent),
+  //     import('./features/admin/pages/admin.component').then((m) => m.AdminComponent),
   //   canActivate: [RoleGuard],
   //   data: { roles: [UserRole.ADMIN] },
   // },

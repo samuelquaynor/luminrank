@@ -13,8 +13,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 
 import { routes } from './app.routes';
 import { appReducers } from './store/app.state';
-import { AuthEffects } from './features/auth/store/auth.effects';
-import { LeagueEffects } from './features/leagues/store/league.effects';
+// AuthEffects and LeagueEffects removed - now using signal stores
 import { MatchEffects } from './features/matches/store/match.effects';
 import { LeaderboardEffects } from './features/matches/store/leaderboard.effects';
 import { FixtureEffects } from './features/fixtures/store/fixture.effects';
@@ -23,6 +22,8 @@ import { DisputeEffects } from './features/disputes/store/dispute.effects';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { provideSupabase } from './core/providers/supabase.provider';
+import { AuthSignalStore } from './features/auth/store/auth.signal-store';
+import { LeagueSignalStore } from './features/leagues/store/league.signal-store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -33,8 +34,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideStore(appReducers),
     provideEffects([
-      AuthEffects,
-      LeagueEffects,
       MatchEffects,
       LeaderboardEffects,
       FixtureEffects,
@@ -47,5 +46,7 @@ export const appConfig: ApplicationConfig = {
       logOnly: false, // Set to true in production
     }),
     provideSupabase(),
+    AuthSignalStore,
+    LeagueSignalStore,
   ],
 };

@@ -1,58 +1,52 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { LoginCredentials } from '../../../../core/models/user.model';
-import * as AuthActions from '../../store/auth.actions';
-import * as AuthSelectors from '../../store/auth.selectors';
+import { AuthSignalStore } from '../../store/auth.signal-store';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  loginForm: FormGroup;
-  isLoading$: Observable<boolean>;
-  error$: Observable<string | null>;
-  private subscription = new Subscription();
+  private authStore = inject(AuthSignalStore);
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
 
-  constructor(
-    private fb: FormBuilder,
-    private store: Store,
-    private router: Router
-  ) {
+  loginForm: FormGroup;
+
+  // Signal-based selectors
+  isLoading = this.authStore.loading;
+  error = this.authStore.error;
+
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
-
-    this.isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
-    this.error$ = this.store.select(AuthSelectors.selectError);
   }
 
   ngOnInit(): void {
     // Clear any existing errors when component loads
-    this.store.dispatch(AuthActions.clearError());
+    this.authStore.clearError();
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    // No subscriptions to unsubscribe with signal store
   }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
       const credentials: LoginCredentials = {
         email: this.loginForm.value.email,
-        password: this.loginForm.value.password
+        password: this.loginForm.value.password,
       };
 
-      this.store.dispatch(AuthActions.login({ credentials }));
+      this.authStore.login(credentials);
     } else {
       this.markFormGroupTouched();
     }
@@ -63,7 +57,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private markFormGroupTouched(): void {
-    Object.keys(this.loginForm.controls).forEach(key => {
+    Object.keys(this.loginForm.controls).forEach((key) => {
       const control = this.loginForm.get(key);
       control?.markAsTouched();
     });

@@ -1,19 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable, map, take } from 'rxjs';
-import { Store } from '@ngrx/store';
-
-import * as AuthSelectors from '../../features/auth/store/auth.selectors';
+import { Observable } from 'rxjs';
+import { AuthSignalStore } from '../../features/auth/store/auth.signal-store';
 import { UserRole } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleGuard implements CanActivate {
-  constructor(
-    private store: Store,
-    private router: Router
-  ) {}
+  private authStore = inject(AuthSignalStore);
+
+  constructor(private router: Router) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -21,41 +18,44 @@ export class RoleGuard implements CanActivate {
   ): Observable<boolean> {
     const requiredRoles = route.data['roles'] as UserRole[];
     
-    if (!requiredRoles || requiredRoles.length === 0) {
-      return this.store.select(AuthSelectors.selectIsAuthenticated).pipe(
-        take(1),
-        map(isAuthenticated => {
-          if (isAuthenticated) {
-            return true;
-          } else {
-            this.router.navigate(['/auth'], {
-              queryParams: { returnUrl: state.url }
-            });
-            return false;
-          }
-        })
-      );
-    }
+    return new Observable(observer => {
+      const isAuthenticated = this.authStore.isAuthenticated();
+      const userRole = this.authStore.userRole();
+      
+      if (!isAuthenticated) {
+        this.router.navigate(['/auth'], {
+          queryParams: { returnUrl: state.url }
+        });
+        observer.next(false);
+        observer.complete();
+        return;
+      }
 
-    return this.store.select(AuthSelectors.selectUserRole).pipe(
-      take(1),
-      map(userRole => {
-        if (!userRole) {
-          this.router.navigate(['/auth'], {
-            queryParams: { returnUrl: state.url }
-          });
-          return false;
-        }
+      if (!requiredRoles || requiredRoles.length === 0) {
+        observer.next(true);
+        observer.complete();
+        return;
+      }
 
-        const hasRequiredRole = requiredRoles.includes(userRole);
-        
-        if (hasRequiredRole) {
-          return true;
-        } else {
-          this.router.navigate(['/unauthorized']);
-          return false;
-        }
-      })
-    );
+      if (!userRole) {
+        this.router.navigate(['/auth'], {
+          queryParams: { returnUrl: state.url }
+        });
+        observer.next(false);
+        observer.complete();
+        return;
+      }
+
+      const hasRequiredRole = requiredRoles.includes(userRole);
+      
+      if (hasRequiredRole) {
+        observer.next(true);
+        observer.complete();
+      } else {
+        this.router.navigate(['/unauthorized']);
+        observer.next(false);
+        observer.complete();
+      }
+    });
   }
 }

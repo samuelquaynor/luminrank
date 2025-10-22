@@ -1,0 +1,109 @@
+<div class="min-h-screen bg-bg-primary">
+  <app-header></app-header>
+
+  <div class="flex items-center justify-center min-h-[calc(100vh-64px)] px-4">
+    <div class="w-full max-w-md">
+      <div class="bg-bg-secondary border border-border rounded-2xl shadow-xl p-8">
+        
+        @if (autoJoining) {
+          <!-- Auto-joining State -->
+          <div class="text-center py-8">
+            <svg class="animate-spin h-16 w-16 mx-auto mb-6 text-white" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <h2 class="text-2xl font-bold text-white mb-2">Joining League...</h2>
+            <p class="text-gray-400">Please wait while we add you to the league</p>
+          </div>
+        } @else {
+          <!-- Join Form -->
+          <div class="mb-6">
+            <h1 class="text-3xl font-bold text-white mb-2">Join a League</h1>
+            <p class="text-gray-400">Enter the invite code shared by your league creator</p>
+          </div>
+
+          <form [formGroup]="joinForm" (ngSubmit)="onSubmit()" class="space-y-6" data-testid="join-league-form">
+            
+            <!-- Invite Code -->
+            <div>
+              <label for="code" class="block text-sm font-medium text-gray-300 mb-2">
+                Invite Code
+              </label>
+              <input
+                type="text"
+                id="code"
+                formControlName="code"
+                placeholder="LMNR-ABC123"
+                class="w-full px-4 py-3 bg-bg-tertiary border rounded-lg text-white placeholder-gray-500 font-mono transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white uppercase"
+                [class.border-red-500]="code?.invalid && code?.touched"
+                [class.border-border]="!(code?.invalid && code?.touched)"
+                data-testid="invite-code-input"
+              />
+              <p class="mt-1 text-xs text-gray-400">Format: LMNR-XXXXXX</p>
+              
+              @if (code?.invalid && code?.touched) {
+                <p class="mt-1 text-sm text-red-400">
+                  @if (code?.errors?.['required']) {
+                    Invite code is required
+                  }
+                  @if (code?.errors?.['pattern']) {
+                    Invalid code format (should be LMNR-XXXXXX)
+                  }
+                </p>
+              }
+            </div>
+
+            <!-- Server Error -->
+            @if (error(); as error) {
+              <div class="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                <span>{{ error }}</span>
+              </div>
+            }
+
+            <!-- Form Actions -->
+            <div class="flex flex-col-reverse sm:flex-row gap-4">
+              <button 
+                type="button" 
+                routerLink="/leagues"
+                class="flex-1 sm:flex-none px-6 py-3 bg-transparent border-2 border-white/20 text-white rounded-lg font-semibold transition-all duration-200 hover:border-white/40 hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-bg-secondary"
+                data-testid="cancel-join-button">
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                class="flex-1 px-6 py-3 bg-white text-black rounded-lg font-semibold transition-all duration-200 hover:bg-gray-100 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-bg-secondary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                [disabled]="joinForm.invalid || (loading())"
+                data-testid="submit-join-league-button"
+              >
+                @if (loading()) {
+                  <span class="flex items-center justify-center gap-2">
+                    <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Joining...
+                  </span>
+                } @else {
+                  Join League
+                }
+              </button>
+            </div>
+          </form>
+
+          <!-- Help Text -->
+          <div class="mt-6 pt-6 border-t border-border">
+            <div class="flex items-start gap-3 text-sm text-gray-400">
+              <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+              </svg>
+              <p>Don't have an invite code? Ask a league creator to share their code with you.</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

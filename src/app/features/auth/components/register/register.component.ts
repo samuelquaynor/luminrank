@@ -1,59 +1,62 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { RegisterData } from '../../../../core/models/user.model';
-import * as AuthActions from '../../store/auth.actions';
-import * as AuthSelectors from '../../store/auth.selectors';
+import { AuthSignalStore } from '../../store/auth.signal-store';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class RegisterComponent implements OnInit, OnDestroy {
+  private authStore = inject(AuthSignalStore);
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+
   registerForm: FormGroup;
-  isLoading$: Observable<boolean>;
-  error$: Observable<string | null>;
-  private subscription = new Subscription();
 
-  constructor(
-    private fb: FormBuilder,
-    private store: Store,
-    private router: Router
-  ) {
-    this.registerForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
+  // Signal-based selectors
+  isLoading = this.authStore.loading;
+  error = this.authStore.error;
 
-    this.isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
-    this.error$ = this.store.select(AuthSelectors.selectError);
+  constructor() {
+    this.registerForm = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatchValidator }
+    );
   }
 
   ngOnInit(): void {
     // Clear any existing errors when component loads
-    this.store.dispatch(AuthActions.clearError());
+    this.authStore.clearError();
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    // No subscriptions to unsubscribe with signal store
   }
 
   onSubmit(): void {
     if (this.registerForm.valid) {
       const registerData: RegisterData = {
         email: this.registerForm.value.email,
-        password: this.registerForm.value.password
+        password: this.registerForm.value.password,
       };
 
-      this.store.dispatch(AuthActions.register({ registerData }));
+      this.authStore.register(registerData);
     } else {
       this.markFormGroupTouched();
     }
@@ -64,16 +67,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   private markFormGroupTouched(): void {
-    Object.keys(this.registerForm.controls).forEach(key => {
+    Object.keys(this.registerForm.controls).forEach((key) => {
       const control = this.registerForm.get(key);
       control?.markAsTouched();
     });
   }
 
-  private passwordMatchValidator(control: AbstractControl): {[key: string]: any} | null {
+  private passwordMatchValidator(control: AbstractControl): { [key: string]: any } | null {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
-    
+
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       return { passwordMismatch: true };
     }
@@ -82,7 +85,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   getErrorMessage(fieldName: string): string {
     const control = this.registerForm.get(fieldName);
-    
+
     if (control?.hasError('required')) {
       return `${fieldName} is required`;
     }
@@ -98,7 +101,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   getPasswordStrength(): string {
     const password = this.registerForm.get('password')?.value || '';
     if (password.length === 0) return '';
-    
+
     if (password.length < 6) return 'weak';
     if (password.length < 8) return 'fair';
     if (password.match(/[A-Z]/) && password.match(/[0-9]/)) return 'strong';
@@ -111,8 +114,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   isPasswordMismatch(): boolean {
-    return this.registerForm.hasError('passwordMismatch') && 
-           !!this.registerForm.get('confirmPassword')?.touched;
+    return (
+      this.registerForm.hasError('passwordMismatch') &&
+      !!this.registerForm.get('confirmPassword')?.touched
+    );
   }
 
   getPasswordStrengthClass(): string {
