@@ -1,11 +1,16 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  runInInjectionContext,
+  Injector,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Actions, ofType } from '@ngrx/effects';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { LeaderboardComponent } from '../../../shared/components/leaderboard/leaderboard.component';
 import { MatchCardComponent } from '../../../shared/components/match-card/match-card.component';
@@ -18,15 +23,9 @@ import { FixtureWithDetails } from '../../fixtures/models/fixture.model';
 import { CreateDisputeRequest } from '../../disputes/models/dispute.model';
 import { LeagueSignalStore } from '../store/league.signal-store';
 import { AuthSignalStore } from '../../auth/store/auth.signal-store';
-import * as MatchActions from '../../matches/store/match.actions';
-import * as MatchSelectors from '../../matches/store/match.selectors';
-import * as LeaderboardActions from '../../matches/store/leaderboard.actions';
-import * as LeaderboardSelectors from '../../matches/store/leaderboard.selectors';
-import * as FixtureActions from '../../fixtures/store/fixture.actions';
-import * as FixtureSelectors from '../../fixtures/store/fixture.selectors';
-import * as SeasonActions from '../../fixtures/store/season.actions';
-import * as SeasonSelectors from '../../fixtures/store/season.selectors';
-import * as DisputeActions from '../../disputes/store/dispute.actions';
+import { MatchSignalStore } from '../../matches/store/match.signal-store';
+import { FixtureSignalStore } from '../../fixtures/store/fixture.signal-store';
+import { DisputeSignalStore } from '../../disputes/store/dispute.signal-store';
 
 @Component({
   selector: 'app-league-detail',
@@ -46,28 +45,50 @@ import * as DisputeActions from '../../disputes/store/dispute.actions';
 export class LeagueDetailComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private store = inject(Store);
   private fb = inject(FormBuilder);
-  private actions$ = inject(Actions);
   private authStore = inject(AuthSignalStore);
   private leagueStore = inject(LeagueSignalStore);
+  private matchStore = inject(MatchSignalStore);
+  private fixtureStore = inject(FixtureSignalStore);
+  private disputeStore = inject(DisputeSignalStore);
+  private injector = inject(Injector);
 
   leagueId!: string;
   league$!: Observable<LeagueWithDetails | null>;
   members$!: Observable<LeagueMember[]>;
-  loading$: Observable<boolean> = toObservable(this.leagueStore.loading);
-  currentUserId$: Observable<string | undefined> = toObservable(this.authStore.userId);
+  loading$: Observable<boolean>;
+  currentUserId$: Observable<string | undefined>;
+
+  constructor() {
+    // Initialize observables in constructor (injection context)
+    this.loading$ = toObservable(this.leagueStore.loading);
+    this.currentUserId$ = toObservable(this.authStore.userId);
+    this.league$ = toObservable(this.leagueStore.selectedLeague);
+
+    // Initialize match & leaderboard observables
+    this.leaderboardEntries$ = toObservable(this.matchStore['leaderboardEntries']) as Observable<
+      LeaderboardEntry[]
+    >;
+    this.matches$ = toObservable(this.matchStore.matches);
+    this.leaderboardLoading$ = toObservable(this.matchStore.leaderboardLoading);
+    this.matchesLoading$ = toObservable(this.matchStore.matchLoading);
+
+    // Initialize fixture & season observables
+    this.fixtures$ = toObservable(this.fixtureStore.fixtures);
+    this.activeSeason$ = toObservable(this.fixtureStore.activeSeason);
+    this.fixturesLoading$ = toObservable(this.fixtureStore.fixtureLoading);
+  }
 
   // Phase 2: Match & Leaderboard
-  leaderboardEntries$!: Observable<LeaderboardEntry[]>;
-  matches$!: Observable<MatchWithDetails[]>;
-  leaderboardLoading$!: Observable<boolean>;
-  matchesLoading$!: Observable<boolean>;
+  leaderboardEntries$: Observable<LeaderboardEntry[]>;
+  matches$: Observable<MatchWithDetails[]>;
+  leaderboardLoading$: Observable<boolean>;
+  matchesLoading$: Observable<boolean>;
 
   // Phase 3: Fixtures & Seasons
-  fixtures$!: Observable<FixtureWithDetails[]>;
-  activeSeason$!: Observable<any>;
-  fixturesLoading$!: Observable<boolean>;
+  fixtures$: Observable<FixtureWithDetails[]>;
+  activeSeason$: Observable<any>;
+  fixturesLoading$: Observable<boolean>;
 
   activeTab: 'leaderboard' | 'matches' | 'fixtures' | 'members' | 'settings' = 'leaderboard';
   settingsForm!: FormGroup;
@@ -85,39 +106,22 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.leagueId = this.route.snapshot.paramMap.get('id')!;
-    this.league$ = toObservable(this.leagueStore.selectedLeague);
-    this.members$ = toObservable(this.leagueStore.leagueMembers(this.leagueId));
+    // Initialize members observable after we have leagueId using runInInjectionContext
+    this.members$ = runInInjectionContext(this.injector, () =>
+      toObservable(this.leagueStore.leagueMembers(this.leagueId))
+    );
 
-    // Listen for dispute success and reload matches
-    this.actionsSubscription = this.actions$
-      .pipe(
-        ofType(
-          DisputeActions.createDisputeSuccess,
-          DisputeActions.resolveDisputeSuccess,
-          DisputeActions.withdrawDisputeSuccess
-        )
-      )
-      .subscribe(() => {
-        this.store.dispatch(MatchActions.loadLeagueMatches({ leagueId: this.leagueId }));
-      });
+    // Note: Dispute success handling moved to dispute dialog component
+    // Matches will be reloaded there after successful dispute operations
 
-    // Phase 2: Load leaderboard and matches
-    this.leaderboardEntries$ = this.store.select(LeaderboardSelectors.selectLeaderboardEntries);
-    this.matches$ = this.store.select(MatchSelectors.selectAllMatches);
-    this.leaderboardLoading$ = this.store.select(LeaderboardSelectors.selectLeaderboardLoading);
-    this.matchesLoading$ = this.store.select(MatchSelectors.selectMatchLoading);
-
+    // Phase 2: Load league, leaderboard and matches
     this.leagueStore.loadLeague(this.leagueId);
-    this.store.dispatch(LeaderboardActions.loadLeaderboard({ leagueId: this.leagueId }));
-    this.store.dispatch(MatchActions.loadLeagueMatches({ leagueId: this.leagueId }));
+    this.matchStore.loadLeaderboard(this.leagueId);
+    this.matchStore.loadLeagueMatches(this.leagueId);
 
     // Phase 3: Load fixtures and seasons
-    this.fixtures$ = this.store.select(FixtureSelectors.selectAllFixtures);
-    this.activeSeason$ = this.store.select(SeasonSelectors.selectActiveSeason);
-    this.fixturesLoading$ = this.store.select(FixtureSelectors.selectFixtureLoading);
-
-    this.store.dispatch(FixtureActions.loadLeagueFixtures({ leagueId: this.leagueId }));
-    this.store.dispatch(SeasonActions.loadActiveSeason({ leagueId: this.leagueId }));
+    this.fixtureStore.loadLeagueFixtures({ leagueId: this.leagueId });
+    this.fixtureStore.loadActiveSeason(this.leagueId);
 
     // Subscribe to league to initialize forms (only once)
     this.leagueSubscription = this.league$.subscribe((league) => {
@@ -138,7 +142,9 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
 
     // Handle leave league success
     // Listen for league removal (when user leaves league)
-    this.leagueSubscription = toObservable(this.leagueStore.leagues).subscribe((leagues) => {
+    this.leagueSubscription = runInInjectionContext(this.injector, () =>
+      toObservable(this.leagueStore.leagues)
+    ).subscribe((leagues) => {
       const currentLeague = leagues.find((l) => l.id === this.leagueId);
       if (!currentLeague) {
         this.router.navigate(['/leagues']);
@@ -291,10 +297,11 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   }
 
   onSubmitDispute(request: CreateDisputeRequest): void {
-    this.store.dispatch(DisputeActions.createDispute({ request }));
+    this.disputeStore.createDispute(request);
     this.showDisputeDialog = false;
     this.selectedMatchForDispute = undefined;
-    // Note: Matches will be reloaded automatically when createDisputeSuccess action fires
+    // Reload matches after creating dispute
+    this.matchStore.loadLeagueMatches(this.leagueId);
   }
 
   onCancelDispute(): void {

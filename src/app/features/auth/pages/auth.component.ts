@@ -22,7 +22,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     effect(() => {
       const user = this.authStore.user();
       const isAuthenticated = this.authStore.isAuthenticated();
-      
+
       if (isAuthenticated && user) {
         if (!user.name) {
           this.router.navigate(['/profile-setup']);

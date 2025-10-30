@@ -1,15 +1,11 @@
-import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { AppState } from '../../../store/app.state';
 import { LeagueSignalStore } from '../../leagues/store/league.signal-store';
-import { selectMatchRecording, selectMatchError } from '../store/match.selectors';
-import { recordMatch, clearMatchError } from '../store/match.actions';
-import { loadLeaderboard } from '../store/leaderboard.actions';
+import { MatchSignalStore } from '../store/match.signal-store';
 import { League, LeagueMember } from '../../leagues/models/league.model';
 import { CreateMatchRequest, MatchResult } from '../models/match.model';
 
@@ -266,13 +262,13 @@ import { CreateMatchRequest, MatchResult } from '../models/match.model';
     </div>
   `,
 })
-export class RecordMatchComponent implements OnInit {
+export class RecordMatchComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private store = inject(Store<AppState>);
   private platformId = inject(PLATFORM_ID);
   private leagueStore = inject(LeagueSignalStore);
+  private matchStore = inject(MatchSignalStore);
 
   leagueId: string = '';
   matchForm!: FormGroup;
@@ -283,6 +279,7 @@ export class RecordMatchComponent implements OnInit {
   members$!: Observable<LeagueMember[]>;
   recording$!: Observable<boolean>;
   error$!: Observable<string | null>;
+  private recordingSubscription?: Subscription;
 
   ngOnInit(): void {
     this.leagueId = this.route.snapshot.paramMap.get('id') || '';
@@ -295,8 +292,8 @@ export class RecordMatchComponent implements OnInit {
     // Initialize observables
     this.league$ = toObservable(this.leagueStore.leagueById(this.leagueId));
     this.members$ = toObservable(this.leagueStore.leagueMembers(this.leagueId));
-    this.recording$ = this.store.select(selectMatchRecording);
-    this.error$ = this.store.select(selectMatchError);
+    this.recording$ = toObservable(this.matchStore.recordingMatch);
+    this.error$ = toObservable(this.matchStore.matchError);
 
     // Load league members
     this.members$.subscribe((members) => {
@@ -307,17 +304,16 @@ export class RecordMatchComponent implements OnInit {
     this.initForm();
 
     // Listen for successful match recording
-    this.recording$.subscribe((recording) => {
-      if (!recording && !this.formError) {
-        // Check if we just finished recording (transition from true to false)
-        const previousRecording = this.matchForm.disabled;
-        if (previousRecording) {
-          // Refresh leaderboard
-          this.store.dispatch(loadLeaderboard({ leagueId: this.leagueId }));
-          // Navigate back to league detail
-          this.router.navigate(['/leagues', this.leagueId]);
-        }
+    let wasRecording = false;
+    this.recordingSubscription = this.recording$.subscribe((recording) => {
+      if (wasRecording && !recording && !this.matchStore.matchError()) {
+        // Recording just finished successfully
+        // Refresh leaderboard
+        this.matchStore.loadLeaderboard(this.leagueId);
+        // Navigate back to league detail
+        this.router.navigate(['/leagues', this.leagueId]);
       }
+      wasRecording = recording;
     });
   }
 
@@ -386,8 +382,12 @@ export class RecordMatchComponent implements OnInit {
       ],
     };
 
-    // Dispatch action
-    this.store.dispatch(recordMatch({ request }));
+    // Record match using signal store
+    this.matchStore.recordMatch(request);
+  }
+
+  ngOnDestroy(): void {
+    this.recordingSubscription?.unsubscribe();
   }
 
   goBack(): void {

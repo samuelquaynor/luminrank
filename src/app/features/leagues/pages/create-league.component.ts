@@ -33,14 +33,7 @@ export class CreateLeagueComponent implements OnInit, OnDestroy {
     return this.createForm.get('gameType');
   }
 
-  // Static data for templates
-  gameTypes = [
-    { value: 'tennis', label: 'Tennis' },
-    { value: 'badminton', label: 'Badminton' },
-    { value: 'table_tennis', label: 'Table Tennis' },
-    { value: 'squash', label: 'Squash' },
-    { value: 'other', label: 'Other' },
-  ];
+  gameTypes = ['GamePigeon', 'Chess', 'Pool', 'Darts', 'Trivia', 'Fantasy Sports', 'Other'];
 
   scoringSystems = [
     {
@@ -55,7 +48,7 @@ export class CreateLeagueComponent implements OnInit, OnDestroy {
     this.createForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
-      gameType: ['tennis', [Validators.required]],
+      gameType: ['', [Validators.required]],
       isPrivate: [false],
       // Advanced settings
       scoringSystem: ['standard', [Validators.required]],

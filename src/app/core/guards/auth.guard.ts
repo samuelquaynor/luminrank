@@ -20,10 +20,10 @@ export class AuthGuard implements CanActivate {
 
     // For now, we'll use a simple approach with signal store
     // In a real app, you might want to create a more sophisticated guard
-    return new Observable(observer => {
+    return new Observable((observer) => {
       // Check authentication status
       const isAuthenticated = this.authStore.isAuthenticated();
-      
+
       if (isAuthenticated) {
         observer.next(true);
         observer.complete();

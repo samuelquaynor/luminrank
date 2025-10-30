@@ -2,17 +2,12 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { AppState } from '../../../store/app.state';
-import * as SeasonActions from '../store/season.actions';
-import * as FixtureActions from '../store/fixture.actions';
 import { LeagueSignalStore } from '../../leagues/store/league.signal-store';
-import { selectAllSeasons, selectSeasonLoading } from '../store/season.selectors';
-import { selectGenerationResult, selectFixtureLoading } from '../store/fixture.selectors';
+import { FixtureSignalStore } from '../store/fixture.signal-store';
 import { Season, SeasonStatus } from '../models/season.model';
-import { GenerateFixturesRequest } from '../models/fixture.model';
+import { GenerateFixturesRequest, FixtureGenerationResult } from '../models/fixture.model';
 
 @Component({
   selector: 'app-generate-fixtures',
@@ -21,19 +16,19 @@ import { GenerateFixturesRequest } from '../models/fixture.model';
   templateUrl: './generate-fixtures.component.html',
 })
 export class GenerateFixturesComponent implements OnInit, OnDestroy {
-  private store = inject(Store<AppState>);
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private leagueStore = inject(LeagueSignalStore);
+  private fixtureStore = inject(FixtureSignalStore);
 
   leagueId = '';
-  league$ = toObservable(this.leagueStore.leagueById(this.leagueId));
-  seasons$ = this.store.select(selectAllSeasons);
-  members$ = toObservable(this.leagueStore.leagueMembers(this.leagueId));
-  seasonLoading$ = this.store.select(selectSeasonLoading);
-  fixtureLoading$ = this.store.select(selectFixtureLoading);
-  generationResult$ = this.store.select(selectGenerationResult);
+  league$!: Observable<any>;
+  seasons$: Observable<Season[]>;
+  members$!: Observable<any>;
+  seasonLoading$: Observable<boolean>;
+  fixtureLoading$: Observable<boolean>;
+  generationResult$: Observable<FixtureGenerationResult | null>;
 
   currentStep = 1;
   selectedSeason: Season | null = null;
@@ -46,6 +41,12 @@ export class GenerateFixturesComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor() {
+    // Initialize observables
+    this.seasons$ = toObservable(this.fixtureStore.seasons);
+    this.seasonLoading$ = toObservable(this.fixtureStore.seasonLoading);
+    this.fixtureLoading$ = toObservable(this.fixtureStore.fixtureLoading);
+    this.generationResult$ = toObservable(this.fixtureStore.generationResult);
+
     // Season selection/creation form
     this.seasonForm = this.fb.group({
       seasonId: [''],
@@ -66,9 +67,13 @@ export class GenerateFixturesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.leagueId = this.route.snapshot.paramMap.get('id') || '';
 
+    // Initialize league-specific observables
+    this.league$ = toObservable(this.leagueStore.leagueById(this.leagueId));
+    this.members$ = toObservable(this.leagueStore.leagueMembers(this.leagueId));
+
     // Load league data
     this.leagueStore.loadLeague(this.leagueId);
-    this.store.dispatch(SeasonActions.loadLeagueSeasons({ leagueId: this.leagueId }));
+    this.fixtureStore.loadLeagueSeasons(this.leagueId);
 
     // Watch for successful generation
     this.subscriptions.add(
@@ -157,10 +162,8 @@ export class GenerateFixturesComponent implements OnInit, OnDestroy {
         status: SeasonStatus.ACTIVE,
       };
 
-      // Dispatch create season action and wait for success
-      // In a real app, we'd subscribe to the success action
-      // For simplicity, we'll proceed with the assumption it succeeds
-      this.store.dispatch(SeasonActions.createSeason({ request: seasonData }));
+      // Create season using signal store
+      this.fixtureStore.createSeason(seasonData);
 
       // TODO: Wait for season creation success before proceeding
       // For now, we'll skip season linking
@@ -175,7 +178,7 @@ export class GenerateFixturesComponent implements OnInit, OnDestroy {
       submission_window_hours: this.settingsForm.value.submissionWindowHours,
     };
 
-    this.store.dispatch(FixtureActions.generateFixtures({ request }));
+    this.fixtureStore.generateFixtures(request);
   }
 
   cancel() {

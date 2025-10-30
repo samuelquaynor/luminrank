@@ -17,7 +17,7 @@ export const routes: Routes = [
   {
     path: 'profile-setup',
     loadComponent: () =>
-      import('./features/user/pages/profile-setup.component').then((m) => m.ProfileSetupComponent),
+      import('./features/profile/pages/profile-setup.component').then((m) => m.ProfileSetupComponent),
     canActivate: [AuthGuard],
   },
   {
