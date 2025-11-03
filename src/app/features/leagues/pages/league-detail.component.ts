@@ -1,31 +1,30 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
-  OnInit,
+  Injector,
   OnDestroy,
+  OnInit,
+  computed,
   inject,
   runInInjectionContext,
-  Injector,
+  signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { skip, take } from 'rxjs/operators';
 import { LeaderboardComponent } from '../../../shared/components/leaderboard/leaderboard.component';
 import { MatchCardComponent } from '../../../shared/components/match-card/match-card.component';
-import { FixtureCardComponent } from '../../../shared/components/fixture-card/fixture-card.component';
-import { DisputeDialogComponent } from '../../disputes/components/dispute-dialog.component';
-import { LeagueWithDetails, LeagueMember, ScoringSystem } from '../models/league.model';
-import { MatchWithDetails } from '../../matches/models/match.model';
-import { LeaderboardEntry } from '../../matches/models/leaderboard.model';
-import { FixtureWithDetails } from '../../fixtures/models/fixture.model';
-import { CreateDisputeRequest } from '../../disputes/models/dispute.model';
-import { LeagueSignalStore } from '../store/league.signal-store';
 import { AuthSignalStore } from '../../auth/store/auth.signal-store';
-import { MatchSignalStore } from '../../matches/store/match.signal-store';
-import { FixtureSignalStore } from '../../fixtures/store/fixture.signal-store';
+import { DisputeDialogComponent } from '../../disputes/components/dispute-dialog.component';
+import { CreateDisputeRequest } from '../../disputes/models/dispute.model';
 import { DisputeSignalStore } from '../../disputes/store/dispute.signal-store';
+import { LeaderboardEntry } from '../../matches/models/leaderboard.model';
+import { MatchWithDetails } from '../../matches/models/match.model';
+import { MatchSignalStore } from '../../matches/store/match.signal-store';
+import { LeagueMember, LeagueWithDetails, LeagueStatus } from '../models/league.model';
+import { LeagueSignalStore } from '../store/league.signal-store';
 
 @Component({
   selector: 'app-league-detail',
@@ -33,10 +32,8 @@ import { DisputeSignalStore } from '../../disputes/store/dispute.signal-store';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HeaderComponent,
     LeaderboardComponent,
     MatchCardComponent,
-    FixtureCardComponent,
     DisputeDialogComponent,
   ],
   templateUrl: './league-detail.component.html',
@@ -44,12 +41,11 @@ import { DisputeSignalStore } from '../../disputes/store/dispute.signal-store';
 })
 export class LeagueDetailComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  router = inject(Router);
   private fb = inject(FormBuilder);
   private authStore = inject(AuthSignalStore);
   private leagueStore = inject(LeagueSignalStore);
   private matchStore = inject(MatchSignalStore);
-  private fixtureStore = inject(FixtureSignalStore);
   private disputeStore = inject(DisputeSignalStore);
   private injector = inject(Injector);
 
@@ -73,10 +69,8 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     this.leaderboardLoading$ = toObservable(this.matchStore.leaderboardLoading);
     this.matchesLoading$ = toObservable(this.matchStore.matchLoading);
 
-    // Initialize fixture & season observables
-    this.fixtures$ = toObservable(this.fixtureStore.fixtures);
-    this.activeSeason$ = toObservable(this.fixtureStore.activeSeason);
-    this.fixturesLoading$ = toObservable(this.fixtureStore.fixtureLoading);
+    // Season observables (seasons still needed for time-boxed competition)
+    // TODO: Move seasons to separate service/store if needed
   }
 
   // Phase 2: Match & Leaderboard
@@ -85,12 +79,7 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   leaderboardLoading$: Observable<boolean>;
   matchesLoading$: Observable<boolean>;
 
-  // Phase 3: Fixtures & Seasons
-  fixtures$: Observable<FixtureWithDetails[]>;
-  activeSeason$: Observable<any>;
-  fixturesLoading$: Observable<boolean>;
-
-  activeTab: 'leaderboard' | 'matches' | 'fixtures' | 'members' | 'settings' = 'leaderboard';
+  activeTab: 'details' | 'matches' | 'standings' = 'details';
   settingsForm!: FormGroup;
   leagueForm!: FormGroup;
   editingSettings = false;
@@ -104,6 +93,8 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   showDisputeDialog = false;
   selectedMatchForDispute?: MatchWithDetails;
 
+  private matchesSignal = signal<MatchWithDetails[]>([]);
+
   ngOnInit(): void {
     this.leagueId = this.route.snapshot.paramMap.get('id')!;
     // Initialize members observable after we have leagueId using runInInjectionContext
@@ -114,14 +105,18 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     // Note: Dispute success handling moved to dispute dialog component
     // Matches will be reloaded there after successful dispute operations
 
-    // Phase 2: Load league, leaderboard and matches
+    // Phase 2: Load league, members, leaderboard and matches
     this.leagueStore.loadLeague(this.leagueId);
+    this.leagueStore.loadLeagueMembers(this.leagueId);
     this.matchStore.loadLeaderboard(this.leagueId);
     this.matchStore.loadLeagueMatches(this.leagueId);
 
-    // Phase 3: Load fixtures and seasons
-    this.fixtureStore.loadLeagueFixtures({ leagueId: this.leagueId });
-    this.fixtureStore.loadActiveSeason(this.leagueId);
+    // Seasons will be loaded when needed (if seasons functionality is added)
+
+    // Subscribe to matches to update signals
+    this.matches$.subscribe((matches) => {
+      this.matchesSignal.set(matches);
+    });
 
     // Subscribe to league to initialize forms (only once)
     this.leagueSubscription = this.league$.subscribe((league) => {
@@ -137,17 +132,6 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
             this.leagueSubscription = undefined;
           }
         }
-      }
-    });
-
-    // Handle leave league success
-    // Listen for league removal (when user leaves league)
-    this.leagueSubscription = runInInjectionContext(this.injector, () =>
-      toObservable(this.leagueStore.leagues)
-    ).subscribe((leagues) => {
-      const currentLeague = leagues.find((l) => l.id === this.leagueId);
-      if (!currentLeague) {
-        this.router.navigate(['/leagues']);
       }
     });
   }
@@ -174,8 +158,12 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  switchTab(tab: 'leaderboard' | 'matches' | 'fixtures' | 'members' | 'settings'): void {
+  switchTab(tab: 'details' | 'matches' | 'standings'): void {
     this.activeTab = tab;
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
   }
 
   copyInviteCode(code: string): void {
@@ -225,6 +213,14 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
 
   toggleEditLeague(): void {
     this.editingLeague = !this.editingLeague;
+    if (this.editingLeague) {
+      // Initialize form with current league values when starting to edit
+      this.league$.pipe(take(1)).subscribe((league) => {
+        if (league) {
+          this.initializeLeagueForm(league);
+        }
+      });
+    }
   }
 
   saveLeague(): void {
@@ -253,6 +249,17 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
   leaveLeague(): void {
     if (confirm('Are you sure you want to leave this league?')) {
       this.leagueStore.leaveLeague(this.leagueId);
+
+      // Wait for the leave operation to complete, then navigate
+      const subscription = this.loading$.pipe(skip(1), take(1)).subscribe((loading) => {
+        if (!loading) {
+          // Operation completed, navigate to home
+          this.router.navigate(['/']);
+        }
+      });
+
+      // Clean up subscription after navigation
+      setTimeout(() => subscription.unsubscribe(), 5000);
     }
   }
 
@@ -280,8 +287,90 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/leagues', this.leagueId, 'record-match']);
   }
 
-  navigateToGenerateFixtures(): void {
-    this.router.navigate(['/leagues', this.leagueId, 'generate-fixtures']);
+  groupMatchesByDate(matches: MatchWithDetails[]): { date: string; matches: MatchWithDetails[] }[] {
+    const groups = new Map<
+      string,
+      { dateKey: string; dateValue: Date; matches: MatchWithDetails[] }
+    >();
+
+    matches.forEach((match) => {
+      const dateString = match.scheduled_date || match.match_date;
+      if (!dateString) return;
+
+      const date = new Date(dateString);
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      let dateKey: string;
+
+      // Format as "Today • 03 Nov"
+      if (date.toDateString() === today.toDateString()) {
+        dateKey = `Today • ${date.toLocaleDateString('en-US', { day: '2-digit', month: 'short' })}`;
+      } else if (date.toDateString() === tomorrow.toDateString()) {
+        dateKey = `Tomorrow • ${date.toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: 'short',
+        })}`;
+      } else {
+        dateKey = date.toLocaleDateString('en-US', {
+          weekday: 'long',
+          day: '2-digit',
+          month: 'short',
+        });
+      }
+
+      // Use the date at midnight for grouping
+      const dateValue = new Date(date);
+      dateValue.setHours(0, 0, 0, 0);
+      const dateValueKey = dateValue.toISOString();
+
+      if (!groups.has(dateValueKey)) {
+        groups.set(dateValueKey, { dateKey, dateValue, matches: [] });
+      }
+      groups.get(dateValueKey)!.matches.push(match);
+    });
+
+    // Sort groups by date (earliest first) and sort matches within each group
+    return Array.from(groups.entries())
+      .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+      .map(([_, group]) => ({
+        date: group.dateKey,
+        matches: group.matches.sort((a, b) => {
+          const dateA = new Date(a.scheduled_date || a.match_date || 0);
+          const dateB = new Date(b.scheduled_date || b.match_date || 0);
+          return dateA.getTime() - dateB.getTime();
+        }),
+      }));
+  }
+
+  startLeague(): void {
+    this.league$.pipe(take(1)).subscribe((league) => {
+      if (!league) return;
+
+      // Validate league can be started
+      if (league.status !== LeagueStatus.DRAFT) {
+        alert('League can only be started when in draft status');
+        return;
+      }
+
+      // Confirm with user
+      const confirmed = confirm(
+        'Are you sure you want to start this league? This will generate all matches and cannot be undone.'
+      );
+
+      if (confirmed) {
+        // Start the league (store handles the operation)
+        this.leagueStore.startLeague(this.leagueId);
+
+        // Reload matches and leaderboard after a delay to ensure operation completes
+        // The store already reloads the league, we just need to reload matches
+        setTimeout(() => {
+          this.matchStore.loadLeagueMatches(this.leagueId);
+          this.matchStore.loadLeaderboard(this.leagueId);
+        }, 3000);
+      }
+    });
   }
 
   // Phase 4: Dispute handling
@@ -314,7 +403,7 @@ export class LeagueDetailComponent implements OnInit, OnDestroy {
     return this.selectedMatchForDispute.participants.map((p) => ({
       id: p.profile_id,
       name: p.display_name || 'Unknown',
-      score: p.score,
+      score: p.score ?? 0,
     }));
   }
 

@@ -27,7 +27,7 @@ ADD COLUMN IF NOT EXISTS confirmed_by UUID REFERENCES public.profiles (id);
 ALTER TABLE public.matches
 ADD COLUMN IF NOT EXISTS confirmed_at TIMESTAMPTZ;
 
--- Update status check constraint to include 'disputed' and 'pending'
+-- Update status check constraint to include all match statuses
 -- Drop the old constraint and create a new one
 ALTER TABLE public.matches
 DROP CONSTRAINT IF EXISTS matches_status_check;
@@ -35,10 +35,13 @@ DROP CONSTRAINT IF EXISTS matches_status_check;
 ALTER TABLE public.matches
 ADD CONSTRAINT matches_status_check CHECK (
     status IN (
+        'scheduled',
+        'overdue',
+        'forfeited',
         'completed',
         'cancelled',
-        'disputed',
-        'pending'
+        'pending',
+        'disputed'
     )
 );
 

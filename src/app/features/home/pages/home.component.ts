@@ -3,12 +3,20 @@ import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { HomePublicComponent } from './home-public.component';
+import { HomeDashboardComponent } from './home-dashboard.component';
 import { AuthSignalStore } from '../../auth/store/auth.signal-store';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderComponent,
+    HomePublicComponent,
+    HomeDashboardComponent,
+  ],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {

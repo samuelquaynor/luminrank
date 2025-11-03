@@ -15,9 +15,17 @@ export const routes: Routes = [
       import('./features/auth/pages/auth.component').then((m) => m.AuthComponent),
   },
   {
+    path: 'profile',
+    loadComponent: () =>
+      import('./features/profile/pages/profile.component').then((m) => m.ProfileComponent),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'profile-setup',
     loadComponent: () =>
-      import('./features/profile/pages/profile-setup.component').then((m) => m.ProfileSetupComponent),
+      import('./features/profile/pages/profile-setup.component').then(
+        (m) => m.ProfileSetupComponent
+      ),
     canActivate: [AuthGuard],
   },
   {
@@ -64,13 +72,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/matches/pages/record-match.component').then(
             (m) => m.RecordMatchComponent
-          ),
-      },
-      {
-        path: ':id/generate-fixtures',
-        loadComponent: () =>
-          import('./features/fixtures/pages/generate-fixtures.component').then(
-            (m) => m.GenerateFixturesComponent
           ),
       },
     ],

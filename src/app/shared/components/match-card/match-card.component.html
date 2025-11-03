@@ -1,61 +1,94 @@
 <div
-  class="p-4 bg-bg-secondary rounded-lg border border-border hover:border-white/20 transition-all duration-200"
+  class="hover:bg-white/5 transition-all duration-200"
+  [class.border-b]="!isLast"
+  [class.border-white/10]="!isLast"
   [attr.data-testid]="'match-card-' + match.id"
 >
-  <!-- Header: Date and Disputed Badge -->
-  <div class="flex items-center justify-between mb-3">
-    <div class="text-xs text-gray-500">
-      {{ formatDate(match.match_date) }}
+  <div class="flex items-stretch">
+    <!-- Time/Date Section -->
+    <div class="flex flex-col items-center justify-center px-2.5 py-2 bg-white/5 border-r border-white/10 min-w-[60px]">
+      <div class="text-[9px] text-gray-400 uppercase mb-0.5">{{ getTimeLabel() }}</div>
+      <div class="text-[11px] font-medium text-white">{{ getTimeDisplay() }}</div>
+      <div *ngIf="!isScheduledMatch()" class="text-[8px] text-gray-500 mt-0.5">FT</div>
     </div>
-    <div *ngIf="isMatchDisputed()" class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs font-medium rounded" data-testid="disputed-badge">
-      ⚠️ DISPUTED
-    </div>
-  </div>
 
-  <!-- Match Participants -->
-  <div class="space-y-2">
-    <div
-      *ngFor="let participant of match.participants"
-      class="flex items-center justify-between"
-    >
-      <!-- Player Name -->
-      <div class="flex items-center gap-2">
-        <span
-          class="font-medium"
-          [class.text-white]="participant.profile_id === currentUserId"
-          [class.text-gray-300]="participant.profile_id !== currentUserId"
-        >
-          {{ participant.display_name }}
-        </span>
-        <span
-          *ngIf="participant.profile_id === currentUserId"
-          class="text-xs px-2 py-0.5 bg-white/10 text-white rounded"
-        >
-          You
-        </span>
+    <!-- Match Details Section -->
+    <div class="flex-1 px-2.5 py-1.5">
+      <!-- Round & Status Info -->
+      <div class="flex items-center justify-between mb-1.5">
+        <div class="text-[9px] text-gray-400">
+          <span *ngIf="match.round_number">Round {{ match.round_number }}</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <div *ngIf="isMatchDisputed()" class="px-1.5 py-0.5 bg-yellow-500/20 text-yellow-400 text-[8px] font-medium rounded" data-testid="disputed-badge">
+            DISPUTED
+          </div>
+        </div>
       </div>
 
-      <!-- Score and Result -->
-      <div class="flex items-center gap-3">
-        <span class="text-lg font-bold text-white">{{ participant.score }}</span>
-        <span
-          class="px-3 py-1 rounded-full text-sm font-medium"
-          [class.bg-green-500/20]="participant.result === 'win'"
-          [class.text-green-400]="participant.result === 'win'"
-          [class.bg-red-500/20]="participant.result === 'loss'"
-          [class.text-red-400]="participant.result === 'loss'"
-        >
-          {{ participant.result === 'win' ? 'WIN' : 'LOSS' }}
-        </span>
+      <!-- Scheduled Match Display -->
+      <div *ngIf="isScheduledMatch()" class="space-y-1">
+        <!-- Home Player -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 min-w-0 flex-1">
+            <span class="text-xs font-medium text-white truncate">
+              {{ match.home_player?.name || 'Player 1' }}
+            </span>
+            <span *ngIf="match.home_player_id === currentUserId" class="text-[8px] px-1 py-0.5 bg-emerald-500/20 text-emerald-400 rounded flex-shrink-0">
+              YOU
+            </span>
+          </div>
+          <span class="text-[11px] text-gray-500 ml-2">-</span>
+        </div>
+
+        <!-- Away Player -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 min-w-0 flex-1">
+            <span class="text-xs font-medium text-white truncate">
+              {{ match.away_player?.name || 'Player 2' }}
+            </span>
+            <span *ngIf="match.away_player_id === currentUserId" class="text-[8px] px-1 py-0.5 bg-emerald-500/20 text-emerald-400 rounded flex-shrink-0">
+              YOU
+            </span>
+          </div>
+          <span class="text-[11px] text-gray-500 ml-2">-</span>
+        </div>
+      </div>
+
+      <!-- Completed Match Display -->
+      <div *ngIf="!isScheduledMatch()" class="space-y-1">
+        <div *ngFor="let participant of match.participants; let i = index" class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 min-w-0 flex-1">
+            <span 
+              class="text-xs font-medium truncate"
+              [class.text-white]="participant.result === 'win'"
+              [class.text-gray-400]="participant.result === 'loss'"
+            >
+              {{ participant.display_name || 'Player' }}
+            </span>
+            <span *ngIf="participant.profile_id === currentUserId" class="text-[8px] px-1 py-0.5 bg-emerald-500/20 text-emerald-400 rounded flex-shrink-0">
+              YOU
+            </span>
+          </div>
+          <div class="flex items-center gap-2 ml-2">
+            <span 
+              class="text-base font-bold tabular-nums min-w-[28px] text-right"
+              [class.text-white]="participant.result === 'win'"
+              [class.text-gray-400]="participant.result === 'loss'"
+            >
+              {{ participant.score }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Dispute Button -->
-  <div *ngIf="canDispute && !isMatchDisputed()" class="mt-3 pt-3 border-t border-gray-700">
+  <div *ngIf="canDispute && !isMatchDisputed() && !isScheduledMatch()" class="px-2.5 pb-1.5">
     <button
       (click)="onDispute()"
-      class="w-full py-1.5 text-sm font-medium text-gray-300 bg-gray-700 rounded hover:bg-gray-600 transition-colors"
+      class="w-full py-1 text-[10px] font-medium text-gray-300 bg-white/5 rounded-lg hover:bg-white/10 transition-colors border border-white/10"
       data-testid="dispute-match-button"
     >
       Dispute Match

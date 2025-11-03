@@ -18,7 +18,6 @@ import { provideSupabase } from './core/providers/supabase.provider';
 import { AuthSignalStore } from './features/auth/store/auth.signal-store';
 import { LeagueSignalStore } from './features/leagues/store/league.signal-store';
 import { MatchSignalStore } from './features/matches/store/match.signal-store';
-import { FixtureSignalStore } from './features/fixtures/store/fixture.signal-store';
 import { DisputeSignalStore } from './features/disputes/store/dispute.signal-store';
 
 export const appConfig: ApplicationConfig = {
@@ -40,7 +39,6 @@ export const appConfig: ApplicationConfig = {
     AuthSignalStore,
     LeagueSignalStore,
     MatchSignalStore,
-    FixtureSignalStore,
     DisputeSignalStore,
   ],
 };

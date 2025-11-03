@@ -17,7 +17,12 @@ describe('Login', () => {
     cy.createAndLoginTestUser().then((user: { email: string; password: string; name: string }) => {
       // User is already logged in from createAndLoginTestUser
       cy.url().should('eq', Cypress.config().baseUrl + '/', { timeout: 10000 });
+      // Verify authenticated state by checking for menu button
+      cy.get('button[aria-label="Menu"]').should('be.visible');
+      // Verify Sign Out is in dropdown
+      cy.get('button[aria-label="Menu"]').click();
       cy.contains('button', 'Sign Out').should('be.visible');
+      cy.get('button[aria-label="Menu"]').click(); // Close dropdown
     });
   });
 
@@ -25,8 +30,8 @@ describe('Login', () => {
     cy.createAndLoginTestUser().then((user: { email: string; password: string; name: string }) => {
       // Verify user is logged in
       cy.url().should('eq', Cypress.config().baseUrl + '/');
-      cy.get('[data-testid="welcome-message"]').should('be.visible');
-      cy.contains('button', 'Sign Out').should('be.visible');
+      cy.get('[data-testid="create-league-button"]').should('be.visible');
+      cy.get('button[aria-label="Menu"]').should('be.visible');
       
       // Check that auth token exists in localStorage
       cy.checkAuth();
@@ -36,14 +41,16 @@ describe('Login', () => {
       
       // Verify user is still logged in after reload
       cy.url({ timeout: 10000 }).should('eq', Cypress.config().baseUrl + '/');
-      cy.get('[data-testid="welcome-message"]', { timeout: 10000 }).should('be.visible');
+      cy.get('[data-testid="create-league-button"]', { timeout: 10000 }).should('be.visible');
+      cy.get('button[aria-label="Menu"]', { timeout: 10000 }).should('be.visible');
+      
+      // Verify Sign Out is in dropdown
+      cy.get('button[aria-label="Menu"]').click();
       cy.contains('button', 'Sign Out', { timeout: 10000 }).should('be.visible');
+      cy.get('button[aria-label="Menu"]').click(); // Close dropdown
       
       // Verify auth token still exists
       cy.checkAuth();
-      
-      // Verify user can access protected content (e.g., create league button)
-      cy.get('[data-testid="create-league-button"]').should('be.visible');
     });
   });
 });

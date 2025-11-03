@@ -21,6 +21,7 @@ export class JoinLeagueComponent implements OnInit, OnDestroy {
   loading = this.leagueStore.loading;
   error = this.leagueStore.error;
   autoJoining = false;
+  justJoined = false;
 
   // Form control getter for template
   get code() {
@@ -36,10 +37,14 @@ export class JoinLeagueComponent implements OnInit, OnDestroy {
     effect(() => {
       const leagues = this.leagueStore.leagues();
       const loading = this.loading();
+      const errorValue = this.error();
 
-      // If we just finished loading and have leagues, navigate to the first one
-      if (!loading && leagues.length > 0 && this.autoJoining) {
-        const joinedLeague = leagues[0]; // Assuming the newest league is first
+      // If we just finished loading and have leagues (and no error), navigate to the newly joined league
+      if (!loading && leagues.length > 0 && this.justJoined && !errorValue) {
+        // Find the most recently joined league (it should be at the end or beginning of the list)
+        // For simplicity, navigate to the last league in the list (assuming newest is added at end)
+        const joinedLeague = leagues[leagues.length - 1];
+        this.justJoined = false; // Reset flag before navigation
         this.router.navigate(['/leagues', joinedLeague.id]);
       }
     });
@@ -49,9 +54,18 @@ export class JoinLeagueComponent implements OnInit, OnDestroy {
     // Clear any existing errors
     this.leagueStore.clearError();
 
-    // Check for invite code in query params
-    this.route.queryParams.subscribe((params) => {
+    // Check for invite code in route params (from /leagues/join/:code)
+    this.route.params.subscribe((params) => {
       if (params['code']) {
+        this.joinForm.patchValue({ inviteCode: params['code'] });
+        this.autoJoining = true;
+        this.onSubmit();
+      }
+    });
+
+    // Also check query params as fallback
+    this.route.queryParams.subscribe((params) => {
+      if (params['code'] && !this.autoJoining) {
         this.joinForm.patchValue({ inviteCode: params['code'] });
         this.autoJoining = true;
         this.onSubmit();
@@ -66,6 +80,7 @@ export class JoinLeagueComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.joinForm.valid) {
       const inviteCode = this.joinForm.value.inviteCode;
+      this.justJoined = true; // Set flag before joining
       this.leagueStore.joinLeague(inviteCode);
     } else {
       this.markFormGroupTouched();

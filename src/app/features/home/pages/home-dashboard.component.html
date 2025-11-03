@@ -1,0 +1,101 @@
+<div class="max-w-5xl mx-auto px-4 py-6">
+  @if (leagues().length === 0) {
+    <!-- Empty State -->
+    <div class="text-center py-12">
+      <p class="text-gray-400 mb-6 max-w-md mx-auto">Create or join a league to see matches and track your rankings</p>
+      <div class="flex flex-row gap-3 justify-center">
+        <a routerLink="/leagues/create" 
+           class="px-6 py-3 border border-white/20 hover:border-white/40 hover:bg-white/5 text-white rounded-lg text-sm font-medium transition-all"
+           data-testid="create-league-button">
+          Create League
+        </a>
+        <a routerLink="/leagues/join" 
+           class="px-6 py-3 border border-white/20 hover:border-white/40 hover:bg-white/5 text-white rounded-lg text-sm font-medium transition-all"
+           data-testid="join-league-button">
+          Join League
+        </a>
+      </div>
+    </div>
+  } @else {
+    <!-- Leagues Dropdown List -->
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-white">Leagues</h2>
+      <div class="flex gap-2">
+        <a routerLink="/leagues/join" 
+           class="px-3 py-1.5 border border-white/20 hover:border-white/40 hover:bg-white/5 text-white rounded text-xs font-medium transition-all"
+           data-testid="join-league-button">
+          Join League
+        </a>
+        <a routerLink="/leagues/create" 
+           class="px-3 py-1.5 border border-white/20 hover:border-white/40 hover:bg-white/5 text-white rounded text-xs font-medium transition-all"
+           data-testid="create-league-button">
+          Create League
+        </a>
+      </div>
+    </div>
+    <div class="space-y-2">
+      @for (league of leagues(); track league.id) {
+        <app-expandable
+          [title]="league.name"
+          [routerLink]="'/leagues/' + league.id"
+          [isExpanded]="isExpanded(league.id)"
+          [badge]="league.status === 'draft' 
+            ? getLeagueMembers(league.id).length + ' member' + (getLeagueMembers(league.id).length !== 1 ? 's' : '')
+            : getLeagueMatches(league.id).length.toString()"
+          [badgeColor]="league.status === 'draft' ? 'blue' : 'green'"
+          [loading]="matchLoading() && !loadedLeagues().has(league.id)"
+          (expandedChange)="onExpandableChange(league.id, $event)"
+          [attr.data-testid]="'league-toggle-' + league.id">
+          
+          @if (league.status === 'draft') {
+            <!-- Draft League: Show Member Count -->
+            <div class="px-4 py-6 text-center">
+              <p class="text-sm text-gray-300 mb-1">League hasn't started yet</p>
+              <p class="text-xs text-gray-400">
+                {{ getLeagueMembers(league.id).length }} member{{ getLeagueMembers(league.id).length !== 1 ? 's' : '' }} joined
+              </p>
+            </div>
+          } @else {
+            <!-- Active/Completed League: Show Matches -->
+            @if (matchLoading() && !loadedLeagues().has(league.id)) {
+              <div class="px-4 py-6 text-center">
+                <div class="inline-block animate-spin h-5 w-5 border-2 border-emerald-400 border-t-transparent rounded-full"></div>
+                <p class="text-xs text-gray-400 mt-2">Loading matches...</p>
+              </div>
+            } @else {
+              @if (getLeagueMatches(league.id).length === 0) {
+                <div class="px-4 py-6 text-center">
+                  <p class="text-sm text-gray-400">No upcoming matches</p>
+                  <a [routerLink]="['/leagues', league.id]" 
+                     class="text-xs text-emerald-400 hover:text-emerald-300 mt-2 inline-block">
+                    View league details
+                  </a>
+                </div>
+              } @else {
+                <div>
+                  <!-- Date Header -->
+                  <div class="px-4 py-2 bg-white/2 border-b border-white/5">
+                    <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">
+                      {{ getMatchesDateLabel(league.id) }}
+                    </p>
+                  </div>
+                  
+                  <!-- Matches List using Match Card Component -->
+                  <div class="bg-white/5 overflow-hidden">
+                    @for (match of getLeagueMatches(league.id); track match.id; let idx = $index; let isFirst = $first; let isLast = $last) {
+                      <app-match-card 
+                        [match]="match" 
+                        [isFirst]="isFirst"
+                        [isLast]="isLast">
+                      </app-match-card>
+                    }
+                  </div>
+                </div>
+              }
+            }
+          }
+        </app-expandable>
+      }
+    </div>
+  }
+</div>

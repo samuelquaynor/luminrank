@@ -9,7 +9,7 @@
 export enum MatchStatus {
   COMPLETED = 'completed',
   CANCELLED = 'cancelled',
-  DISPUTED = 'disputed'
+  DISPUTED = 'disputed',
 }
 
 /**
@@ -17,7 +17,7 @@ export enum MatchStatus {
  */
 export enum MatchResult {
   WIN = 'win',
-  LOSS = 'loss'
+  LOSS = 'loss',
 }
 
 /**
@@ -27,10 +27,10 @@ export interface MatchParticipant {
   id: string;
   match_id: string;
   profile_id: string;
-  score: number;
-  result: MatchResult;
+  score: number | null;
+  result: MatchResult | null;
   created_at: string;
-  
+
   // Populated fields (from joins)
   display_name?: string;
 }
@@ -41,13 +41,21 @@ export interface MatchParticipant {
 export interface Match {
   id: string;
   league_id: string;
-  match_date: string;
-  recorded_by: string;
-  recorded_at: string;
-  status: MatchStatus;
+  season_id?: string | null;
+  match_date?: string | null;
+  recorded_by?: string | null;
+  recorded_at?: string | null;
+  status: MatchStatus | string; // Allow string for scheduled/overdue/forfeited
   created_at: string;
   updated_at: string;
-  
+
+  // Scheduling fields (for scheduled matches)
+  round_number?: number | null;
+  scheduled_date?: string | null;
+  submission_deadline?: string | null;
+  home_player_id?: string | null;
+  away_player_id?: string | null;
+
   // Populated fields (from joins)
   participants?: MatchParticipant[];
   recorder_name?: string;
@@ -71,5 +79,7 @@ export interface CreateMatchRequest {
  */
 export interface MatchWithDetails extends Match {
   participants: MatchParticipant[];
+  // Populated player names for scheduled matches
+  home_player?: { name: string } | null;
+  away_player?: { name: string } | null;
 }
-

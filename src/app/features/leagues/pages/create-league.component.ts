@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -21,6 +21,8 @@ export class CreateLeagueComponent implements OnInit, OnDestroy {
   loading = this.leagueStore.loading;
   error = this.leagueStore.error;
   showAdvanced = false;
+  private previousLeagueCount = signal(0);
+  private isCreating = signal(false);
 
   // Form control getters for template
   get name() {
@@ -63,11 +65,21 @@ export class CreateLeagueComponent implements OnInit, OnDestroy {
     effect(() => {
       const leagues = this.leagueStore.leagues();
       const loading = this.loading();
+      const creating = this.isCreating();
+      const previousCount = this.previousLeagueCount();
 
-      // If we just finished loading and have leagues, navigate to the first one
-      if (!loading && leagues.length > 0) {
+      // Only navigate if:
+      // 1. We're not loading
+      // 2. We were creating a league (just submitted)
+      // 3. The league count increased (new league was added)
+      if (!loading && creating && leagues.length > previousCount && leagues.length > 0) {
         const newLeague = leagues[0]; // Assuming the newest league is first
+        this.isCreating.set(false);
+        this.previousLeagueCount.set(leagues.length);
         this.router.navigate(['/leagues', newLeague.id]);
+      } else if (!loading) {
+        // Update previous count when not creating to track changes
+        this.previousLeagueCount.set(leagues.length);
       }
     });
   }
@@ -75,6 +87,8 @@ export class CreateLeagueComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Clear any existing errors
     this.leagueStore.clearError();
+    // Initialize previous count with current leagues
+    this.previousLeagueCount.set(this.leagueStore.leagues().length);
   }
 
   ngOnDestroy(): void {
@@ -102,6 +116,9 @@ export class CreateLeagueComponent implements OnInit, OnDestroy {
           : undefined,
       };
 
+      // Mark that we're creating a league
+      this.isCreating.set(true);
+      this.previousLeagueCount.set(this.leagueStore.leagues().length);
       this.leagueStore.createLeague(createData);
     } else {
       this.markFormGroupTouched();
@@ -126,7 +143,7 @@ export class CreateLeagueComponent implements OnInit, OnDestroy {
     }
     if (control?.hasError('minlength')) {
       return `${fieldName} must be at least ${control.errors?.['minlength'].requiredLength} characters`;
-    }
+  }
     if (control?.hasError('min')) {
       return `${fieldName} must be at least ${control.errors?.['min'].min}`;
     }

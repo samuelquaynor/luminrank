@@ -2,24 +2,24 @@ export enum LeagueStatus {
   DRAFT = 'draft',
   ACTIVE = 'active',
   COMPLETED = 'completed',
-  ARCHIVED = 'archived'
+  ARCHIVED = 'archived',
 }
 
 export enum MemberRole {
   CREATOR = 'creator',
   ADMIN = 'admin',
-  MEMBER = 'member'
+  MEMBER = 'member',
 }
 
 export enum MemberStatus {
   ACTIVE = 'active',
   LEFT = 'left',
-  REMOVED = 'removed'
+  REMOVED = 'removed',
 }
 
 export enum ScoringSystem {
   WIN_LOSS = 'win_loss',
-  POINTS = 'points'
+  POINTS = 'points',
 }
 
 export interface League {
@@ -45,6 +45,10 @@ export interface LeagueSettings {
   pointsPerDraw: number;
   pointsPerLoss: number;
   allowDraws: boolean;
+  // Match generation settings (for Start League feature)
+  matchFrequencyDays?: number;
+  includeReturnFixtures?: boolean;
+  submissionWindowHours?: number;
   createdAt: Date;
   updatedAt: Date;
 }

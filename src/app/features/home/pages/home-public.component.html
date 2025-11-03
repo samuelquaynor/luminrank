@@ -1,0 +1,126 @@
+<section class="relative overflow-hidden">
+  <div class="pointer-events-none absolute inset-0">
+    <div class="absolute -top-32 -left-32 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl"></div>
+    <div class="absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 pt-10 pb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div>
+        <div class="inline-flex items-center px-3 py-1 bg-white/10 border border-white/15 rounded-full text-xs text-white mb-3">
+          Competitive Social Rankings
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-[1.1] mb-3">
+          LuminRank <span class="text-emerald-400">illuminates</span> every match.
+        </h1>
+        <p class="text-sm md:text-base text-gray-300 max-w-xl mb-5">
+          Run leagues for iMessage games and beyond. Record results in seconds, watch leaderboards update live, and crown champions with seasons and disputes.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <button routerLink="/auth" data-testid="start-league-button"
+                  class="px-4 py-2 bg-white text-black rounded text-sm font-semibold hover:bg-gray-100 transition">
+            Create Free League
+          </button>
+          <a routerLink="/leagues" class="px-4 py-2 border border-white/25 text-white rounded text-sm hover:bg-white/5 transition">
+            Explore Leagues
+          </a>
+        </div>
+
+        <ul class="mt-6 grid grid-cols-2 gap-3 max-w-md">
+          <li class="flex items-center gap-2 text-gray-300 text-sm">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
+            Live leaderboards
+          </li>
+          <li class="flex items-center gap-2 text-gray-300 text-sm">
+            <span class="inline-block h-2 w-2 rounded-full bg-cyan-400"></span>
+            Seasons
+          </li>
+          <li class="flex items-center gap-2 text-gray-300 text-sm">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
+            Secure auth via Supabase
+          </li>
+          <li class="flex items-center gap-2 text-gray-300 text-sm">
+            <span class="inline-block h-2 w-2 rounded-full bg-cyan-400"></span>
+            Disputes with audit trail
+          </li>
+        </ul>
+      </div>
+
+      <div class="relative">
+        <div class="bg-bg-secondary/70 backdrop-blur border border-border rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-white text-sm font-semibold">Top Players</div>
+            <div class="text-xs text-gray-400">Live</div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between bg-bg-primary/60 border border-border rounded-lg p-3">
+              <div class="flex items-center gap-3">
+                <div class="h-7 w-7 rounded bg-emerald-500/20 border border-emerald-500/30"></div>
+                <div>
+                  <div class="text-white text-sm font-medium">Player One</div>
+                  <div class="text-[10px] text-gray-400">W 12 • L 4</div>
+                </div>
+              </div>
+              <div class="text-emerald-400 text-sm font-semibold">1520 pts</div>
+            </div>
+            <div class="flex items-center justify-between bg-bg-primary/60 border border-border rounded-lg p-3">
+              <div class="flex items-center gap-3">
+                <div class="h-7 w-7 rounded bg-cyan-400/20 border border-cyan-400/30"></div>
+                <div>
+                  <div class="text-white text-sm font-medium">Player Two</div>
+                  <div class="text-[10px] text-gray-400">W 9 • L 5</div>
+                </div>
+              </div>
+              <div class="text-emerald-400 text-sm font-semibold">1387 pts</div>
+            </div>
+            <div class="flex items-center justify-between bg-bg-primary/60 border border-border rounded-lg p-3">
+              <div class="flex items-center gap-3">
+                <div class="h-7 w-7 rounded bg-emerald-500/20 border border-emerald-500/30"></div>
+                <div>
+                  <div class="text-white text-sm font-medium">Player Three</div>
+                  <div class="text-[10px] text-gray-400">W 7 • L 6</div>
+                </div>
+              </div>
+              <div class="text-emerald-400 text-sm font-semibold">1244 pts</div>
+            </div>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a routerLink="/auth" class="text-xs text-emerald-400 hover:text-emerald-300">Start tracking →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-bg-secondary border border-border rounded-xl p-4">
+        <div class="text-white font-semibold mb-1">Anonymous-friendly</div>
+        <p class="text-sm text-gray-400">Only what you need: email optional; name optional. Focus on competition, not forms.</p>
+      </div>
+      <div class="bg-bg-secondary border border-border rounded-xl p-4">
+        <div class="text-white font-semibold mb-1">Instant standings</div>
+        <p class="text-sm text-gray-400">Record a match and see the table re-balance in real time with clear points rules.</p>
+      </div>
+      <div class="bg-bg-secondary border border-border rounded-xl p-4">
+        <div class="text-white font-semibold mb-1">Season flows</div>
+        <p class="text-sm text-gray-400">Run short sprints or full seasons with disputes and champions.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-4 pb-12">
+    <div class="max-w-7xl mx-auto bg-gradient-to-r from-emerald-500/10 via-cyan-400/10 to-emerald-500/10 border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <div class="text-white font-semibold text-base">Launch your first league today</div>
+        <div class="text-xs text-gray-300">No setup stress. Invite friends and start recording wins.</div>
+      </div>
+      <div class="flex gap-3">
+        <button routerLink="/auth" class="px-4 py-2 bg-white text-black rounded text-sm font-semibold hover:bg-gray-100">Get Started</button>
+        <a routerLink="/leagues" class="px-4 py-2 border border-white/20 rounded text-sm text-white hover:bg-white/5">View Examples</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+

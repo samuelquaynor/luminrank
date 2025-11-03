@@ -128,18 +128,21 @@ export class MatchService {
         .select(
           `
           *,
-          match_participants!inner(
+          match_participants(
             id,
             profile_id,
             score,
             result,
             created_at,
             profiles!match_participants_profile_id_fkey(name)
-          )
+          ),
+          home_player:profiles!matches_home_player_id_fkey(name),
+          away_player:profiles!matches_away_player_id_fkey(name)
         `
         )
         .eq('league_id', leagueId)
-        .order('match_date', { ascending: false })
+        .order('scheduled_date', { ascending: false, nullsFirst: false })
+        .order('match_date', { ascending: false, nullsFirst: false })
     ).pipe(
       map(({ data, error }) => {
         if (error) {
@@ -148,7 +151,7 @@ export class MatchService {
 
         return (data || []).map((match: any) => ({
           ...match,
-          participants: match.match_participants.map((p: any) => ({
+          participants: (match.match_participants || []).map((p: any) => ({
             id: p.id,
             match_id: match.id,
             profile_id: p.profile_id,

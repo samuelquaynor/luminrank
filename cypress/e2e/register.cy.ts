@@ -41,6 +41,10 @@ describe('Register', () => {
     
     // Wait for redirect to home page
     cy.url().should('eq', Cypress.config().baseUrl + '/', { timeout: 10000 });
+    // Verify authenticated state by checking for menu button
+    cy.get('button[aria-label="Menu"]', { timeout: 10000 }).should('be.visible');
+    // Verify Sign Out is in dropdown
+    cy.get('button[aria-label="Menu"]').click();
     cy.contains('button', 'Sign Out').should('be.visible');
   });
 });

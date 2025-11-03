@@ -183,6 +183,28 @@ export class LeagueSignalStore {
     )
   );
 
+  startLeague = rxMethod<string>(
+    pipe(
+      tap(() => this.setLoading(true)),
+      switchMap((leagueId) =>
+        this.leagueService.startLeague(leagueId).pipe(
+          tap((result) => {
+            // Reload the league to get updated status
+            this.loadLeague(leagueId);
+            this.setLoading(false);
+          }),
+          catchError((error) => {
+            const errorMessage = error.message || 'Failed to start league';
+            console.error('Failed to start league:', error);
+            this.setError(errorMessage);
+            this.setLoading(false);
+            return of(null);
+          })
+        )
+      )
+    )
+  );
+
   clearError = () => {
     this.state.update((state) => ({ ...state, error: null }));
   };
